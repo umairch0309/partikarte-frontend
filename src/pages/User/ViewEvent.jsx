@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ViewEvent.scss";
 import FeaturedEvents from "../../components/UserLandingPagesSections/FeaturedEvents";
 import { ReactSVG } from "react-svg";
@@ -7,6 +8,7 @@ import PrimaryButton from "../../components/UI/PrimaryButton";
 import GoogleMapComponent from "../../components/service-components/GoogleMapComponent";
 
 const ViewEvent = () => {
+  const navigate = useNavigate();
   const [showMap, setShowMap] = useState(false);
   const tickets = [
     {
@@ -23,13 +25,6 @@ const ViewEvent = () => {
       comment: "DDV ni obračunan v skladu s 43.členom ZDDV-1.",
       price: "10",
     },
-    // {
-    //   title: "Vstopnica, MAJA ZALOŽNIK z zasedbo",
-    //   startDate: "2023-07-13T20:00:00.000Z",
-    //   endDate: "2023-07-13T22:20:00.000Z",
-    //   comment: "DDV ni obračunan v skladu s 43.členom ZDDV-1.",
-    //   price: "10",
-    // },
   ];
 
   const handleGetDirections = () => {
@@ -38,6 +33,10 @@ const ViewEvent = () => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 
     window.open(url, "_blank");
+  };
+
+  const butTicketsHandler = () => {
+    navigate("/checkout");
   };
 
   return (
@@ -139,7 +138,10 @@ const ViewEvent = () => {
             </div>
             {tickets.length > 0 && (
               <>
-                <PrimaryButton className="buy-tickets-button">
+                <PrimaryButton
+                  onClick={butTicketsHandler}
+                  className="buy-tickets-button"
+                >
                   Buy Tickets
                 </PrimaryButton>
                 <div className="payment-methods">

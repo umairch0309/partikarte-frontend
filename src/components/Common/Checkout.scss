@@ -1,0 +1,24 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.checkout-component {
+  background-color: white;
+  border-radius: $primaryBorderRadius;
+  padding: 50px 25px;
+  .checkout-title {
+    font-weight: 500;
+    font-size: 25px;
+  }
+  .top-payment-buttons {
+    padding-block: 20px;
+    @include flex(row, space-between, center, 30px);
+    .top-payment-button {
+      width: 100%;
+      @include flex(row, "", center, 10px);
+    }
+    .in-active-button {
+      background-color: $borderColor;
+      color: $textColor;
+    }
+  }
+}

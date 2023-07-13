@@ -5,7 +5,7 @@ import Page404 from "../common/Page404";
 import LandingPage from "./LandingPage";
 import AllEventsPage from "./AllEventsPage";
 import ViewEvent from "./ViewEvent";
-import GoogleMapComponent from "../../components/service-components/GoogleMapComponent";
+import CheckoutPage from "./CheckoutPage";
 
 const UserMain = () => {
   return (
@@ -14,8 +14,7 @@ const UserMain = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/all-events" element={<AllEventsPage />} />
         <Route path="/all-events/:eventId" element={<ViewEvent />} />
-        <Route path="/google" element={<GoogleMapComponent />} />
-
+        <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
     </UserLayout>

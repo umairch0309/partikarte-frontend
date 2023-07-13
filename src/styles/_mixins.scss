@@ -6,7 +6,12 @@
   @if $justify != "" {
     justify-content: $justify;
   }
-  align-items: $align;
+  @if $align != "" {
+    align-items: $align;
+  }
+  @if $align == "" {
+    align-items: stretch;
+  }
   gap: $gap;
 }
 

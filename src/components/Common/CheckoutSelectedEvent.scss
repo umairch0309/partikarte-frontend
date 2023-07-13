@@ -1,0 +1,70 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.selected-ticket-container {
+  @include flex(row, space-between, center);
+  width: 100%;
+
+  .event-tile-left {
+    @include flex(row, "", center, 15px);
+    img {
+      width: 100px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    .event-name-quantity {
+      @include flex(column, center, "", 10px);
+      h4 {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .quantity-select {
+        @include flex(row, "", center, 5px);
+        p {
+          color: opacityColor($textColor, 0.7);
+        }
+        select {
+          border: none;
+          outline: none;
+          font-size: 16px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  .event-tile-right {
+    @include flex(row, "", center, 15px);
+    .price-container {
+      @include flex(column, center, flex-end, 10px);
+      h4 {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      h6 {
+        font-size: 14px;
+        font-weight: 400;
+        color: opacityColor($textColor, 0.7);
+      }
+    }
+    .delete-button {
+      height: 40px;
+      padding-inline: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: opacityColor($errorColor, 0.08);
+      svg {
+        height: 20px;
+      }
+
+      &:hover {
+        background-color: $errorColor;
+        svg {
+          path {
+            fill: white;
+          }
+        }
+      }
+    }
+  }
+}

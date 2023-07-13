@@ -5,7 +5,6 @@ import EventCard from "../Common/EventCard";
 import Slider from "react-slick";
 
 const settings = {
-  dots: true,
   infinite: true,
   speed: 500,
   slidesToShow: 3,
@@ -22,7 +21,6 @@ const settings = {
         slidesToShow: 4,
         slidesToScroll: 4,
         infinite: true,
-        dots: false,
       },
     },
     {
