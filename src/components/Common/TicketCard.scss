@@ -1,0 +1,59 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.ticket-card-container {
+  padding: 16px;
+  border: 1px solid $borderColor;
+  border-radius: $primaryBorderRadius;
+
+  .ticket-card-top {
+    .ticket-title {
+      color: $primaryColor;
+      font-weight: 600;
+    }
+    .ticket-time-date {
+      margin-top: 10px;
+    }
+    p {
+      line-height: 20px;
+    }
+  }
+  hr {
+    width: 100%;
+    border: 1px solid $borderColor;
+    margin-block: 15px;
+  }
+  .ticket-card-bottom {
+    .ticket-card-bottom-controls-container {
+      @include flex(row, space-between, center);
+      .price {
+        font-weight: 500;
+        margin-left: 30px;
+      }
+      .buttons-container {
+        width: 60%;
+        background-color: $borderColor;
+        border-radius: $primaryBorderRadius;
+        padding: 5px;
+        @include flex(row, space-between, center);
+        .quantity-button {
+          width: 43px;
+          height: 43px;
+          padding: 0;
+        }
+      }
+    }
+    .add-to-wishlist-button {
+      margin-top: 20px;
+      width: fit-content;
+      margin-inline: auto;
+      border-bottom: 1px solid $primaryColor;
+      color: $primaryColor;
+      cursor: pointer;
+      &:hover {
+        border-color: $tertiaryColor;
+        color: $tertiaryColor;
+      }
+    }
+  }
+}

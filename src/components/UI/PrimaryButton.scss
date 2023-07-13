@@ -1,0 +1,19 @@
+@import "../../styles//mixins";
+@import "../../styles//variables";
+
+.primary-button {
+  font-size: 16px;
+  font-weight: 500;
+  height: 50px;
+  padding-inline: 33px;
+  background: $primaryColor;
+  border: 1px solid transparent;
+  color: white;
+  border-radius: $primaryBorderRadius;
+  transition: all 0.2s;
+  &:hover {
+    background-color: transparent;
+    color: $primaryColor;
+    @include customBorder(1px, solid, $primaryColor, 10px);
+  }
+}

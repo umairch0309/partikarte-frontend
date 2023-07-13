@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;600;700&display=swap");
+
+// FONTS
+$primaryFont: "Outfit", sans-serif;
+$secondaryFont: "Frank Ruhl Libre", serif;
+
+// COLORS
+$primaryColor: #3d8aff;
+$secondaryColor: #0e2d5d;
+$tertiaryColor: #1d1e25;
+$textColor: #1d1e25;
+$placeHolderColor: #dfdfdf;
+
+// Status colors
+$errorColor: #ef5924;
+$successColor: #219653;
+$pendingColor: #f6d240;
+
+@function opacityColor($color, $alpha) {
+  @return rgba(red($color), green($color), blue($color), $alpha);
+}
+
+// borders and border-radius
+$borderColor: #f5f5f7;
+$primaryBorder: 1px solid $borderColor;
+$primaryBorderRadius: 10px;
+
+// buttons gradients
+$box-shadow: 0px 42.82143020629883px 107.05358123779297px 0px #0000000d;

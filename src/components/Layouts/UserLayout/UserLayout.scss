@@ -1,0 +1,12 @@
+@import "../../../styles/mixins";
+@import "../../../styles//variables";
+
+.user-layout {
+  svg {
+    display: block;
+  }
+  .header-place-holder {
+    height: 100px;
+    background: $primaryColor;
+  }
+}

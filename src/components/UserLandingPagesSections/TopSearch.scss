@@ -1,0 +1,63 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.user-top-search {
+  background-color: $primaryColor;
+  height: 270px;
+  padding-top: 40px;
+
+  @include flex(column, "", center, 20px);
+  h1 {
+    color: white;
+    font-weight: 400;
+    font-size: 40px;
+    text-align: center;
+  }
+
+  .search-main-container {
+    height: 50px;
+    width: 45%;
+    margin-inline: auto;
+    background-color: white;
+    border-radius: 5px 20px 5px 5px;
+
+    @include flex(row, "", center, 10px);
+
+    input {
+      outline: none;
+      font-size: 16px;
+      color: $primaryColor;
+      border: none;
+      width: 80%;
+      font-weight: 500;
+      &::placeholder {
+        color: rgba(32, 31, 31, 0.5);
+      }
+    }
+    hr {
+      border: none;
+      height: 60%;
+      border-left: 1px solid rgba(32, 31, 31, 0.5);
+    }
+    p {
+      color: rgba(32, 31, 31, 0.5);
+    }
+  }
+  .date-filters {
+    margin-top: 15px;
+    @include flex(row, "", center, 20px);
+    .date-filter-button {
+      height: 35px;
+      padding-inline: 25px;
+      border-radius: 5px;
+      border: none;
+      color: white;
+      background: transparent;
+      font-size: 16px;
+      font-weight: 400;
+    }
+    .active {
+      background-color: rgba(255, 255, 255, 0.082);
+    }
+  }
+}

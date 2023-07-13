@@ -1,0 +1,182 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.view-event-user {
+  .event-header-image {
+    height: 500px;
+    width: 100%;
+    object-fit: cover;
+  }
+  .view-event-main {
+    padding-top: 10px;
+    background: #fcfcfc;
+    width: 100%;
+    padding-inline: 7.5%;
+    @include flex(row, space-between, flex-start);
+    .view-event-main-left {
+      width: 70%;
+      .main-left-header {
+        h1 {
+          color: $primaryColor;
+        }
+        .header-details-container {
+          margin-top: 40px;
+          @include flex(row, "", center, 30px);
+          flex-wrap: wrap;
+          .details-item {
+            @include flex(row, "", center, 5px);
+            .clock {
+              svg {
+                path {
+                  stroke: $primaryColor;
+                }
+              }
+            }
+          }
+        }
+        hr {
+          margin-block: 20px;
+          width: 100%;
+          border: 1px solid $borderColor;
+        }
+        .event-description {
+          padding-top: 20px;
+          p {
+            margin-top: 20px;
+            width: 80%;
+          }
+        }
+      }
+    }
+    .view-event-main-right {
+      width: 30%;
+      padding-inline: 10px;
+      transform: translateY(-100px);
+      .all-tickets-container {
+        box-shadow: 0px 0px 10px 0px #0000000d;
+        background-color: white;
+        padding: 10px 10px 10px 20px;
+        border-radius: $primaryBorderRadius;
+        .tickets-header {
+          @include flex(row, "", center, 10px);
+        }
+        .tickets-wrapper {
+          max-height: 700px;
+          overflow-y: auto;
+          margin-block: 20px;
+          padding-right: 10px;
+          @include flex(column, "", center, 10px);
+
+          &::-webkit-scrollbar {
+            width: 2px;
+            @media (max-width: 767px) {
+              height: 2px;
+            }
+          }
+        }
+        .buy-tickets-button {
+          width: 100%;
+          margin-right: 10px;
+        }
+        .payment-methods {
+          margin-top: 10px;
+          @include flex(row, center, center, 5px);
+          svg {
+            height: 30px;
+            width: 30px;
+          }
+        }
+      }
+      .maps-container {
+        box-shadow: 0px 0px 10px 0px #0000000d;
+        margin-block: 20px;
+        padding: 10px;
+        background-color: white;
+        border-radius: 10px;
+        position: relative;
+        .get-directions-button-wrapper {
+          position: absolute;
+          bottom: 30px;
+          width: 93%;
+          @include flex(row, center, center);
+          .get-directions-button {
+            margin-inline: auto;
+            &:hover {
+              background-color: $primaryColor;
+              color: white;
+            }
+          }
+        }
+      }
+      .event-info-container {
+        box-shadow: 0px 0px 10px 0px #0000000d;
+        padding: 30px 20px;
+        background-color: white;
+        border-radius: $primaryBorderRadius;
+        .date-time-container {
+          @include flex(row, "", flex-start, 10px);
+          margin-bottom: 20px;
+          svg {
+            path {
+              stroke: $textColor;
+            }
+          }
+          .date-time-wrapper {
+            @include flex(column, "", flex-start, 5px);
+            h4 {
+              font-weight: 500;
+              color: $primaryColor;
+              font-size: 15px;
+              width: 250px;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+              span {
+                color: $textColor;
+              }
+            }
+          }
+        }
+        .location-container {
+          @include flex(row, "", flex-start, 10px);
+          margin-bottom: 20px;
+
+          svg {
+            path {
+              fill: $textColor;
+            }
+          }
+          h4 {
+            font-weight: 500;
+            color: $primaryColor;
+            font-size: 15px;
+            width: 250px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            span {
+              color: $textColor;
+            }
+          }
+        }
+        .organizer-container {
+          @include flex(row, "", flex-start, 10px);
+          svg {
+            path {
+              stroke: $textColor;
+            }
+          }
+          h4 {
+            font-weight: 500;
+            color: $primaryColor;
+            font-size: 15px;
+            width: 250px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            span {
+              color: $textColor;
+            }
+          }
+        }
+      }
+    }
+  }
+}

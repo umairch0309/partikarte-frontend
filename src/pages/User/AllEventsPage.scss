@@ -1,0 +1,8 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.all-events-page-user {
+  hr {
+    border: 1px solid $borderColor;
+  }
+}

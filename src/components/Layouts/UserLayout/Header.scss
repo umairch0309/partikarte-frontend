@@ -1,0 +1,32 @@
+@import "../../../styles/mixins";
+@import "../../../styles//variables";
+.user-layout-header-container {
+  width: 100%;
+  left: 0;
+  z-index: 10;
+  position: fixed;
+
+  .user-layout-header {
+    background: linear-gradient(to bottom, #00000033, rgba(0, 0, 0, 0));
+    height: 100px;
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    backdrop-filter: blur(3px);
+
+    @include flex(row, space-between, center);
+    padding-inline: 6%;
+
+    .header-right-side {
+      @include flex(row, "", center, 50px);
+      h4 {
+        font-weight: 500;
+        font-size: 16px;
+        color: white;
+      }
+      .header-login-button {
+        width: 150px;
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.landing-page-user {
+  hr {
+    border: 1px solid $borderColor;
+  }
+}

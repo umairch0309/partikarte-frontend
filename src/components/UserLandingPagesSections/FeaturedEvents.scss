@@ -1,0 +1,76 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.featured-events-section {
+  background-color: #fcfcfc;
+  padding: 60px 6% 45px 6%;
+
+  .featured-events-header {
+    padding-inline: 20px;
+    @include flex(row, space-between, center);
+    .header-left {
+      p {
+        color: $primaryColor;
+      }
+      h1 {
+        font-size: 40px;
+        font-weight: 400;
+        color: $secondaryColor;
+        span {
+          color: $primaryColor;
+        }
+      }
+    }
+    .header-right {
+      @include flex(row, "", center, 10px);
+      .featured-header-arrow {
+        @include flex(row, center, center);
+        gap: 10px;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 1px solid $tertiaryColor;
+        cursor: pointer;
+        svg {
+          margin: auto;
+        }
+
+        &:hover {
+          background-color: $primaryColor;
+          border-color: transparent;
+          svg {
+            path {
+              stroke: white;
+            }
+          }
+        }
+      }
+      .arrow-left {
+        svg {
+          margin-right: 2px;
+        }
+      }
+      .arrow-right {
+        svg {
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+
+  .featured-events-main {
+    margin-top: 40px;
+    // @include flex(row, space-between, center);
+    .single-slider-item {
+      width: 100%;
+      padding-inline: 5%;
+    }
+    .slick-track {
+      height: 425px;
+      padding-block: 15px;
+    }
+    .slick-arrow {
+      display: none !important;
+    }
+  }
+}

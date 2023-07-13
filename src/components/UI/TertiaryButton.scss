@@ -1,0 +1,46 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.tertiary-button {
+  padding: 15px 30px;
+  border: 1px solid rgba(51, 138, 243, 0.1);
+  font-weight: 400px;
+  font-weight: 16px;
+  @include flex(row, center, center);
+  gap: 15px;
+  white-space: nowrap;
+  border-radius: 50px;
+  background: radial-gradient(
+      52.73% 52.73% at 30.75% 100%,
+      rgba(51, 138, 243, 0.1) 24.03%,
+      rgba(216, 78, 91, 0) 100%
+    ),
+    linear-gradient(
+      262.7deg,
+      rgba(51, 185, 243, 0.1) 8.09%,
+      rgba(51, 185, 243, 0.1) 15.31%,
+      rgba(51, 185, 243, 0.1) 28.29%,
+      rgba(51, 185, 243, 0) 72.76%
+    ),
+    linear-gradient(
+      263.72deg,
+      rgba(51, 185, 243, 0.1) 16.36%,
+      rgba(51, 185, 243, 0) 50.14%
+    ),
+    linear-gradient(
+      93.2deg,
+      rgba(51, 138, 243, 0.1) 16.07%,
+      rgba(216, 78, 91, 0) 79.56%
+    ),
+    rgba(51, 138, 243, 0.1);
+
+  color: $tertiaryColor;
+  transition: all 0.2s;
+  &:hover {
+    @include customBorder(1px, solid, $tertiaryColor, 50px);
+    color: $tertiaryColor;
+    svg {
+      fill: $primaryColor;
+    }
+  }
+}
