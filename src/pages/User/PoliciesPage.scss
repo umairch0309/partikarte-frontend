@@ -1,0 +1,36 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.policies-page-main-container {
+  .policies-page-header {
+    position: relative;
+    img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      opacity: 0.85;
+      filter: brightness(0.7);
+    }
+    input {
+      width: 45%;
+      position: absolute;
+      left: 6%;
+      top: 55%;
+      color: white;
+      outline: none;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 5px 30px 5px 5px;
+      backdrop-filter: blur(6px);
+      &::placeholder {
+        color: white;
+        font-weight: 100;
+      }
+    }
+  }
+  .policies-page-main {
+    padding-block: 30px;
+    padding-inline: 6%;
+    @include flex(column, center, flex-start, 30px);
+  }
+}

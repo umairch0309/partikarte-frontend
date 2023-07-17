@@ -6,6 +6,8 @@ import LandingPage from "./LandingPage";
 import AllEventsPage from "./AllEventsPage";
 import ViewEvent from "./ViewEvent";
 import CheckoutPage from "./CheckoutPage";
+import PoliciesPage from "./PoliciesPage";
+import ContactUs from "./ContactUs";
 
 const UserMain = () => {
   return (
@@ -15,6 +17,9 @@ const UserMain = () => {
         <Route path="/all-events" element={<AllEventsPage />} />
         <Route path="/all-events/:eventId" element={<ViewEvent />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/policies" element={<PoliciesPage />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+
         <Route path="*" element={<Page404 />} />
       </Routes>
     </UserLayout>

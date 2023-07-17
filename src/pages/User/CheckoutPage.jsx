@@ -73,7 +73,7 @@ const CheckoutPage = () => {
           </div>
         </div>
         <div className="checkout-container-right">
-          <Checkout />
+          <Checkout totalPrice={totalPrice} />
         </div>
       </div>
     </div>

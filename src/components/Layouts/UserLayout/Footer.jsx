@@ -10,9 +10,9 @@ const Footer = () => {
         <ReactSVG src="/logo.svg" />
       </Link>
       <div className="footer-links">
-        <Link to="policies">Policies</Link>
-        <Link to="contact-us">Contact us</Link>
-        <Link to="about-us">About us</Link>
+        <Link to="/policies">Policies</Link>
+        <Link to="/contact-us">Contact us</Link>
+        <Link to="/about-us">About us</Link>
       </div>
       <hr />
       <div className="footer-copy-links">

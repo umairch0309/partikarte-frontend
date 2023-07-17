@@ -17,6 +17,7 @@ const TopSearch = () => {
         {filterButtons.length > 0 &&
           filterButtons.map((item) => (
             <button
+              key={item}
               onClick={() => setActiveButton(item)}
               className={`date-filter-button ${
                 activeButton === item ? "active" : ""

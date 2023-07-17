@@ -1,0 +1,35 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.action-status-modal {
+  width: 30vw !important;
+  .status-modal-container {
+    @include flex(column, center, center, 20px);
+    svg {
+      margin-top: 30px;
+    }
+    .status-text-container {
+      h4 {
+        text-align: center;
+        font-size: 18px;
+      }
+      p {
+        text-align: center;
+        margin-top: 5px;
+        color: opacityColor($textColor, 0.8);
+      }
+    }
+
+    .action-button {
+      width: 100%;
+    }
+    .link-under-button {
+      color: $secondaryColor;
+      text-decoration: underline;
+      text-align: center;
+      &:hover {
+        color: $primaryColor;
+      }
+    }
+  }
+}

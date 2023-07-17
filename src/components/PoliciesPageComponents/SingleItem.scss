@@ -1,0 +1,10 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.policy-single-item-trigger {
+  min-width: 24.37%;
+  height: 60px;
+  background-color: $borderColor;
+  @include flex(row, center, center);
+  cursor: pointer;
+}

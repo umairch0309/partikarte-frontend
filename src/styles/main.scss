@@ -27,7 +27,10 @@ body {
   button {
     cursor: pointer;
   }
-  input {
+  input,
+  select,
+  textarea,
+  .input {
     width: 100%;
     @include customBorder;
     height: 50px;

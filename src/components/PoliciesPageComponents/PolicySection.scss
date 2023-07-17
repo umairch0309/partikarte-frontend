@@ -1,0 +1,15 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.policy-section-container {
+  width: 100%;
+  .policy-section-heading {
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .policy-items-container {
+    width: 100%;
+    @include flex(row, flex-start, center, 10px);
+    flex-wrap: wrap;
+  }
+}
