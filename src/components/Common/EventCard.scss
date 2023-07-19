@@ -14,11 +14,20 @@
   &:hover {
     outline: 5px solid opacityColor($primaryColor, 0.3);
   }
-  img {
+  img,
+  .image-placeholder {
     border-radius: $primaryBorderRadius;
     width: 100%;
     height: 200px;
     object-fit: cover;
+  }
+
+  .image-placeholder {
+    background-color: $primaryColor;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
   }
   .date-overlay {
     background-color: white;

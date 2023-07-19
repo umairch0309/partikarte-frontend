@@ -10,7 +10,11 @@ const EventCard = ({ event, className }) => {
       onClick={() => navigate("/all-events/1")}
       className={`single-event-card ${className}`}
     >
-      <img src={event?.image} alt={event?.title} />
+      {event?.image ? (
+        <img src={event?.image} alt={event?.title} />
+      ) : (
+        <div className="image-placeholder">No image</div>
+      )}
       <div className="date-overlay">
         <ReactSVG src="/icons/tools/clock.svg" />
         <span>{event?.date}</span>

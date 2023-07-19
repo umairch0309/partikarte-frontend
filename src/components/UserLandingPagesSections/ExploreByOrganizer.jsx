@@ -4,6 +4,7 @@ import { ReactSVG } from "react-svg";
 import EventCard from "../Common/EventCard";
 import Slider from "react-slick";
 import PrimaryButton from "../UI/PrimaryButton";
+import { Link } from "react-router-dom";
 
 const settings = {
   infinite: true,
@@ -115,10 +116,12 @@ const ExploreByOrganizer = () => {
               <div key={index} className="single-slider-item">
                 <div className="gallery-item-container">
                   <img src={event.image} alt={event.title} />
-                  <div className="organizer-tag">
-                    <img src={event.image} alt={event.title} />
-                    <h5>Dummy Event llc.</h5>
-                  </div>
+                  <Link to={`/business-profile/${index}`}>
+                    <div className="organizer-tag">
+                      <img src={event.image} alt={event.title} />
+                      <h5>Dummy Event llc.</h5>
+                    </div>
+                  </Link>
                 </div>
               </div>
             );

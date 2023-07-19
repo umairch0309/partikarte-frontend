@@ -41,7 +41,11 @@ const StatusModal = ({
         >
           {button.text}
         </PrimaryButton>
-        <Link className="link-under-button" to={link.url}>
+        <Link
+          className="link-under-button"
+          onClick={() => onCancel(false)}
+          to={link.url}
+        >
           {link?.text}
         </Link>
       </div>

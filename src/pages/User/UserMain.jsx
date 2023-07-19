@@ -8,6 +8,7 @@ import ViewEvent from "./ViewEvent";
 import CheckoutPage from "./CheckoutPage";
 import PoliciesPage from "./PoliciesPage";
 import ContactUs from "./ContactUs";
+import BusinessProfile from "./BusinessProfile";
 
 const UserMain = () => {
   return (
@@ -19,6 +20,10 @@ const UserMain = () => {
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/policies" element={<PoliciesPage />} />
         <Route path="/contact-us" element={<ContactUs />} />
+        <Route
+          path="/business-profile/:businessId"
+          element={<BusinessProfile />}
+        />
 
         <Route path="*" element={<Page404 />} />
       </Routes>
