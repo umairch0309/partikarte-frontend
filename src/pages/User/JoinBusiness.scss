@@ -1,0 +1,83 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.join-business-page {
+  .join-business-hero-section {
+    background: linear-gradient(0deg, #ffffff 0%, #f6f8f9 100%);
+
+    position: relative;
+    img {
+    }
+    .content-on-image-top {
+      width: 100%;
+      padding-inline: 6%;
+      position: absolute;
+      top: 35%;
+      //   left: 50%;
+      //   transform: translate(-50%, -50%);
+      @include flex(column, "", center, 50px);
+      h1 {
+        text-align: center;
+        font-size: 52px;
+        color: white;
+        font-weight: 500;
+      }
+      h5 {
+        margin-top: 10px;
+        text-align: center;
+        color: white;
+        font-size: 18px;
+        font-weight: 400;
+      }
+      .become-a-partner-button {
+        background: #ef7a57;
+        &:hover {
+          background-color: transparent;
+          color: white;
+          @include customBorder(1px, solid, white, 10px);
+        }
+      }
+    }
+  }
+  .join-us-footer-container {
+    width: 100%;
+    position: relative;
+    .background-image {
+      margin-inline: auto;
+      width: fit-content;
+      width: 90%;
+      svg {
+        width: 100%;
+      }
+    }
+    .join-us-footer-content {
+      @include flex(column, "", center, 30px);
+      position: absolute;
+      top: 25%;
+      left: 18.7%;
+      color: white;
+      h5 {
+        font-weight: 500;
+        font-size: 16px;
+      }
+      h1 {
+        font-size: 40px;
+        font-weight: 600;
+      }
+      p {
+        width: 80%;
+        text-align: center;
+        font-weight: 300;
+      }
+      .become-our-partner {
+        background-color: white;
+        color: $primaryColor;
+        &:hover {
+          color: white;
+          background-color: transparent;
+          border-color: white;
+        }
+      }
+    }
+  }
+}

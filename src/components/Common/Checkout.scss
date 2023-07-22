@@ -28,20 +28,7 @@
   .payment-form-container {
     margin-top: 10px;
     @include flex(column, "", center, 30px);
-    .error {
-      position: relative;
-      input {
-        border-color: $errorColor !important;
-        outline-color: $errorColor !important;
-      }
-      .error-message {
-        color: $errorColor;
-        font-size: 12px;
-        position: absolute;
-        top: 48px;
-        right: 10px;
-      }
-    }
+
     .side-by-side-inputs {
       width: 100%;
       @include flex(row, space-between, center, 30px);
@@ -89,6 +76,24 @@
       text-transform: uppercase;
       &::placeholder {
         text-transform: none;
+      }
+    }
+    .error-message {
+      color: $errorColor;
+      font-size: 12px;
+      position: absolute;
+      top: 48px;
+      right: 10px;
+    }
+    .error-message-form {
+      color: $errorColor;
+      font-size: 12px;
+    }
+    .error {
+      position: relative;
+      input {
+        border-color: $errorColor !important;
+        outline-color: $errorColor !important;
       }
     }
     .checkboxes-container {

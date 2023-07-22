@@ -109,11 +109,45 @@
           }
         }
         hr {
-          margin-block: 20px;
+          margin-block: 30px;
           width: 95%;
           margin-inline: auto;
           border: none;
           border-top: 1px solid $borderColor;
+        }
+        .social-media-container {
+          h4 {
+            font-weight: 500;
+          }
+          .social-media-container-bottom {
+            margin-top: 20px;
+            @include flex(column, "", flex-start, 15px);
+            .social-media-item {
+              width: 100%;
+              @include flex(row, space-between, center);
+              .social-media-item-left {
+                @include flex(row, "", center, 10px);
+                h5 {
+                  font-weight: 500;
+                }
+              }
+              .copy-button {
+                @include flex(row, center, center);
+                height: 21px;
+                width: 21px;
+                border-radius: 5px;
+                cursor: pointer;
+                &:hover {
+                  background-color: $borderColor;
+                  svg {
+                    path {
+                      stroke: $secondaryColor;
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

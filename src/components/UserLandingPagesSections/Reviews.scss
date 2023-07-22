@@ -1,0 +1,121 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.reviews-section {
+  background-color: #fcfcfc;
+  padding: 60px 6% 45px 6%;
+
+  .reviews-header {
+    padding-inline: 20px;
+    @include flex(row, space-between, center);
+
+    p {
+      color: opacityColor($textColor, 0.7);
+      width: 38%;
+      font-weight: 400;
+    }
+    h1 {
+      font-size: 40px;
+      font-weight: 400;
+      color: $secondaryColor;
+      width: 40%;
+    }
+    .header-right {
+      @include flex(row, "", center, 10px);
+      .reviews-header-arrow {
+        @include flex(row, center, center);
+        gap: 10px;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 1px solid $tertiaryColor;
+        cursor: pointer;
+        svg {
+          margin: auto;
+        }
+
+        &:hover {
+          background-color: $primaryColor;
+          border-color: transparent;
+          svg {
+            path {
+              stroke: white;
+            }
+          }
+        }
+      }
+      .arrow-left {
+        svg {
+          margin-right: 2px;
+        }
+      }
+      .arrow-right {
+        svg {
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+
+  .reviews-main {
+    margin-top: 40px;
+    // @include flex(row, space-between, center);
+    .single-slider-item {
+      width: 100%;
+      padding-inline: 5%;
+      .single-review-item {
+        padding: 25px;
+        border-radius: $primaryBorderRadius;
+        background-color: opacityColor($borderColor, 0.7);
+        @include flex(column, "", center, 30px);
+        .review-item-header {
+          width: 100%;
+          @include flex(row, space-between, center);
+          h5 {
+            font-size: 16px;
+            font-weight: 500;
+          }
+        }
+        p {
+          text-align: justify;
+          font-size: 15px;
+          color: opacityColor($textColor, 0.7);
+        }
+        hr {
+          width: 100%;
+          border: none;
+          border: 1px solid opacityColor($textColor, 0.1);
+          margin-top: 10px;
+        }
+        .review-item-footer {
+          width: 100%;
+          @include flex(row, space-between, center);
+          .review-item-footer-left {
+            @include flex(row, "", center, 10px);
+            img {
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              object-fit: cover;
+            }
+            h4 {
+              font-size: 18px;
+              font-weight: 600;
+            }
+          }
+          a {
+            color: $primaryColor;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+    .slick-track {
+      height: 425px;
+      padding-block: 15px;
+    }
+    .slick-arrow {
+      display: none !important;
+    }
+  }
+}

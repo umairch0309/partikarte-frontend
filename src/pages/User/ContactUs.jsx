@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import "./ContactUs.scss";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Upload } from "antd";
-
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import validateContactUsForm from "../../validation/ContactUs";
 import { ReactSVG } from "react-svg";
 import StatusModal from "../../components/UI/StatusModal";
 import PrimaryButton from "../../components/UI/PrimaryButton";
@@ -37,9 +39,12 @@ const initalState = {
   email: "",
   object: "",
   description: "",
+  phoneNumber: "",
 };
+
 const ContactUs = () => {
   const [formValues, setFormValues] = useState(initalState);
+  const [formErrors, setFormErrors] = useState({});
   const [showSuccessStatus, setShowSuccessStatus] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -63,8 +68,14 @@ const ContactUs = () => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
-  const contactUsFormSubmitHandler = (e) => {
+
+  const contactUsFormSubmitHandler = async (e) => {
     e.preventDefault();
+    const errors = await validateContactUsForm(formValues);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
 
     const formData = new FormData();
     formData.append("firstName", formValues.firstName);
@@ -72,7 +83,6 @@ const ContactUs = () => {
     formData.append("email", formValues.email);
     formData.append("object", formValues.object);
     formData.append("description", formValues.description);
-
     fileList.forEach((file, index) => {
       formData.append(`file${index + 1}`, file);
     });
@@ -118,65 +128,103 @@ const ContactUs = () => {
             onSubmit={contactUsFormSubmitHandler}
           >
             <div className="side-by-side-inputs">
-              <div className="form-item">
+              <div
+                className={`form-item ${formErrors.firstName ? "error" : ""}`}
+              >
                 <label htmlFor="firstName">First Name</label>
                 <input
                   type="text"
                   id="firstName"
                   name="firstName"
                   placeholder="First Name"
-                  required
                   onChange={handleInputChange}
                   value={formValues.firstName}
                 />
+                {formErrors.firstName && (
+                  <p className="error-message">{formErrors.firstName}</p>
+                )}
               </div>
-              <div className="form-item">
+              <div
+                className={`form-item ${formErrors.lastName ? "error" : ""}`}
+              >
                 <label htmlFor="lastName">Last Name</label>
                 <input
                   type="text"
                   id="lastName"
                   name="lastName"
                   placeholder="Last Name"
-                  required
                   onChange={handleInputChange}
                   value={formValues.lastName}
                 />
+                {formErrors.lastName && (
+                  <p className="error-message">{formErrors.lastName}</p>
+                )}
               </div>
             </div>
-            <div className="form-item">
+            <div className={`form-item ${formErrors.email ? "error" : ""}`}>
               <label htmlFor="email">Email Address</label>
               <input
                 type="email"
                 name="email"
                 id="email"
                 placeholder="Email address"
-                required
                 onChange={handleInputChange}
                 value={formValues.email}
               />
+              {formErrors.email && (
+                <p className="error-message">{formErrors.email}</p>
+              )}
             </div>
-            <div className="form-item">
+            <div
+              className={`form-item ${formErrors.phoneNumber ? "error" : ""}`}
+            >
+              <label htmlFor="phoneNumber">Email Address</label>
+              <PhoneInput
+                defaultCountry="ua"
+                value={formValues.phoneNumber}
+                className={`phone-input-whole ${
+                  formErrors.phoneNumber ? "phone-input-whole-error" : ""
+                }`}
+                inputClassName="phone-input"
+                onChange={(e) =>
+                  handleInputChange({
+                    target: { value: e, name: "phoneNumber" },
+                  })
+                }
+              />
+              {formErrors.phoneNumber && (
+                <p className="error-message">{formErrors.phoneNumber}</p>
+              )}
+            </div>
+
+            <div className={`form-item ${formErrors.object ? "error" : ""}`}>
               <label htmlFor="object">Object</label>
               <input
                 type="text"
                 name="object"
                 id="object"
                 placeholder="Enter an Object/Topic "
-                required
                 onChange={handleInputChange}
                 value={formValues.object}
               />
+              {formErrors.object && (
+                <p className="error-message">{formErrors.object}</p>
+              )}
             </div>
-            <div className="form-item">
+            <div
+              className={`form-item ${formErrors.description ? "error" : ""}`}
+            >
               <label htmlFor="description">Description</label>
               <textarea
                 name="description"
                 id="description"
                 placeholder="Description"
-                required
                 onChange={handleInputChange}
                 value={formValues.description}
               />
+              {formErrors.description && (
+                <p className="error-message">{formErrors.description}</p>
+              )}
             </div>
             <Upload listType="picture" maxCount={3} {...props}>
               <Button

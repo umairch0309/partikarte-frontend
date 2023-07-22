@@ -1,0 +1,45 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.unique-featuers-section {
+  background-color: #fcfcfc;
+  padding-top: 100px;
+  padding-inline: 6%;
+  .unique-features-header {
+    p {
+      color: $primaryColor;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 10px;
+      font-size: 40px;
+      font-weight: 500;
+      color: $secondaryColor;
+      text-align: center;
+    }
+  }
+  .unique-features-container {
+    margin-top: 50px;
+    @include flex(row, space-between, flex-start, 30px);
+    flex-wrap: wrap;
+    .feature-item {
+      padding: 10px 20px;
+      border-radius: $primaryBorderRadius;
+      width: 30%;
+      margin-bottom: 30px;
+      @include flex(column, "", center, 20px);
+      h3 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      p {
+        font-size: 14px;
+        color: opacityColor($textColor, 0.7);
+      }
+      &:hover {
+        cursor: default;
+        background-color: opacityColor($textColor, 0.05);
+      }
+    }
+  }
+}

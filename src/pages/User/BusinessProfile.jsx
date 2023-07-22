@@ -185,6 +185,41 @@ const BusinessProfile = () => {
               </div>
             </div>
             <hr />
+            <div className="social-media-container">
+              <h4>Social Media:</h4>
+              <div className="social-media-container-bottom">
+                <div className="social-media-item">
+                  <div className="social-media-item-left">
+                    <ReactSVG src="/icons/tools/facebook-color.svg" />
+                    <h5>Facebook</h5>
+                  </div>
+                  <ReactSVG
+                    className="copy-button"
+                    src="/icons/tools/copy.svg"
+                  />
+                </div>
+                <div className="social-media-item">
+                  <div className="social-media-item-left">
+                    <ReactSVG src="/icons/tools/insta-color.svg" />
+                    <h5>Instagram</h5>
+                  </div>
+                  <ReactSVG
+                    className="copy-button"
+                    src="/icons/tools/copy.svg"
+                  />
+                </div>
+                <div className="social-media-item">
+                  <div className="social-media-item-left">
+                    <ReactSVG src="/icons/tools/linkedin-color.svg" />
+                    <h5>Linkedin</h5>
+                  </div>
+                  <ReactSVG
+                    className="copy-button"
+                    src="/icons/tools/copy.svg"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

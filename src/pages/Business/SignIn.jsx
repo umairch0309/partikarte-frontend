@@ -1,0 +1,177 @@
+import React, { useState } from "react";
+import "./SignIn.scss";
+import { ReactSVG } from "react-svg";
+import Slider from "react-slick";
+import { Link } from "react-router-dom";
+import PrimaryButton from "../../components/UI/PrimaryButton";
+import validateSignInForm from "../../validation/SignIn";
+
+const settings = {
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  initialSlide: 0,
+  adaptiveHeight: true,
+  autoplay: true,
+  autoplaySpeed: 3000,
+  dots: true,
+};
+const reviews = [
+  {
+    title: "Explore Best and Top Events on Partikarte!",
+    description:
+      "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est.",
+  },
+  {
+    title: "Join the Excitement at Partikarte!",
+    description:
+      "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
+  },
+  {
+    title: "Get Ready for Unforgettable Events!",
+    description:
+      "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.",
+  },
+];
+
+const initalState = {
+  email: "",
+  password: "",
+  remember: false,
+};
+const SignIn = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState(initalState);
+  const [formErrors, setFormErrors] = useState({});
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: newValue }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = await validateSignInForm(formData);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    // use api here
+
+    //   after submitting form
+    setFormErrors({});
+    setFormData(initalState);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+  return (
+    <div className="sign-in-page">
+      <div className="sign-in-page-left">
+        <img src="/images/policies-banner.jpg" alt="banner" />
+        <div className="left-content">
+          <ReactSVG src="/logo-white.svg" />
+          <div className="featured-content-main">
+            <Slider {...settings}>
+              {reviews.map((review, index) => (
+                <div key={index} className="single-slider-item">
+                  <div className="single-item">
+                    <h1>{review.title}</h1>
+                    <p>{review.description}</p>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
+      </div>
+      <div className="sign-in-page-right">
+        <h1>Sign In</h1>
+        <div className="top-line">
+          <p>New user?</p>
+          <Link to={"/business/signup"}>Create new account</Link>
+        </div>
+        <form className="sign-in-form-container" onSubmit={handleSubmit}>
+          <div className={`form-item ${formErrors.email && "error"}`}>
+            <label htmlFor="email">Email Address</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={formData.email}
+              placeholder="Input your email"
+              onChange={handleInputChange}
+            />
+            {formErrors.email && (
+              <p className="error-message">{formErrors.email}</p>
+            )}
+          </div>
+          <div className={`form-item ${formErrors.password && "error"}`}>
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              placeholder="Input your password"
+              onChange={handleInputChange}
+            />
+            <ReactSVG
+              onClick={togglePasswordVisibility}
+              className="show-password"
+              src="/icons/tools/eye.svg"
+            />
+            {formErrors.password && (
+              <p className="error-message">{formErrors.password}</p>
+            )}
+          </div>
+          <div className="top-line">
+            <div className="form-item top-line">
+              <input
+                type="checkbox"
+                id="remember"
+                name="remember"
+                checked={formData.remember}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="remember">Remember me?</label>
+            </div>
+            <Link className="forgot-password" to={"/business/forgot-password"}>
+              Forgot password?
+            </Link>
+          </div>
+          <PrimaryButton type="submit">Sign In</PrimaryButton>
+        </form>
+
+        <div className="sign-in-options-divider">
+          <hr />
+          <p>or</p>
+          <hr />
+        </div>
+        <button className="google-sign-in-button">
+          <ReactSVG src="/icons/tools/google-logo.svg" />
+          <p>Sign in with Google</p>
+        </button>
+        <p className="note-line">
+          Protected by reCAPTCHA and subject to the{" "}
+          <a
+            href="https://policies.google.com/privacy?hl=en-GB"
+            target="_blank"
+          >
+            Google Privacy Policy
+          </a>{" "}
+          and{" "}
+          <a href="https://policies.google.com/terms?hl=en-GB" target="_blank">
+            Terms of Service.
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default SignIn;

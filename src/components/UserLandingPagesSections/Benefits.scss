@@ -1,0 +1,51 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.benefits-section-container {
+  background: linear-gradient(180deg, #f6f8f9 0%, #ffffff 100%),
+    linear-gradient(180deg, #f9fbfb 0%, #ffffff 100%);
+
+  padding-top: 50px;
+  @include flex(row, "", center, 50px);
+  .benefits-section-left {
+    width: 50%;
+  }
+  .benefits-section-right {
+    padding-right: 6%;
+    width: 50%;
+    .header {
+      p {
+        color: $primaryColor;
+      }
+      h1 {
+        margin-top: 10px;
+        font-size: 40px;
+        font-weight: 500;
+        color: $secondaryColor;
+        span {
+          color: $primaryColor;
+        }
+      }
+    }
+    .right-section-bottom {
+      margin-top: 30px;
+      @include flex(column, "", flex-start, 20px);
+      .benefit-item-container {
+        width: 100%;
+        .item-main {
+          margin-bottom: 15px;
+          @include flex(row, "", center, 10px);
+          h4 {
+            font-size: 18px;
+            font-weight: 500;
+            color: $secondaryColor;
+          }
+        }
+        hr {
+          border: none;
+          border-top: 1px solid $borderColor;
+        }
+      }
+    }
+  }
+}

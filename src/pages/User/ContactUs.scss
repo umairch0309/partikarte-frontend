@@ -86,6 +86,50 @@
             height: 100px;
             padding-top: 10px;
           }
+          .phone-input-whole {
+            margin-top: 10px;
+            border: 1px solid #e6e9ed;
+            padding-right: 15px;
+            border-radius: $primaryBorderRadius;
+            &:focus-within {
+              outline: 2px solid $primaryColor;
+            }
+            button {
+              height: 50px;
+              border: none;
+              width: 70px;
+              border-radius: $primaryBorderRadius;
+            }
+            .phone-input {
+              margin-top: 0px;
+              height: 50px;
+              border: none;
+              border-radius: $primaryBorderRadius;
+            }
+          }
+        }
+        .error {
+          width: 100%;
+          position: relative;
+          input,
+          textarea,
+          select {
+            border-color: $errorColor !important;
+            outline-color: $errorColor !important;
+          }
+          .error-message {
+            color: $errorColor;
+            font-size: 12px;
+            position: absolute;
+            top: 48px;
+            right: 10px;
+          }
+          .phone-input-whole-error {
+            border: 1px solid $errorColor;
+            &:focus-within {
+              outline: 1px solid $errorColor;
+            }
+          }
         }
       }
     }
