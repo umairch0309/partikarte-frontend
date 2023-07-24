@@ -12,8 +12,10 @@ const Header = () => {
           <ReactSVG className="header-logo" src="/logo-white.svg" />
         </Link>
         <div className="header-right-side">
-          <h4>For Organizers</h4>
-          <Link to="/business/login">
+          <Link to={"/join-business"}>
+            <h4>For Organizers</h4>
+          </Link>
+          <Link className="login-link-button" to="/business/login">
             <SecondaryButton className="header-login-button">
               Login
             </SecondaryButton>

@@ -31,9 +31,9 @@ const JoinBusiness = () => {
       <Calculate />
       <Reviews />
       <div className="join-us-footer-container">
-        <ReactSVG
+        <img
           className="background-image"
-          src="/images/circles-background.svg"
+          src="/images/circles-background.png"
         />
         <div className="join-us-footer-content">
           <h5>Join Partnerships</h5>

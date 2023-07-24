@@ -5,6 +5,9 @@
   background-color: white;
   border-radius: $primaryBorderRadius;
   padding: 50px 25px;
+  @media (max-width: 767px) {
+    padding: 25px 10px;
+  }
   .checkout-title {
     font-weight: 500;
     font-size: 25px;

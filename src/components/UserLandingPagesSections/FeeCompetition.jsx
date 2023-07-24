@@ -34,8 +34,8 @@ const FeeCompetition = () => {
           <PrimaryButton>Customize Pricing</PrimaryButton>
         </div>
       </div>
-      <div className="benefits-section-right">
-        <ReactSVG src="/images/fee-image.svg" />
+      <div className="fee-competition-section-right">
+        <img src="/images/fee-image.svg" />
       </div>
     </div>
   );

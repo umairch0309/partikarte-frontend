@@ -5,6 +5,7 @@
   left: 0;
   z-index: 10;
   position: fixed;
+  max-width: 100vw;
 
   .user-layout-header {
     background: linear-gradient(to bottom, #00000033, rgba(0, 0, 0, 0));
@@ -16,16 +17,40 @@
 
     @include flex(row, space-between, center);
     padding-inline: 6%;
+    @media (max-width: 767px) {
+      padding-inline: 3%;
+      max-width: 100vw;
+    }
+
+    @media (max-width: 767px) {
+      svg {
+        width: 120px;
+      }
+    }
 
     .header-right-side {
       @include flex(row, "", center, 50px);
+      @media (max-width: 767px) {
+        gap: 20px;
+      }
       h4 {
         font-weight: 500;
         font-size: 16px;
         color: white;
+        @media (max-width: 767px) {
+          font-size: 14px;
+          font-weight: 400;
+          white-space: nowrap;
+        }
       }
-      .header-login-button {
-        width: 150px;
+      .login-link-button {
+        .header-login-button {
+          width: 150px;
+          @media (max-width: 767px) {
+            width: 100%;
+            padding-inline: 25px;
+          }
+        }
       }
     }
   }

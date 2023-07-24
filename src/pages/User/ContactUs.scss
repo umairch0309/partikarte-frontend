@@ -8,6 +8,10 @@
     padding-inline: 6%;
     @include flex(row, space-between, flex-start, 50px);
     border-bottom: 2px solid opacityColor($textColor, 0.3);
+    @media (max-width: 767px) {
+      flex-direction: column;
+      padding-inline: 3%;
+    }
     .contact-us-left {
       width: 100%;
       .contact-us-left-top {
@@ -22,6 +26,9 @@
           font-size: 30px;
           font-weight: 600;
           color: $secondaryColor;
+          @media (max-width: 767px) {
+            font-size: 25px;
+          }
         }
         p {
           margin-top: 20px;

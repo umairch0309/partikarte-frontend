@@ -4,9 +4,18 @@
 .become-a-partner-section {
   background: linear-gradient(180deg, #ffffff 0%, #f6f8f9 100%);
   @include flex(row, "", center, 50px);
+  padding-inline: 6%;
+  @media (max-width: 767px) {
+    flex-direction: column;
+    width: 100%;
+    padding-inline: 10px;
+  }
   .become-a-partner-left {
-    padding-left: 6%;
     width: 50%;
+    @media (max-width: 767px) {
+      width: 100%;
+      padding: 0;
+    }
     .header {
       p {
         color: $primaryColor;
@@ -29,6 +38,9 @@
         font-size: 16px;
         line-height: 24px;
         text-align: justify;
+        @media (max-width: 767px) {
+          text-align: start;
+        }
       }
       h5 {
         font-size: 16px;
@@ -38,6 +50,15 @@
     }
     .get-started-button {
       margin-top: 30px;
+    }
+  }
+  .become-a-partner-right {
+    @media (max-width: 767px) {
+      img {
+        max-width: 95vw;
+
+        object-fit: cover;
+      }
     }
   }
 }

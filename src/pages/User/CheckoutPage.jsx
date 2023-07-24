@@ -6,6 +6,7 @@ import CheckoutSelectedEvent from "../../components/Common/CheckoutSelectedEvent
 import { useState } from "react";
 import { useEffect } from "react";
 import Checkout from "../../components/Common/Checkout";
+import { Link } from "react-router-dom";
 
 const CheckoutPage = () => {
   const DUMMY_EVENTS = [
@@ -70,9 +71,17 @@ const CheckoutPage = () => {
                 <h4>$ {(totalPrice + totalPrice * 0.065).toFixed(2)}</h4>
               </div>
             </div>
+            <div className="legal-links-container">
+              <Link to={"./"}>Terms</Link>
+              <Link to={"./"}>Privacy</Link>
+            </div>
           </div>
         </div>
         <div className="checkout-container-right">
+          <div className="back-button">
+            <ReactSVG src="/icons/tools/left-arrow.svg" />
+            <p>Back</p>
+          </div>
           <Checkout totalPrice={totalPrice} />
         </div>
       </div>

@@ -162,7 +162,15 @@ const ViewEvent = () => {
             )}
           </div>
           <div className="maps-container">
-            <GoogleMapComponent setShowMap={setShowMap} />
+            <GoogleMapComponent
+              setShowMap={setShowMap}
+              styleOptions={{
+                width: "100%",
+                height: "296px",
+                padding: "10px",
+                borderRadius: "10px",
+              }}
+            />
             {showMap && (
               <div className="get-directions-button-wrapper">
                 <PrimaryButton

@@ -4,15 +4,25 @@
 .calculate-earning-section {
   padding: 70px 6%;
   background-color: #fcfcfc;
+  @media (max-width: 767px) {
+    padding: 8% 3%;
+  }
   .calculate-container {
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.03);
     border-radius: 30px;
     padding: 30px 40px;
     background: white;
     @include flex(row, "", center, 30px);
+    @media (max-width: 767px) {
+      flex-direction: column;
+      padding: 30px 15px;
+    }
     .calculate-left {
       width: 50%;
       @include flex(column, "", flex-start, 20px);
+      @media (max-width: 767px) {
+        width: 100%;
+      }
       h1 {
         font-weight: 500;
       }
@@ -57,6 +67,9 @@
       padding: 30px 20px;
       border-radius: $primaryBorderRadius;
       background-color: opacityColor($borderColor, 0.7);
+      @media (max-width: 767px) {
+        width: 100%;
+      }
       h1 {
         color: $primaryColor;
         font-size: 50px;

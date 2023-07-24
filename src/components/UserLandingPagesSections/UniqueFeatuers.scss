@@ -5,6 +5,9 @@
   background-color: #fcfcfc;
   padding-top: 100px;
   padding-inline: 6%;
+  @media (max-width: 767px) {
+    padding-inline: 3%;
+  }
   .unique-features-header {
     p {
       color: $primaryColor;
@@ -22,12 +25,19 @@
     margin-top: 50px;
     @include flex(row, space-between, flex-start, 30px);
     flex-wrap: wrap;
+    @media (max-width: 767px) {
+      flex-direction: column;
+    }
     .feature-item {
       padding: 10px 20px;
       border-radius: $primaryBorderRadius;
       width: 30%;
       margin-bottom: 30px;
       @include flex(column, "", center, 20px);
+      @media (max-width: 767px) {
+        width: 100%;
+        gap: 10px;
+      }
       h3 {
         font-size: 22px;
         font-weight: 600;

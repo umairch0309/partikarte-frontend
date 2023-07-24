@@ -13,7 +13,7 @@ const Benefits = () => {
   return (
     <div className="benefits-section-container">
       <div className="benefits-section-left">
-        <ReactSVG src="/images/benefits-image.svg" />
+        <img src="/images/benefits-image.svg" />
       </div>
       <div className="benefits-section-right">
         <div className="header">

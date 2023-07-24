@@ -26,11 +26,17 @@
         color: white;
         font-weight: 100;
       }
+      @media (max-width: 767px) {
+        width: 80%;
+      }
     }
   }
   .policies-page-main {
     padding-block: 30px;
     padding-inline: 6%;
     @include flex(column, center, flex-start, 30px);
+    @media (max-width: 767px) {
+      padding-inline: 3%;
+    }
   }
 }

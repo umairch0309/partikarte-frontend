@@ -4,15 +4,31 @@
 .benefits-section-container {
   background: linear-gradient(180deg, #f6f8f9 0%, #ffffff 100%),
     linear-gradient(180deg, #f9fbfb 0%, #ffffff 100%);
-
   padding-top: 50px;
+  padding-inline: 6%;
+
   @include flex(row, "", center, 50px);
+  @media (max-width: 767px) {
+    flex-direction: column;
+    padding-inline: 10px;
+  }
   .benefits-section-left {
     width: 50%;
+    @media (max-width: 767px) {
+      width: 100%;
+      img {
+        max-width: 95vw;
+
+        object-fit: cover;
+      }
+    }
   }
   .benefits-section-right {
-    padding-right: 6%;
     width: 50%;
+    @media (max-width: 767px) {
+      width: 100%;
+      padding-right: 0px;
+    }
     .header {
       p {
         color: $primaryColor;
@@ -30,6 +46,7 @@
     .right-section-bottom {
       margin-top: 30px;
       @include flex(column, "", flex-start, 20px);
+
       .benefit-item-container {
         width: 100%;
         .item-main {

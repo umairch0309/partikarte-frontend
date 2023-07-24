@@ -26,9 +26,8 @@ const settings = {
     {
       breakpoint: 600,
       settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-        initialSlide: 2,
+        slidesToShow: 1,
+        slidesToScroll: 1,
       },
     },
     {
@@ -109,7 +108,7 @@ const FeaturedEvents = ({ titleStart, titleEnd, status }) => {
           {DUMMY_EVENTS.map((event, index) => {
             return (
               <div key={index} className="single-slider-item">
-                <EventCard event={event} />
+                <EventCard className="event-in-slider-item" event={event} />
               </div>
             );
           })}

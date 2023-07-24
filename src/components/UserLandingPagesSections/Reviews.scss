@@ -4,24 +4,39 @@
 .reviews-section {
   background-color: #fcfcfc;
   padding: 60px 6% 45px 6%;
-
+  @media (max-width: 767px) {
+    padding-inline: 3%;
+  }
   .reviews-header {
     padding-inline: 20px;
     @include flex(row, space-between, center);
-
+    @media (max-width: 767px) {
+      flex-direction: column;
+      gap: 20px;
+      align-items: flex-start;
+    }
     p {
       color: opacityColor($textColor, 0.7);
       width: 38%;
       font-weight: 400;
+      @media (max-width: 767px) {
+        width: 100%;
+      }
     }
     h1 {
       font-size: 40px;
       font-weight: 400;
       color: $secondaryColor;
       width: 40%;
+      @media (max-width: 767px) {
+        width: 100%;
+      }
     }
     .header-right {
       @include flex(row, "", center, 10px);
+      @media (max-width: 767px) {
+        margin-left: auto;
+      }
       .reviews-header-arrow {
         @include flex(row, center, center);
         gap: 10px;
@@ -34,6 +49,13 @@
           margin: auto;
         }
 
+        @media (max-width: 767px) {
+          width: 30px;
+          height: 30px;
+          svg {
+            width: 7px;
+          }
+        }
         &:hover {
           background-color: $primaryColor;
           border-color: transparent;
@@ -71,6 +93,7 @@
         .review-item-header {
           width: 100%;
           @include flex(row, space-between, center);
+
           h5 {
             font-size: 16px;
             font-weight: 500;

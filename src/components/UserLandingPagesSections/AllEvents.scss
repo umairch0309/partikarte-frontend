@@ -4,13 +4,24 @@
 .all-events-user-landing-page {
   background-color: #fcfcfc;
   padding: 60px 6% 20px 6%;
+
+  @media (max-width: 767px) {
+    padding-inline: 3%;
+  }
   @include flex(column, "", center);
   .all-events-container {
     @include flex(row, space-around, center);
+    @media (max-width: 767px) {
+      flex-direction: column;
+      gap: 30px;
+    }
     flex-wrap: wrap;
     .listing-event-card {
       width: 30%;
       margin-bottom: 3.33%;
+      @media (max-width: 767px) {
+        width: 100%;
+      }
     }
   }
   .events-load-more-button {

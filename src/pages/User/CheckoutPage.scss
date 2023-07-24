@@ -7,12 +7,25 @@
     padding-inline: 8%;
     padding-block: 30px;
     @include flex(row, space-between, "", 70px);
+    @media (max-width: 767px) {
+      padding-inline: 2%;
+      flex-direction: column-reverse;
+      gap: 10px;
+    }
     .checkout-container-left {
       width: 100%;
       padding-top: 6%;
+      @media (max-width: 767px) {
+        padding-inline: 2%;
+      }
       .back-button {
         @include flex(row, "", center, 10px);
         cursor: pointer;
+        @media (max-width: 767px) {
+          display: none;
+          height: 0;
+          width: 0;
+        }
         &:hover {
           color: $primaryColor;
           svg {
@@ -24,6 +37,9 @@
       }
       .checkout-left-main {
         padding: 40px 0px 0px 30px;
+        @media (max-width: 767px) {
+          padding-left: 0px;
+        }
         h5 {
           font-size: 16px;
           font-weight: 400;
@@ -42,6 +58,9 @@
           margin-left: auto;
           width: 50%;
           @include flex(column, "", "", 10px);
+          @media (max-width: 767px) {
+            margin-right: 40px;
+          }
           .totals-item {
             @include flex(row, space-between, center);
             h4 {
@@ -57,10 +76,34 @@
             border: 1px solid $borderColor;
           }
         }
+        .legal-links-container {
+          margin-top: 20%;
+          @include flex(row, "", center, 20px);
+          a {
+            color: opacityColor($secondaryColor, 0.7);
+            font-size: 12px;
+            &:hover {
+              color: $primaryColor;
+            }
+          }
+        }
       }
     }
     .checkout-container-right {
       width: 100%;
+      .back-button {
+        @include flex(row, "", center, 10px);
+        margin-bottom: 40px;
+        cursor: pointer;
+        &:hover {
+          color: $primaryColor;
+          svg {
+            path {
+              fill: $primaryColor;
+            }
+          }
+        }
+      }
     }
   }
 }

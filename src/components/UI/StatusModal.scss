@@ -3,6 +3,9 @@
 
 .action-status-modal {
   width: 30vw !important;
+  @media (max-width: 767px) {
+    width: 95vw !important;
+  }
   .status-modal-container {
     @include flex(column, center, center, 20px);
     svg {
