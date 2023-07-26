@@ -31,7 +31,7 @@ const BecomeAPartner = () => {
         </PrimaryButton>
       </div>
       <div className="become-a-partner-right">
-        <img src="/images/partner-image.svg" />
+        <img src="/images/partner-image.png" />
       </div>
     </div>
   );

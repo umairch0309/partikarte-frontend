@@ -29,6 +29,9 @@
       bottom: 0px;
       left: 0px;
       color: white;
+      svg {
+        cursor: pointer;
+      }
       .featured-content-main {
         margin-top: 20px;
         .single-slider-item {
@@ -119,7 +122,8 @@
         select {
           background-image: url("/icons/tools/dropdown-icon.svg");
           background-repeat: no-repeat;
-          background-position: 95% 20px;
+          background-size: 15px;
+          background-position: 95% 22px;
           -moz-appearance: none;
           -webkit-appearance: none;
           appearance: none;
@@ -133,7 +137,8 @@
       }
       .error {
         position: relative;
-        input {
+        input,
+        select {
           border-color: $errorColor !important;
           outline-color: $errorColor !important;
         }
@@ -143,6 +148,9 @@
           position: absolute;
           top: 43px;
           right: 10px;
+        }
+        .select-error-message {
+          right: 50px;
         }
         .show-password {
           display: none;

@@ -35,7 +35,7 @@ const FeeCompetition = () => {
         </div>
       </div>
       <div className="fee-competition-section-right">
-        <img src="/images/fee-image.svg" />
+        <img src="/images/fee-image.png" />
       </div>
     </div>
   );

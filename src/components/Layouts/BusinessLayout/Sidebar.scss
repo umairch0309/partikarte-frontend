@@ -1,0 +1,61 @@
+@import "../../../styles/mixins";
+@import "../../../styles//variables";
+
+.side-bar-main-container {
+  @include flex(column, "", center, 40px);
+  padding: 40px 20px;
+  background-color: white;
+  min-width: 250px;
+  max-width: 250px;
+  max-height: 100vh;
+  min-height: 100vh;
+  overflow-y: auto;
+  .sidebar-all-routes-container {
+    @include flex(column, "", center, 10px);
+    width: 100%;
+    svg {
+      display: block;
+    }
+    .single-sidebar-item {
+      width: 100%;
+      @include flex(row, "", center, 10px);
+      border-radius: 10px;
+      height: 45px;
+      padding-inline: 15px;
+      h5 {
+        font-size: 14px;
+        font-weight: 400;
+        color: opacityColor($textColor, 0.5);
+      }
+    }
+    .active {
+      background-color: $primaryColor;
+      h5 {
+        color: white;
+      }
+      svg {
+        path {
+          fill: white;
+          fill-opacity: 1;
+        }
+      }
+    }
+  }
+  .logout-button {
+    width: 100%;
+    @include flex(row, "", center, 10px);
+    border-radius: 10px;
+    height: 45px;
+    padding-inline: 15px;
+    cursor: pointer;
+    margin-top: auto;
+    svg {
+      display: block;
+    }
+    h5 {
+      font-size: 14px;
+      font-weight: 400;
+      color: $errorColor;
+    }
+  }
+}

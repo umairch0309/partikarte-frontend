@@ -95,6 +95,10 @@
         @include flex(row, "", center, 10px);
         margin-bottom: 40px;
         cursor: pointer;
+        display: none;
+        @media (max-width: 767px) {
+          display: flex;
+        }
         &:hover {
           color: $primaryColor;
           svg {

@@ -94,7 +94,8 @@
     }
     .error {
       position: relative;
-      input {
+      input,
+      select {
         border-color: $errorColor !important;
         outline-color: $errorColor !important;
       }

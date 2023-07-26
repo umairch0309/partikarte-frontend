@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./SignIn.scss";
 import { ReactSVG } from "react-svg";
 import Slider from "react-slick";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../components/UI/PrimaryButton";
 import validateSignInForm from "../../validation/SignIn";
 
@@ -41,6 +41,7 @@ const initalState = {
   remember: false,
 };
 const SignIn = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
@@ -60,7 +61,7 @@ const SignIn = () => {
     }
 
     // use api here
-
+    navigate("/business-profile");
     //   after submitting form
     setFormErrors({});
     setFormData(initalState);
@@ -74,7 +75,7 @@ const SignIn = () => {
       <div className="sign-in-page-left">
         <img src="/images/policies-banner.jpg" alt="banner" />
         <div className="left-content">
-          <ReactSVG src="/logo-white.svg" />
+          <ReactSVG onClick={() => navigate("/")} src="/logo-white.svg" />
           <div className="featured-content-main">
             <Slider {...settings}>
               {reviews.map((review, index) => (
@@ -93,7 +94,7 @@ const SignIn = () => {
         <h1>Sign In</h1>
         <div className="top-line">
           <p>New user?</p>
-          <Link to={"/business/signup"}>Create new account</Link>
+          <Link to={"/business/signup"}>Create an account</Link>
         </div>
         <form className="sign-in-form-container" onSubmit={handleSubmit}>
           <div className={`form-item ${formErrors.email && "error"}`}>

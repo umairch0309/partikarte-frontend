@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./SignUp.scss";
 import { ReactSVG } from "react-svg";
 import Slider from "react-slick";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../components/UI/PrimaryButton";
 import validateSignUpForm from "../../validation/SignUp";
 
@@ -49,6 +49,7 @@ const initalState = {
   country: "",
 };
 const SignUp = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
@@ -68,7 +69,7 @@ const SignUp = () => {
     }
 
     // use api here
-
+    navigate("/business/login");
     //   after submitting form
     setFormErrors({});
     setFormData(initalState);
@@ -82,7 +83,7 @@ const SignUp = () => {
       <div className="sign-up-page-left">
         <img src="/images/policies-banner.jpg" alt="banner" />
         <div className="left-content">
-          <ReactSVG src="/logo-white.svg" />
+          <ReactSVG onClick={() => navigate("/")} src="/logo-white.svg" />
           <div className="featured-content-main">
             <Slider {...settings}>
               {reviews.map((review, index) => (
@@ -253,13 +254,16 @@ const SignUp = () => {
               value={formData.country}
               onChange={handleInputChange}
             >
+              <option>Choose one</option>
               <option value={"usa"}>United States</option>
               <option value={"si"}>Slovakia</option>
               <option value={"uk"}>United Kingdom</option>
               <option value={"Russia"}>Russia</option>
             </select>
             {formErrors.country && (
-              <p className="error-message">{formErrors.country}</p>
+              <p className="error-message select-error-message">
+                {formErrors.country}
+              </p>
             )}
           </div>
           <PrimaryButton className={"signup-button"} type="submit">

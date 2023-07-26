@@ -4,11 +4,11 @@ import "./CheckoutPage.scss";
 import HeaderPlaceHolder from "../../components/Layouts/UserLayout/HeaderPlaceHolder";
 import CheckoutSelectedEvent from "../../components/Common/CheckoutSelectedEvent";
 import { useState } from "react";
-import { useEffect } from "react";
 import Checkout from "../../components/Common/Checkout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CheckoutPage = () => {
+  const navigate = useNavigate();
   const DUMMY_EVENTS = [
     {
       image: "/images/event-1.jpg",
@@ -36,7 +36,7 @@ const CheckoutPage = () => {
       <HeaderPlaceHolder />
       <div className="checkout-payment-main-container">
         <div className="checkout-container-left">
-          <div className="back-button">
+          <div onClick={() => navigate(-1)} className="back-button">
             <ReactSVG src="/icons/tools/left-arrow.svg" />
             <p>Back</p>
           </div>
@@ -78,7 +78,7 @@ const CheckoutPage = () => {
           </div>
         </div>
         <div className="checkout-container-right">
-          <div className="back-button">
+          <div onClick={() => navigate(-1)} className="back-button">
             <ReactSVG src="/icons/tools/left-arrow.svg" />
             <p>Back</p>
           </div>

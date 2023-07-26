@@ -2,7 +2,7 @@
 @import "../../styles/variables";
 
 .fee-competition-section-container {
-  margin-top: 80px;
+  padding-top: 80px;
   background: linear-gradient(180deg, #ffffff 0%, #f6f8f9 100%);
   @include flex(row, "", center, 50px);
   padding-inline: 6%;
@@ -10,6 +10,8 @@
   @media (max-width: 767px) {
     flex-direction: column;
     padding-inline: 10px;
+    padding-top: 120px;
+    padding-bottom: 60px;
   }
   .fee-competition-section-left {
     width: 50%;

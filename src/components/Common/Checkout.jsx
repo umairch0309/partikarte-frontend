@@ -10,7 +10,7 @@ import StatusModal from "../UI/StatusModal";
 
 const initialState = {
   termsAndConditions: false,
-  reccomendations: false,
+  recomendations: false,
   expiry: new Date().toISOString().slice(0, 7),
 };
 const paymentFormInputStyle = {
@@ -39,6 +39,10 @@ const Checkout = ({ totalPrice }) => {
   );
   const [paymentData, setPaymentData] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
+
+  useEffect(() => {
+    setActivePaymentType(totalPrice === 0 ? "free" : "card");
+  }, [totalPrice]);
 
   useEffect(() => {
     if (activePaymentType === "card") {
@@ -77,7 +81,7 @@ const Checkout = ({ totalPrice }) => {
 
   const submitFormHandler = async (e) => {
     e.preventDefault();
-    const errors = await validateCheckoutForm(paymentData);
+    const errors = await validateCheckoutForm(paymentData, activePaymentType);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       console.log("error existed", errors);
@@ -131,7 +135,10 @@ const Checkout = ({ totalPrice }) => {
       </h2>
       <div className="top-payment-buttons">
         <PrimaryButton
-          onClick={() => setActivePaymentType("card")}
+          onClick={() => {
+            setActivePaymentType("card");
+            setFormErrors({});
+          }}
           className={`top-payment-button ${
             activePaymentType !== "card" && "in-active-button"
           }`}
@@ -141,7 +148,10 @@ const Checkout = ({ totalPrice }) => {
           Credit Card
         </PrimaryButton>
         <PrimaryButton
-          onClick={() => setActivePaymentType("bank")}
+          onClick={() => {
+            setActivePaymentType("bank");
+            setFormErrors({});
+          }}
           className={`top-payment-button ${
             activePaymentType !== "bank" && "in-active-button"
           }`}
@@ -255,6 +265,7 @@ const Checkout = ({ totalPrice }) => {
               >
                 <label htmlFor="country">Country*</label>
                 <select name="country" onChange={cardInputsChangeHandler}>
+                  <option>Chose one</option>
                   <option value="slovakia">Slovakia</option>
                   <option value="usa">United States</option>
                 </select>
@@ -323,12 +334,12 @@ const Checkout = ({ totalPrice }) => {
               onChange={() =>
                 cardInputsChangeHandler({
                   target: {
-                    value: !paymentData.reccomendations,
+                    value: !paymentData.recomendations,
                     name: "recommendations",
                   },
                 })
               }
-              checked={paymentData.reccomendations}
+              checked={paymentData.recomendations}
             />
             <label htmlFor="recommendations">
               I want to receive event recommendations via
@@ -340,7 +351,7 @@ const Checkout = ({ totalPrice }) => {
           <p className="error-message-form">{formErrors.termsAndConditions}</p>
         )}
         <PrimaryButton type="submit" className="submit-payment-form">
-          Pay ${`140.00`}
+          Pay ${totalPrice}
         </PrimaryButton>
       </form>
       {activePaymentType === "card" && (

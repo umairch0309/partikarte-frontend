@@ -11,7 +11,7 @@ const TopSearch = () => {
       <div className="search-main-container">
         <input placeholder="Search Event..." />
         <hr />
-        <p>Anywhere</p>
+        <p className="anywhere-text">Anywhere</p>
       </div>
       <div className="date-filters">
         {filterButtons.length > 0 &&
