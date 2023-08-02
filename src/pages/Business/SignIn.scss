@@ -6,82 +6,16 @@
   @media (max-width: 767px) {
     flex-direction: column;
   }
-  .sign-in-page-left {
-    position: relative;
-    width: 50%;
-    @media (max-width: 767px) {
-      width: 100%;
-    }
-    img {
-      width: 100%;
-      height: 100vh;
-      object-fit: cover;
-      display: block;
-      filter: brightness(0.6);
-      @media (max-width: 767px) {
-        height: 380px;
-      }
-    }
-    .left-content {
-      padding: 50px;
-      width: 100%;
-      position: absolute;
-      bottom: 0px;
-      left: 0px;
-      color: white;
-      svg {
-        cursor: pointer;
-      }
-      .featured-content-main {
-        margin-top: 20px;
-        .single-slider-item {
-          .single-item {
-            height: 180px;
-            @media (max-width: 767px) {
-              height: 230px;
-            }
-            h1 {
-              font-size: 35px;
-              font-weight: 400;
-              width: 80%;
-              @media (max-width: 767px) {
-                width: 100%;
-              }
-            }
-            p {
-              margin-top: 10px;
-              width: 80%;
-              font-weight: 300;
-              @media (max-width: 767px) {
-                width: 100%;
-              }
-            }
-          }
-        }
-        .slick-dots {
-          display: flex !important;
-        }
-        .slick-dots li button:before {
-          background-color: $primaryColor;
-          content: "";
-          height: 5px;
-          width: 25px;
-        }
-        .slick-arrow {
-          display: none !important;
-        }
-      }
-    }
-  }
   .sign-in-page-right {
     background-color: opacityColor($borderColor, 0.3);
 
     overflow-y: auto;
     max-height: 100vh;
+    min-height: 100vh;
     width: 50%;
     padding-inline: 10%;
     padding-block: 30px;
-    @include flex(column, "", flex-start, 20px);
+    @include flex(column, center, flex-start, 20px);
     @media (max-width: 767px) {
       width: 100%;
       max-height: 100%;

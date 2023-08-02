@@ -1,9 +1,10 @@
 import React from "react";
 import "./BecomeAPartner.scss";
-import { ReactSVG } from "react-svg";
 import PrimaryButton from "../UI/PrimaryButton";
+import { useNavigate } from "react-router-dom";
 
 const BecomeAPartner = () => {
+  const navigate = useNavigate();
   return (
     <div className="become-a-partner-section">
       <div className="become-a-partner-left">
@@ -26,7 +27,10 @@ const BecomeAPartner = () => {
           </p>
           <h5>Join and entrust your financial development to us.</h5>
         </div>
-        <PrimaryButton className="get-started-button">
+        <PrimaryButton
+          onClick={() => navigate("/business/signup")}
+          className="get-started-button"
+        >
           Get Started
         </PrimaryButton>
       </div>

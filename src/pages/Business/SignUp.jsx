@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../components/UI/PrimaryButton";
 import validateSignUpForm from "../../validation/SignUp";
+import AuthPageLeft from "../../components/AuthPagesComponents/AuthPageLeft";
 
 const settings = {
   infinite: true,
@@ -80,24 +81,7 @@ const SignUp = () => {
   };
   return (
     <div className="sign-up-page">
-      <div className="sign-up-page-left">
-        <img src="/images/policies-banner.jpg" alt="banner" />
-        <div className="left-content">
-          <ReactSVG onClick={() => navigate("/")} src="/logo-white.svg" />
-          <div className="featured-content-main">
-            <Slider {...settings}>
-              {reviews.map((review, index) => (
-                <div key={index} className="single-slider-item">
-                  <div className="single-item">
-                    <h1>{review.title}</h1>
-                    <p>{review.description}</p>
-                  </div>
-                </div>
-              ))}
-            </Slider>
-          </div>
-        </div>
-      </div>
+      <AuthPageLeft />
       <div className="sign-up-page-right">
         <h1>Create Account</h1>
         <div className="top-line">
