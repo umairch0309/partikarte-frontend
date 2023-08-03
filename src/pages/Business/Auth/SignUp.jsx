@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import "./SignUp.scss";
 import { ReactSVG } from "react-svg";
-import Slider from "react-slick";
 import { Link, useNavigate } from "react-router-dom";
-import PrimaryButton from "../../components/UI/PrimaryButton";
-import validateSignUpForm from "../../validation/SignUp";
-import AuthPageLeft from "../../components/AuthPagesComponents/AuthPageLeft";
+import PrimaryButton from "../../../components/UI/PrimaryButton";
+import validateSignUpForm from "../../../validation/SignUp";
+import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 
 const settings = {
   infinite: true,
@@ -170,7 +169,7 @@ const SignUp = () => {
             }`}
           >
             <label htmlFor="businessRegisteryNumber">
-              Business Registery Number
+              Business Registry Number
             </label>
             <input
               id="businessRegisteryNumber"

@@ -53,6 +53,18 @@
       }
     }
   }
+
+  .image-div {
+    background-color: #fcfcfc;
+  }
+  .image {
+    padding-inline: 6%;
+    width: 100%;
+    object-fit: cover;
+    @media (max-width: 767px) {
+      padding-inline: 3%;
+    }
+  }
   .join-us-footer-container {
     width: 100%;
     position: relative;

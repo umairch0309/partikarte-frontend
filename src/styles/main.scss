@@ -90,6 +90,11 @@ body {
   background-color: #555;
 }
 
+.custom-chart-tooltip {
+  @include flex(column, "", center, 5px);
+  padding: 10px;
+}
+
 .ant-table-wrapper .ant-table {
   font-family: $primaryFont !important;
 }

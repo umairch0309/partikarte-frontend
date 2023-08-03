@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import SignIn from "./SignIn";
+import SignIn from "./Auth/SignIn";
 import Page404 from "../common/Page404";
-import SignUp from "./SignUp";
+import SignUp from "./Auth/SignUp";
 import Dashboard from "./Dashboard";
 import BusinessLayout from "../../components/Layouts/BusinessLayout/BusinessLayout";
-import ForgotPassword from "./ForgotPassword";
-import VerifyOTP from "./VerifyOTP";
-import ResetPassword from "./ResetPassword";
+import ForgotPassword from "./Auth/ForgotPassword";
+import VerifyOTP from "./Auth/VerifyOTP";
+import ResetPassword from "./Auth/ResetPassword";
 
 const BusinessMain = () => {
   const [loggedIn, setLoggedIn] = useState(null);

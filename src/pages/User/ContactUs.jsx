@@ -178,7 +178,7 @@ const ContactUs = () => {
             <div
               className={`form-item ${formErrors.phoneNumber ? "error" : ""}`}
             >
-              <label htmlFor="phoneNumber">Email Address</label>
+              <label htmlFor="phoneNumber">Phone Number</label>
               <PhoneInput
                 defaultCountry="ua"
                 value={formValues.phoneNumber}

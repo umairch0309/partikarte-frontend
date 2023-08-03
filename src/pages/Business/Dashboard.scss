@@ -1,0 +1,17 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.dashboard-page-container {
+  @include flex(row, space-between, flex-start, 40px);
+  .dashboard-page-left {
+    width: 65%;
+    .chart-main-container {
+      background-color: white;
+      border-radius: $primaryBorderRadius;
+      padding: 20px 20px 15px 0px;
+    }
+  }
+  .dashboard-page-right {
+    width: 32%;
+  }
+}

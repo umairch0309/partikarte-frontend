@@ -1,12 +1,12 @@
-@import "../../styles/mixins";
-@import "../../styles/variables";
+@import "../../../styles/mixins";
+@import "../../../styles/variables";
 
-.verify-otp-page {
+.sign-up-page {
   @include flex(row, "", center);
   @media (max-width: 767px) {
     flex-direction: column;
   }
-  .verify-otp-page-right {
+  .sign-up-page-right {
     background-color: opacityColor($borderColor, 0.3);
     overflow-y: auto;
     max-height: 100vh;
@@ -14,7 +14,7 @@
     width: 50%;
     padding-inline: 10%;
     padding-block: 30px;
-    @include flex(column, center, flex-start, 20px);
+    @include flex(column, "", flex-start, 20px);
     @media (max-width: 767px) {
       width: 100%;
       max-height: 100%;
@@ -32,11 +32,8 @@
         font-size: 14px;
         white-space: nowrap;
       }
-      label {
-        color: opacityColor($textColor, 0.6) !important;
-      }
     }
-    .verify-otp-form-container {
+    .sign-up-form-container {
       width: 100%;
       @include flex(column, "", center, 20px);
 
@@ -48,17 +45,34 @@
           color: $secondaryColor;
           font-weight: 600;
         }
-        input {
+        input,
+        select {
           border-color: #e6e9ed;
           font-size: 15px;
           margin-top: 5px;
           width: 100%;
           background-color: white;
         }
+        select {
+          background-image: url("/icons/tools/dropdown-icon.svg");
+          background-repeat: no-repeat;
+          background-size: 15px;
+          background-position: 95% 22px;
+          -moz-appearance: none;
+          -webkit-appearance: none;
+          appearance: none;
+        }
+        .show-password {
+          position: absolute;
+          top: 40px;
+          right: 20px;
+          cursor: pointer;
+        }
       }
       .error {
         position: relative;
-        input {
+        input,
+        select {
           border-color: $errorColor !important;
           outline-color: $errorColor !important;
         }
@@ -69,13 +83,20 @@
           top: 43px;
           right: 10px;
         }
+        .select-error-message {
+          right: 50px;
+        }
+        .show-password {
+          display: none;
+        }
       }
-      .verify-otp {
+      .forgot-password {
         color: opacityColor($textColor, 0.6);
         font-weight: 500;
       }
       button {
         width: 100%;
+        margin-top: 30px;
       }
     }
     .note-line {

@@ -4,6 +4,7 @@ import "./BusinessProfile.scss";
 import EventCard from "../../components/Common/EventCard";
 import FeaturedEvents from "../../components/UserLandingPagesSections/FeaturedEvents";
 import NewsCard from "../../components/Common/NewsCard";
+import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 
 const BusinessProfile = () => {
   const DUMMY_EVENTS = [
@@ -45,6 +46,32 @@ const BusinessProfile = () => {
       tag: "Party events",
     },
   ];
+  const isMobile = useIsMobileWidth();
+  const latestEvents = () => {
+    return (
+      <div className="events-container">
+        <div className="events-header">
+          <ReactSVG src="/icons/tools/calendar-filled.svg" />{" "}
+          <h3>Latest Events</h3>
+        </div>
+        <div className="events-wrapper">
+          {DUMMY_EVENTS.length > 0 ? (
+            DUMMY_EVENTS.slice(0, 2).map((event, index) => {
+              return (
+                <EventCard
+                  key={index}
+                  className="listing-event-card"
+                  event={event}
+                />
+              );
+            })
+          ) : (
+            <p>No events yet</p>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="business-profile">
@@ -57,6 +84,7 @@ const BusinessProfile = () => {
         <div className="business-profile-left">
           <div className="main-left-header">
             <h1>Jorge Party Maker</h1>
+            {isMobile && latestEvents()}
             <div className="business-profile-description">
               <p>
                 Maja Založnik - vokal <br /> Tadej Gruškovnjak - klavir
@@ -110,28 +138,7 @@ const BusinessProfile = () => {
           </div>
         </div>
         <div className="business-profile-right">
-          <div className="events-container">
-            <div className="events-header">
-              <ReactSVG src="/icons/tools/calendar-filled.svg" />{" "}
-              <h3>Latest Events</h3>
-            </div>
-            <div className="events-wrapper">
-              {DUMMY_EVENTS.length > 0 ? (
-                DUMMY_EVENTS.slice(0, 2).map((event, index) => {
-                  return (
-                    <EventCard
-                      key={index}
-                      className="listing-event-card"
-                      event={event}
-                    />
-                  );
-                })
-              ) : (
-                <p>No events yet</p>
-              )}
-            </div>
-          </div>
-
+          {!isMobile && latestEvents()}
           <div className="news-container">
             <div className="news-header">
               <ReactSVG src="/icons/tools/news-tag.svg" /> <h3>News</h3>

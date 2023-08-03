@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import "./ResetPassword.scss";
 import { ReactSVG } from "react-svg";
 import { Link, useNavigate } from "react-router-dom";
-import PrimaryButton from "../../components/UI/PrimaryButton";
-import validateSignInForm from "../../validation/SignIn";
-import AuthPageLeft from "../../components/AuthPagesComponents/AuthPageLeft";
-import validateConfirmPasswordForm from "../../validation/ResetPassword";
+import PrimaryButton from "../../../components/UI/PrimaryButton";
+import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
+import validateConfirmPasswordForm from "../../../validation/ResetPassword";
 
 const initalState = {
   password: "",

@@ -6,9 +6,11 @@ import { ReactSVG } from "react-svg";
 import TicketCard from "../../components/Common/TicketCard";
 import PrimaryButton from "../../components/UI/PrimaryButton";
 import GoogleMapComponent from "../../components/service-components/GoogleMapComponent";
+import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 
 const ViewEvent = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobileWidth();
   const [showMap, setShowMap] = useState(false);
   const tickets = [
     {
@@ -37,6 +39,49 @@ const ViewEvent = () => {
 
   const butTicketsHandler = () => {
     navigate("/checkout");
+  };
+
+  const renderTickets = () => {
+    return (
+      <div className="all-tickets-container">
+        <div className="tickets-header">
+          <ReactSVG src="/icons/tools/tickets.svg" /> <h3>TICKETS</h3>
+        </div>
+        <div className="tickets-wrapper">
+          {tickets.length > 0 ? (
+            tickets.map((ticket, index) => {
+              return <TicketCard key={index} ticket={ticket} />;
+            })
+          ) : (
+            <p>No tickets yet</p>
+          )}
+        </div>
+        {tickets.length > 0 && (
+          <>
+            <PrimaryButton
+              onClick={butTicketsHandler}
+              className="buy-tickets-button"
+            >
+              Buy Tickets
+            </PrimaryButton>
+            <div className="payment-methods">
+              <ReactSVG
+                className="payment-method"
+                src="/icons/tools/mastercard.svg"
+              />
+              <ReactSVG
+                className="payment-method"
+                src="/icons/tools/visa.svg"
+              />
+              <ReactSVG
+                className="payment-method"
+                src="/icons/tools/mbills.svg"
+              />
+            </div>
+          </>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -69,6 +114,8 @@ const ViewEvent = () => {
               </div>
             </div>
             <hr />
+            {isMobile && renderTickets()}
+
             <div className="event-description">
               <h3>Description</h3>
               <p>
@@ -123,44 +170,7 @@ const ViewEvent = () => {
           </div>
         </div>
         <div className="view-event-main-right">
-          <div className="all-tickets-container">
-            <div className="tickets-header">
-              <ReactSVG src="/icons/tools/tickets.svg" /> <h3>TICKETS</h3>
-            </div>
-            <div className="tickets-wrapper">
-              {tickets.length > 0 ? (
-                tickets.map((ticket, index) => {
-                  return <TicketCard key={index} ticket={ticket} />;
-                })
-              ) : (
-                <p>No tickets yet</p>
-              )}
-            </div>
-            {tickets.length > 0 && (
-              <>
-                <PrimaryButton
-                  onClick={butTicketsHandler}
-                  className="buy-tickets-button"
-                >
-                  Buy Tickets
-                </PrimaryButton>
-                <div className="payment-methods">
-                  <ReactSVG
-                    className="payment-method"
-                    src="/icons/tools/mastercard.svg"
-                  />
-                  <ReactSVG
-                    className="payment-method"
-                    src="/icons/tools/visa.svg"
-                  />
-                  <ReactSVG
-                    className="payment-method"
-                    src="/icons/tools/mbills.svg"
-                  />
-                </div>
-              </>
-            )}
-          </div>
+          {!isMobile && renderTickets()}
           <div className="maps-container">
             <GoogleMapComponent
               setShowMap={setShowMap}

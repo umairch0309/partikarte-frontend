@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "./VerifyOTP.scss";
 import { Link, useNavigate } from "react-router-dom";
-import PrimaryButton from "../../components/UI/PrimaryButton";
-import AuthPageLeft from "../../components/AuthPagesComponents/AuthPageLeft";
-import validateVerifyOTPForm from "../../validation/VerifyOTP";
+import PrimaryButton from "../../../components/UI/PrimaryButton";
+import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
+import validateVerifyOTPForm from "../../../validation/VerifyOTP";
 
 const initalState = {
   otp: "",

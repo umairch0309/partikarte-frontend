@@ -57,34 +57,7 @@
         width: 100%;
         padding-inline: 0px;
       }
-      .events-container {
-        box-shadow: 0px 0px 10px 0px #0000000d;
-        background-color: white;
-        padding: 10px 10px 10px 20px;
-        border-radius: $primaryBorderRadius;
-        .events-header {
-          @include flex(row, "", center, 10px);
-        }
-        .events-wrapper {
-          max-height: 770px;
-          overflow-y: auto;
-          margin-block: 20px;
-          padding-right: 10px;
-          padding-block: 5px;
-          @include flex(column, "", center, 20px);
 
-          &::-webkit-scrollbar {
-            width: 2px;
-            @media (max-width: 767px) {
-              height: 2px;
-            }
-          }
-          .listing-event-card {
-            width: 95%;
-            box-shadow: 0px 0px 10px 0px #0000000d;
-          }
-        }
-      }
       .news-container {
         margin-top: 40px;
         box-shadow: 0px 0px 10px 0px #0000000d;
@@ -168,6 +141,37 @@
               }
             }
           }
+        }
+      }
+    }
+    .events-container {
+      box-shadow: 0px 0px 10px 0px #0000000d;
+      background-color: white;
+      padding: 10px 10px 10px 20px;
+      border-radius: $primaryBorderRadius;
+      @media (max-width: 767px) {
+        margin-top: 30px;
+      }
+      .events-header {
+        @include flex(row, "", center, 10px);
+      }
+      .events-wrapper {
+        max-height: 770px;
+        overflow-y: auto;
+        margin-block: 20px;
+        padding-right: 10px;
+        padding-block: 5px;
+        @include flex(column, "", center, 20px);
+
+        &::-webkit-scrollbar {
+          width: 2px;
+          @media (max-width: 767px) {
+            height: 2px;
+          }
+        }
+        .listing-event-card {
+          width: 95%;
+          box-shadow: 0px 0px 10px 0px #0000000d;
         }
       }
     }

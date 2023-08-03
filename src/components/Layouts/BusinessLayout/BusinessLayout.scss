@@ -3,4 +3,10 @@
 
 .business-layout-container {
   @include flex(row, "", flex-start);
+  main {
+    padding-inline: 30px;
+    background-color: #fcfcfc;
+    width: 100%;
+    min-height: 100vh;
+  }
 }

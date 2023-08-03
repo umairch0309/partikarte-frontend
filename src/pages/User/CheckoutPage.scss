@@ -59,7 +59,7 @@
           width: 50%;
           @include flex(column, "", "", 10px);
           @media (max-width: 767px) {
-            margin-right: 40px;
+            margin-right: 0;
           }
           .totals-item {
             @include flex(row, space-between, center);

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "./SignIn.scss";
 import { ReactSVG } from "react-svg";
 import { Link, useNavigate } from "react-router-dom";
-import PrimaryButton from "../../components/UI/PrimaryButton";
-import validateSignInForm from "../../validation/SignIn";
-import AuthPageLeft from "../../components/AuthPagesComponents/AuthPageLeft";
+import PrimaryButton from "../../../components/UI/PrimaryButton";
+import validateSignInForm from "../../../validation/SignIn";
+import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 
 const initalState = {
   email: "",

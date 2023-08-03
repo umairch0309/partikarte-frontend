@@ -27,6 +27,7 @@
     flex-wrap: wrap;
     @media (max-width: 767px) {
       flex-direction: column;
+      gap: 0px;
     }
     .feature-item {
       padding: 10px 20px;

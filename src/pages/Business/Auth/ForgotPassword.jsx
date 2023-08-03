@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "./ForgotPassword.scss";
 import { Link, useNavigate } from "react-router-dom";
-import PrimaryButton from "../../components/UI/PrimaryButton";
-import validateForgotPasswordForm from "../../validation/ForgotPassword";
-import AuthPageLeft from "../../components/AuthPagesComponents/AuthPageLeft";
+import PrimaryButton from "../../../components/UI/PrimaryButton";
+import validateForgotPasswordForm from "../../../validation/ForgotPassword";
+import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 
 const initalState = {
   email: "",

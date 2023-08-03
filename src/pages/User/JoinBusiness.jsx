@@ -29,6 +29,10 @@ const JoinBusiness = () => {
       <FeeCompetition />
       <UniqueFeatuers />
       <Calculate />
+      <div className="image-div">
+        <img className="image" src="/images/our-partners.png" />
+      </div>
+
       <Reviews />
       <div className="join-us-footer-container">
         <img

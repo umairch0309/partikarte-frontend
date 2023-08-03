@@ -1,2 +1,54 @@
 @import "../../../styles/mixins";
 @import "../../../styles//variables";
+
+.topbar-container {
+  @include flex(row, space-between, center);
+  padding-block: 30px;
+  position: sticky;
+  top: 0;
+  right: 0;
+  backdrop-filter: blur(3px);
+
+  .topbar-left {
+    color: $secondaryColor;
+    @include flex(column, "", flex-start, 5px);
+    h2 {
+      font-weight: 500;
+      font-size: 28px;
+    }
+    h5 {
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+  .topbar-right {
+    @include flex(row, flex-end, center, 20px);
+    width: 50%;
+    svg {
+      display: block;
+    }
+    .search-input-container {
+      @include flex(row, "", center, 10px);
+      border-radius: $primaryBorderRadius;
+      padding-inline: 5px 20px;
+      border: 1px solid opacityColor($textColor, 0.2);
+      width: 70%;
+      input {
+        font-size: 14px;
+        border: none;
+        outline: none;
+      }
+
+      &:focus-within {
+        outline: 2px solid $primaryColor;
+        border-color: transparent;
+      }
+    }
+    img {
+      height: 60px;
+      width: 60px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+}

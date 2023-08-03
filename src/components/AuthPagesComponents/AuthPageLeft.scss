@@ -24,6 +24,9 @@
     bottom: 0px;
     left: 0px;
     color: white;
+    @media (max-width: 767px) {
+      padding-inline: 30px;
+    }
     svg {
       cursor: pointer;
     }

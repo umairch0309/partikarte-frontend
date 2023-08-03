@@ -6,6 +6,9 @@
     height: 500px;
     width: 100%;
     object-fit: cover;
+    @media (max-width: 767px) {
+      height: 400px;
+    }
   }
   .view-event-main {
     padding-top: 10px;
@@ -70,41 +73,7 @@
         transform: translateY(0px);
         margin-top: 50px;
       }
-      .all-tickets-container {
-        box-shadow: 0px 0px 10px 0px #0000000d;
-        background-color: white;
-        padding: 10px 10px 10px 20px;
-        border-radius: $primaryBorderRadius;
-        .tickets-header {
-          @include flex(row, "", center, 10px);
-        }
-        .tickets-wrapper {
-          max-height: 700px;
-          overflow-y: auto;
-          margin-block: 20px;
-          padding-right: 10px;
-          @include flex(column, "", center, 10px);
 
-          &::-webkit-scrollbar {
-            width: 2px;
-            @media (max-width: 767px) {
-              height: 2px;
-            }
-          }
-        }
-        .buy-tickets-button {
-          width: 100%;
-          margin-right: 10px;
-        }
-        .payment-methods {
-          margin-top: 10px;
-          @include flex(row, center, center, 5px);
-          svg {
-            height: 30px;
-            width: 30px;
-          }
-        }
-      }
       .maps-container {
         box-shadow: 0px 0px 10px 0px #0000000d;
         margin-block: 20px;
@@ -194,6 +163,44 @@
             }
           }
         }
+      }
+    }
+  }
+  .all-tickets-container {
+    box-shadow: 0px 0px 10px 0px #0000000d;
+    background-color: white;
+    padding: 10px 10px 10px 20px;
+    border-radius: $primaryBorderRadius;
+    @media (max-width: 767px) {
+      margin-bottom: 40px;
+    }
+    .tickets-header {
+      @include flex(row, "", center, 10px);
+    }
+    .tickets-wrapper {
+      max-height: 700px;
+      overflow-y: auto;
+      margin-block: 20px;
+      padding-right: 10px;
+      @include flex(column, "", center, 10px);
+
+      &::-webkit-scrollbar {
+        width: 2px;
+        @media (max-width: 767px) {
+          height: 2px;
+        }
+      }
+    }
+    .buy-tickets-button {
+      width: 100%;
+      margin-right: 10px;
+    }
+    .payment-methods {
+      margin-top: 10px;
+      @include flex(row, center, center, 5px);
+      svg {
+        height: 30px;
+        width: 30px;
       }
     }
   }

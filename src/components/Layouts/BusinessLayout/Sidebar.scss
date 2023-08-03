@@ -10,6 +10,9 @@
   max-height: 100vh;
   min-height: 100vh;
   overflow-y: auto;
+  position: sticky;
+  top: 0;
+  left: 0;
   .sidebar-all-routes-container {
     @include flex(column, "", center, 10px);
     width: 100%;
