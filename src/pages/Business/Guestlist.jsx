@@ -4,9 +4,11 @@ import "./Guestlist.scss";
 import EventsList from "../../components/Common/EventsList";
 import { ReactSVG } from "react-svg";
 import GuestTable from "../../components/Tables/GuestTable";
+import AddPeopleToGuestlistModal from "../../components/Guestlist/AddPeopleToGuestlistModal";
 
 const Guestlist = () => {
   const [data, setData] = useState([]);
+  const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
 
   useEffect(() => {
     const array = [];
@@ -95,7 +97,7 @@ const Guestlist = () => {
               </select>
             </div>
             <div className="header-right">
-              <button>
+              <button onClick={() => setShowAddPeopleModal(true)}>
                 <ReactSVG src="/icons/tools/people-list.svg" />
                 <span>Add People to Guest List</span>
               </button>
@@ -112,6 +114,10 @@ const Guestlist = () => {
           <GuestTable guestsData={data} />
         </div>
       </div>
+      <AddPeopleToGuestlistModal
+        showAddPeopleModal={showAddPeopleModal}
+        setShowAddPeopleModal={setShowAddPeopleModal}
+      />
     </>
   );
 };

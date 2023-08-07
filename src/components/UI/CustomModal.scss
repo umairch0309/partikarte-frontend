@@ -1,0 +1,31 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.custom-modal-title {
+  font-size: 22px;
+  font-weight: 600;
+}
+.custom-modal-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ant-modal {
+  select {
+    background-image: url("/icons/tools/dropdown-filled-icon.svg");
+    background-size: 8px;
+    background-repeat: no-repeat;
+    background-position: 97% 22px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .radio-input-container {
+    @include flex(row, "", center, 10px);
+    .radio-input {
+      height: 20px;
+      width: 20px;
+      margin: 0;
+    }
+  }
+}

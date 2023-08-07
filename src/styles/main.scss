@@ -66,6 +66,10 @@ body {
   color: $textColor;
 }
 
+.svg {
+  display: block;
+}
+
 /* Set the width and height of the scrollbar */
 ::-webkit-scrollbar {
   width: 5px;

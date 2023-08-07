@@ -1,0 +1,40 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.add-guest-form-container {
+  margin-top: 30px;
+  @include flex(column, "", "", 20px);
+  .side-by-side-guest-input {
+    @include flex(row, space-between, center, 30px);
+    button {
+      white-space: nowrap;
+    }
+    .add-multiple-button {
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      color: $secondaryColor;
+    }
+  }
+  .single-form-item {
+    width: 100%;
+    label {
+      font-size: 16px;
+      font-weight: 500;
+      color: $secondaryColor;
+    }
+    select,
+    input,
+    textarea {
+      border-color: #e6e9ed;
+      font-size: 15px;
+      margin-top: 5px;
+      width: 100%;
+    }
+    textarea {
+      height: 100px;
+      padding-top: 10px;
+    }
+  }
+}
