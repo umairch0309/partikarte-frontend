@@ -97,18 +97,34 @@ body {
 
 .ant-table-wrapper .ant-table {
   font-family: $primaryFont !important;
+  background-color: transparent;
 }
 
 .ant-table-wrapper .ant-table-thead > tr > th {
-  color: $secondaryColor;
-  font-weight: 700;
-  font-size: 16px;
+  color: opacityColor($secondaryColor, 0.6);
+  font-weight: 500;
+  font-size: 14px;
   white-space: nowrap;
   background: none;
-  background-color: opacityColor($secondaryColor, 0.1);
+  background-color: transparent;
   &::before {
     display: none;
   }
+}
+
+.ant-table-tbody {
+  background: none;
+  background: transparent;
+}
+
+.ant-table-wrapper .ant-table td {
+  font-size: 14px;
+  color: $secondaryColor;
+  border-right: 0.1px solid #f0f0f0;
+}
+
+.ant-table-wrapper .ant-table td:last-child {
+  border-right: none;
 }
 
 .ant-table-wrapper .ant-table-pagination-right {
@@ -124,20 +140,6 @@ body {
 
 .ant-pagination .ant-pagination-options {
   margin-left: auto;
-}
-
-.ant-table-wrapper .ant-table td {
-  font-size: 14px;
-  color: $primaryColor;
-}
-
-.ant-table-wrapper .ant-table-thead > tr > th {
-  background: none;
-  background: #fafaff;
-}
-.ant-table-tbody {
-  background: none;
-  background: #fafaff;
 }
 
 .ant-form-item {

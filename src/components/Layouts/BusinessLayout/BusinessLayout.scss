@@ -8,5 +8,57 @@
     background-color: #fcfcfc;
     width: 100%;
     min-height: 100vh;
+    select {
+      background-image: url("/icons/tools/dropdown-filled-icon.svg");
+      background-size: 8px;
+      background-repeat: no-repeat;
+      background-position: 92% 17px;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .table-actions-container {
+      width: 100%;
+      @include flex(row, center, center, 10px);
+      .dots-action-button {
+        height: 30px;
+        svg {
+          display: block;
+        }
+        border: none;
+        background: opacityColor($primaryColor, 0.2);
+        border-radius: 5px;
+        padding: 0 3px 0 3px;
+        .dots-action-svg {
+          transform: rotate(90deg);
+        }
+        &:hover {
+          background: $primaryColor;
+          svg {
+            path {
+              fill: white;
+            }
+          }
+        }
+      }
+    }
   }
+}
+.button-in-dropdown {
+  svg {
+    display: block;
+  }
+  @include flex(row, "", center, 10px);
+  .button-svg {
+    svg {
+      width: 12px;
+    }
+  }
+}
+
+.blue-button-dropdown {
+  background-color: opacityColor($primaryColor, 0.2);
+}
+.red-button-dropdown {
+  background-color: opacityColor($errorColor, 0.2);
 }

@@ -8,6 +8,7 @@ import BusinessLayout from "../../components/Layouts/BusinessLayout/BusinessLayo
 import ForgotPassword from "./Auth/ForgotPassword";
 import VerifyOTP from "./Auth/VerifyOTP";
 import ResetPassword from "./Auth/ResetPassword";
+import Guestlist from "./Guestlist";
 
 const BusinessMain = () => {
   const [loggedIn, setLoggedIn] = useState(null);
@@ -36,8 +37,8 @@ const BusinessMain = () => {
   return (
     <BusinessLayout>
       <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-
+        <Route path="/dashboard" index element={<Dashboard />} />
+        <Route path="/guestlists" element={<Guestlist />} />
         {/* Show 404 for any other unauthorized routes */}
         <Route path="*" element={<Navigate to="/business/dashboard" />} />
         <Route path="*" element={<Page404 />} />

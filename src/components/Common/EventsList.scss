@@ -1,0 +1,43 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.event-list-container {
+  width: calc(100vw - 320px);
+  max-width: calc(1440px - 320px);
+  @include flex(row, "", center, 20px);
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .selected-event {
+    border: 1px solid $primaryColor;
+  }
+  .single-event-container {
+    width: 320px;
+    min-width: 320px;
+    padding: 20px 15px;
+    background-color: white;
+    border-radius: $primaryBorderRadius;
+    cursor: pointer;
+    @include flex(column, "", flex-start, 15px);
+    &:hover {
+      background-color: opacityColor($primaryColor, 0.02);
+    }
+    .event-header {
+      width: 100%;
+      margin-block: 5px;
+      @include flex(row, space-between, center);
+
+      .date-container {
+        svg {
+          display: block;
+        }
+        @include flex(row, "", center, 10px);
+      }
+    }
+    h3 {
+      font-size: 18px;
+    }
+  }
+}

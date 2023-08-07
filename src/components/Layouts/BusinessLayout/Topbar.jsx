@@ -2,12 +2,12 @@ import React from "react";
 import "./Topbar.scss";
 import { ReactSVG } from "react-svg";
 
-const Topbar = () => {
+const Topbar = ({ title, subtitle }) => {
   return (
     <header className="topbar-container">
       <div className="topbar-left">
-        <h2>Welcome to Partikarte</h2>
-        <h5>Hey David, Good Evening 🌃</h5>
+        <h2>{title}</h2>
+        <h5>{subtitle}</h5>
       </div>
       <div className="topbar-right">
         <div className="search-input-container">

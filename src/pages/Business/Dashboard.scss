@@ -2,16 +2,183 @@
 @import "../../styles/variables";
 
 .dashboard-page-container {
-  @include flex(row, space-between, flex-start, 40px);
+  @include flex(row, space-between, flex-start, 20px);
   .dashboard-page-left {
-    width: 65%;
+    width: 69%;
     .chart-main-container {
       background-color: white;
       border-radius: $primaryBorderRadius;
-      padding: 20px 20px 15px 0px;
+      padding: 20px 20px 15px 5px;
+      .chart-container-header {
+        padding-left: 15px;
+        margin-bottom: 20px;
+        @include flex(row, space-between, center);
+        .header-left {
+          h3 {
+            color: $secondaryColor;
+            font-weight: 600;
+          }
+        }
+        .header-right {
+          @include flex(row, "", center, 10px);
+          select {
+            min-width: 120px;
+            padding-inline: 10px;
+            height: 40px;
+            border-color: transparent;
+            background-color: opacityColor($primaryColor, 0.03);
+          }
+        }
+      }
+    }
+    .latest-orders-container {
+      margin-top: 20px;
+      background-color: white;
+      border-radius: $primaryBorderRadius;
+      padding-block: 20px;
+      .latest-orders-container-header {
+        @include flex(row, space-between, center);
+        padding-inline: 20px;
+        margin-bottom: 10px;
+        .header-left {
+          h3 {
+            color: $secondaryColor;
+            font-weight: 600;
+          }
+        }
+        .header-right {
+          select {
+            min-width: 120px;
+            padding-inline: 10px;
+            height: 40px;
+            border-color: transparent;
+            background-color: opacityColor($primaryColor, 0.03);
+          }
+        }
+      }
     }
   }
   .dashboard-page-right {
-    width: 32%;
+    width: 30%;
+    .active-events-container {
+      padding: 10px 5px 10px 10px;
+      background-color: white;
+      border-radius: $primaryBorderRadius;
+      h3 {
+        color: $secondaryColor;
+        font-weight: 600;
+      }
+      .all-active-events-container {
+        @include flex(column, "", center, 10px);
+        padding-right: 5px;
+        margin-top: 10px;
+        max-height: 53.5vh;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+          width: 2px;
+        }
+        .single-active-event {
+          background-color: white;
+          border: 2px dashed opacityColor($textColor, 0.1);
+          padding: 10px;
+          border-radius: $primaryBorderRadius;
+          @include flex(column, "", flex-start, 5px);
+          h5 {
+            color: $primaryColor;
+            font-weight: 500;
+            font-size: 14px;
+          }
+          h6 {
+            font-size: 12px;
+            color: $textColor;
+            font-weight: 400;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .more-button-container {
+            margin-block: 10px;
+            width: 100%;
+            @include flex(row, space-between, center);
+            button {
+              height: 30px;
+              border-radius: 5px;
+              border: none;
+              background-color: opacityColor($primaryColor, 0.2);
+              color: $secondaryColor;
+              font-weight: 600;
+            }
+            p {
+              font-size: 12px;
+              color: opacityColor($textColor, 0.6);
+            }
+          }
+          hr {
+            width: 100%;
+            border: none;
+            border-top: 1px solid opacityColor($textColor, 0.1);
+          }
+          .revenue-details-container {
+            margin-top: 10px;
+            width: 100%;
+            @include flex(row, space-between, center);
+            p {
+              font-size: 12px;
+              color: opacityColor($textColor, 0.6);
+            }
+            h3 {
+              font-size: 18px;
+              color: $primaryColor;
+              span {
+                font-size: 12px;
+                font-weight: 400;
+              }
+            }
+          }
+        }
+      }
+    }
+    .balance-sheet-container {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: white;
+      border-radius: $primaryBorderRadius;
+      .balance-sheet-header {
+        @include flex(row, space-between, center);
+        h3 {
+          color: $secondaryColor;
+          font-weight: 600;
+        }
+        select {
+          max-width: 120px;
+          padding-inline: 10px;
+          height: 40px;
+          border-color: transparent;
+          background-color: opacityColor($primaryColor, 0.08);
+        }
+      }
+      .all-balance-sheets-container {
+        margin-top: 10px;
+        @include flex(column, "", center, 10px);
+        .single-balance-sheet {
+          width: 100%;
+          padding: 10px 10px;
+          background-color: opacityColor($primaryColor, 0.1);
+          border-radius: 5px;
+          color: $secondaryColor;
+          @include flex(row, space-between, center);
+          h4 {
+            font-size: 16px;
+            font-weight: 400;
+          }
+          h3 {
+            font-size: 20px;
+            font-weight: 500;
+          }
+        }
+      }
+    }
   }
 }
