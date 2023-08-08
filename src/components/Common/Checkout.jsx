@@ -66,12 +66,17 @@ const Checkout = ({ totalPrice }) => {
     }
   }, [activePaymentType, totalPrice, showErrorStatus]);
 
-  const cardInputsChangeHandler = (event) => {
+  const cardInputsChangeHandler = async (event) => {
     const { name, value } = event.target;
     setPaymentData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+    const errors = await validateCheckoutForm({ [name]: value });
+    if (Object.keys(errors).length > 0) {
+      setFormErrors({ ...formErrors, [name]: errors[name] });
+      return;
+    }
   };
 
   const handleRecaptchaChange = (value) => {

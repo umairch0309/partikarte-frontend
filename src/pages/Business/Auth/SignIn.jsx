@@ -17,10 +17,15 @@ const SignIn = ({ setLoggedIn }) => {
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: newValue }));
+    const errors = await validateSignInForm({ [name]: newValue });
+    if (Object.keys(errors).length > 0) {
+      setFormErrors({ ...formErrors, [name]: errors[name] });
+      return;
+    }
   };
 
   const handleSubmit = async (e) => {

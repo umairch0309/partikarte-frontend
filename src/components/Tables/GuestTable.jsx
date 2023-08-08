@@ -96,6 +96,7 @@ const GuestTable = ({ guestsData }) => {
               }}
               trigger={["click"]}
               placement="bottom"
+              className="dropdown-table-actions"
             >
               <button className="dots-action-button">
                 <ReactSVG

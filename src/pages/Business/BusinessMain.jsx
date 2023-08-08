@@ -9,6 +9,7 @@ import ForgotPassword from "./Auth/ForgotPassword";
 import VerifyOTP from "./Auth/VerifyOTP";
 import ResetPassword from "./Auth/ResetPassword";
 import Guestlist from "./Guestlist";
+import Settings from "./Settings";
 
 const BusinessMain = () => {
   const [loggedIn, setLoggedIn] = useState(null);
@@ -39,6 +40,8 @@ const BusinessMain = () => {
       <Routes>
         <Route path="/dashboard" index element={<Dashboard />} />
         <Route path="/guestlists" element={<Guestlist />} />
+        <Route path="/settings/*" element={<Settings />} />
+
         {/* Show 404 for any other unauthorized routes */}
         <Route path="*" element={<Navigate to="/business/dashboard" />} />
         <Route path="*" element={<Page404 />} />

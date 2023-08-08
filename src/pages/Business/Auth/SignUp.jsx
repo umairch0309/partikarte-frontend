@@ -6,35 +6,6 @@ import PrimaryButton from "../../../components/UI/PrimaryButton";
 import validateSignUpForm from "../../../validation/SignUp";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 
-const settings = {
-  infinite: true,
-  speed: 500,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  initialSlide: 0,
-  adaptiveHeight: true,
-  autoplay: true,
-  autoplaySpeed: 3000,
-  dots: true,
-};
-const reviews = [
-  {
-    title: "Explore Best and Top Events on Partikarte!",
-    description:
-      "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est.",
-  },
-  {
-    title: "Join the Excitement at Partikarte!",
-    description:
-      "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
-  },
-  {
-    title: "Get Ready for Unforgettable Events!",
-    description:
-      "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore.",
-  },
-];
-
 const initalState = {
   email: "",
   password: "",
@@ -54,10 +25,15 @@ const SignUp = () => {
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: newValue }));
+    const errors = await validateSignUpForm({ [name]: newValue });
+    if (Object.keys(errors).length > 0) {
+      setFormErrors({ ...formErrors, [name]: errors[name] });
+      return;
+    }
   };
 
   const handleSubmit = async (e) => {

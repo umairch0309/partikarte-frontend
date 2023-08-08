@@ -5,10 +5,12 @@ import EventsList from "../../components/Common/EventsList";
 import { ReactSVG } from "react-svg";
 import GuestTable from "../../components/Tables/GuestTable";
 import AddPeopleToGuestlistModal from "../../components/Guestlist/AddPeopleToGuestlistModal";
+import AddMultiplePeopleToGuestlistModal from "../../components/Guestlist/AddMultiplePeopleToGuestlistModal";
 
 const Guestlist = () => {
   const [data, setData] = useState([]);
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
+  const [showMultiplePeopleModal, setShowMultiplePeopleModal] = useState(false);
 
   useEffect(() => {
     const array = [];
@@ -117,6 +119,12 @@ const Guestlist = () => {
       <AddPeopleToGuestlistModal
         showAddPeopleModal={showAddPeopleModal}
         setShowAddPeopleModal={setShowAddPeopleModal}
+        setShowMultiplePeopleModal={setShowMultiplePeopleModal}
+      />
+      <AddMultiplePeopleToGuestlistModal
+        showMultiplePeopleModal={showMultiplePeopleModal}
+        setShowAddPeopleModal={setShowAddPeopleModal}
+        setShowMultiplePeopleModal={setShowMultiplePeopleModal}
       />
     </>
   );

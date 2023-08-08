@@ -1,0 +1,152 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.business-settings-form {
+  width: 100%;
+  @include flex(column, "", "", 20px);
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .heading-sub-heading-container {
+    padding-top: 30px;
+    p {
+      margin-top: 5px;
+      color: opacityColor($textColor, 0.7);
+    }
+  }
+  .side-by-side-settings-input {
+    @include flex(row, space-between, center, 30px);
+    button {
+      white-space: nowrap;
+    }
+    .add-multiple-button {
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      color: $secondaryColor;
+    }
+  }
+  .single-form-item {
+    width: 100%;
+    position: relative;
+
+    label {
+      font-size: 16px;
+      font-weight: 500;
+      color: $textColor;
+    }
+    select,
+    input,
+    textarea {
+      border-color: #e6e9ed;
+      font-size: 15px;
+      margin-top: 5px;
+      width: 100%;
+    }
+    select {
+      background-position-y: 22px;
+    }
+    textarea {
+      height: 100px;
+      padding-top: 10px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    .show-password-icon {
+      position: absolute;
+      top: 40px;
+      right: 10px;
+      cursor: pointer;
+    }
+  }
+  .error {
+    width: 100%;
+    input,
+    select,
+    textarea {
+      border-color: $errorColor !important;
+      outline-color: $errorColor !important;
+    }
+    .error-message,
+    .select-error-message {
+      color: $errorColor;
+      font-size: 12px;
+      position: absolute;
+      top: 42px;
+      right: 10px;
+    }
+    .select-error-message {
+      margin-right: 30px;
+      top: 44px;
+    }
+  }
+  .settings-form-submit-button {
+    width: fit-content;
+    margin-top: 10px;
+  }
+  .generate-new-api-key-button {
+    margin-top: auto;
+    height: 50px;
+  }
+  .account-info-image-container {
+    position: relative;
+    @include flex(row, "", center, 30px);
+    input {
+      display: none;
+    }
+    .avatar-container {
+      background-color: #ebebeb;
+      width: 150px;
+      height: 150px;
+      padding: 10px;
+      border-radius: 50%;
+      svg {
+        fill: $textColor;
+        display: block;
+      }
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+    }
+    .upload-icon-container {
+      position: absolute;
+      bottom: 10px;
+      left: 110px;
+      height: 35px;
+      width: 35px;
+      background-color: white;
+      border-radius: 50%;
+      box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);
+      @include flex(row, center, center);
+      cursor: pointer;
+      svg {
+        display: block;
+        margin: auto;
+      }
+    }
+    .image-upload-guides {
+      h5 {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      p {
+        font-size: 12px;
+        margin-top: 5px;
+        color: opacityColor($textColor, 0.7);
+      }
+    }
+  }
+}

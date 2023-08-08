@@ -1,0 +1,77 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.business-settings-page {
+  .business-settings-main-container {
+    @include flex(row, "", flex-start, 20px);
+    .business-settings-left {
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+      background-color: white;
+      border-radius: $primaryBorderRadius;
+      padding: 20px;
+      width: 330px;
+      position: sticky;
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+      .business-settings-menu {
+        padding-top: 20px;
+        @include flex(column, "", center, 20px);
+        a {
+          height: 45px;
+          width: 100%;
+          @include flex(row, flex-start, center, 10px);
+          padding-inline: 10px;
+          border-radius: $primaryBorderRadius;
+          color: $textColor;
+          font-weight: 500;
+          svg {
+            display: block;
+            path {
+              stroke: #9c9ca4;
+            }
+          }
+        }
+        .active,
+        a:hover {
+          background-color: $primaryColor;
+          color: white;
+          svg {
+            path {
+              stroke: white;
+            }
+          }
+        }
+        .logout-button-settings {
+          width: 100%;
+          height: 45px;
+          border-radius: $primaryBorderRadius;
+          border: 2px solid opacityColor($errorColor, 0.7);
+          background-color: white;
+          font-size: 16px;
+          font-weight: 500;
+          color: $errorColor;
+          &:hover {
+            background-color: $errorColor;
+            color: white;
+            border-color: transparent;
+          }
+        }
+      }
+    }
+    .business-settings-right {
+      background-color: white;
+      border-radius: $primaryBorderRadius;
+      padding: 20px;
+      width: 100%;
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

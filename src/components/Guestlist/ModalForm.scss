@@ -9,6 +9,7 @@
     button {
       white-space: nowrap;
     }
+
     .add-multiple-button {
       background: none;
       border: none;
@@ -35,6 +36,27 @@
     textarea {
       height: 100px;
       padding-top: 10px;
+    }
+  }
+  .error {
+    width: 100%;
+    position: relative;
+    input,
+    select,
+    textarea {
+      border-color: $errorColor !important;
+      outline-color: $errorColor !important;
+    }
+    .error-message,
+    .select-error-message {
+      color: $errorColor;
+      font-size: 12px;
+      position: absolute;
+      top: 48px;
+      right: 10px;
+    }
+    .select-error-message {
+      margin-right: 30px;
     }
   }
 }

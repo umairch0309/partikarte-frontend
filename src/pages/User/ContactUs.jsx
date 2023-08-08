@@ -64,9 +64,14 @@ const ContactUs = () => {
     fileList,
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
+    const errors = await validateContactUsForm({ [name]: value });
+    if (Object.keys(errors).length > 0) {
+      setFormErrors({ ...formErrors, [name]: errors[name] });
+      return;
+    }
   };
 
   const contactUsFormSubmitHandler = async (e) => {

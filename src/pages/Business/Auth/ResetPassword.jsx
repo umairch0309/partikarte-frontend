@@ -17,9 +17,14 @@ const ResetPassword = () => {
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    const errors = await validateConfirmPasswordForm({ [name]: value });
+    if (Object.keys(errors).length > 0) {
+      setFormErrors({ ...formErrors, [name]: errors[name] });
+      return;
+    }
   };
 
   const handleSubmit = async (e) => {
