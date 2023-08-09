@@ -55,17 +55,6 @@
         }
         button {
           @include flex(row, "", center, 5px);
-          height: 40px;
-          border: 1px solid transparent;
-          background-color: $primaryColor;
-          color: white;
-          border-radius: 10px;
-          padding-inline: 10px;
-          font-size: 12px;
-          font-weight: 400;
-          &:hover {
-            background-color: opacityColor($primaryColor, 0.7);
-          }
         }
         .royal-blue-button {
           background-color: $secondaryColor;

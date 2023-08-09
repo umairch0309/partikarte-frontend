@@ -3,6 +3,7 @@ import "./SettingsForm.scss";
 import PrimaryButton from "../UI/PrimaryButton";
 import validateAccountInformation from "../../validation/AccountInformation";
 import { ReactSVG } from "react-svg";
+import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 
 const initialState = {
   username: "",
@@ -37,11 +38,10 @@ const AccountInformation = () => {
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    const errors = await validateAccountInformation({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateAccountInformation, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -98,6 +98,7 @@ const AccountInformation = () => {
             placeholder="Username"
             onChange={handleInputChange}
             value={formValues.username}
+            onBlur={handleOnBlur}
           />
           {formErrors.username && (
             <p className="error-message">{formErrors.username}</p>
@@ -111,6 +112,7 @@ const AccountInformation = () => {
             id="email"
             placeholder="Email Address"
             onChange={handleInputChange}
+            onBlur={handleOnBlur}
             value={formValues.email}
           />
           {formErrors.email && (
@@ -141,6 +143,7 @@ const AccountInformation = () => {
             placeholder="Old Password"
             onChange={handleInputChange}
             value={formValues.oldPassword}
+            onBlur={handleOnBlur}
           />
           {formErrors.oldPassword && (
             <p className="select-error-message">{formErrors.oldPassword}</p>
@@ -166,6 +169,7 @@ const AccountInformation = () => {
             placeholder="New Password"
             onChange={handleInputChange}
             value={formValues.newPassword}
+            onBlur={handleOnBlur}
           />
           {formErrors.newPassword && (
             <p className="select-error-message">{formErrors.newPassword}</p>

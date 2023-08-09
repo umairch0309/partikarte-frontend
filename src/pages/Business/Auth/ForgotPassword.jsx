@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../components/UI/PrimaryButton";
 import validateForgotPasswordForm from "../../../validation/ForgotPassword";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
+import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 
 const initalState = {
   email: "",
@@ -16,11 +17,10 @@ const ForgotPassword = () => {
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-    const errors = await validateForgotPasswordForm({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateForgotPasswordForm, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -60,6 +60,7 @@ const ForgotPassword = () => {
               value={formData.email}
               placeholder="Input your email"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             {formErrors.email && (
               <p className="error-message">{formErrors.email}</p>

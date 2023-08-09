@@ -2,8 +2,11 @@ import React from "react";
 import "./EventsList.scss";
 import { ReactSVG } from "react-svg";
 import { Dropdown } from "antd";
+import PrimaryButton from "../UI/PrimaryButton";
+import { useState } from "react";
+import { useRef } from "react";
 
-const EventsList = () => {
+const EventsList = ({ showHeader, showInputs }) => {
   const items = [
     {
       label: "action 1",
@@ -72,32 +75,84 @@ const EventsList = () => {
     },
   ];
 
+  const scrollContainerRef = useRef(null);
+
+  const handleScroll = (scrollOffset) => {
+    const scrollContainer = scrollContainerRef.current;
+    scrollContainer.scrollTo({
+      left:
+        scrollContainer.scrollLeft +
+        scrollOffset +
+        (scrollOffset > 0 ? 20 : -20),
+      behavior: "smooth",
+    });
+  };
+
   return (
-    <div className="event-list-container">
-      {eventsData.map((event, index) => (
-        <div className="single-event-container" key={index}>
-          <div className="event-header">
-            <div className="date-container">
-              <ReactSVG src="/icons/tools/clock.svg" />
-              <span>{formatDate(event.date)}</span>
-            </div>
-            <Dropdown
-              menu={{
-                items: items,
-              }}
-              placement="bottom"
-              trigger={["click"]}
-            >
-              <ReactSVG src="/icons/tools/dots-action.svg" />
-            </Dropdown>
+    <div className="event-list-main-container">
+      {showHeader && (
+        <div className="event-list-header">
+          <div className="event-list-header-left">
+            <h3>Latest Events</h3>
           </div>
-          <h3>{event.eventName}</h3>
-          <p className="ticket-time-date">
-            Available from {formatDate(event.startTime)} to{" "}
-            {formatDate(event.endTime)}
-          </p>
+          <div className="event-list-header-right">
+            {showInputs && (
+              <div className="header-right-search-button-container">
+                <div className="search-container">
+                  <ReactSVG src="/icons/tools/search.svg" />
+                  <input
+                    type="text"
+                    name="search"
+                    placeholder="Search events..."
+                  />
+                </div>
+                <PrimaryButton className={"add-new-event"}>
+                  <ReactSVG src="/icons/tools/add-event.svg" />
+                  <span>Add new Event</span>
+                </PrimaryButton>
+              </div>
+            )}
+            <div className="header-right-arrows">
+              <ReactSVG
+                onClick={() => handleScroll(-320)}
+                className="featured-header-arrow arrow-left"
+                src="/icons/tools/arrow-head-left.svg"
+              />
+              <ReactSVG
+                onClick={() => handleScroll(320)}
+                className="featured-header-arrow arrow-right"
+                src="/icons/tools/arrow-head-right.svg"
+              />
+            </div>
+          </div>
         </div>
-      ))}
+      )}
+      <div className="event-list-container" ref={scrollContainerRef}>
+        {eventsData.map((event, index) => (
+          <div className="single-event-container" key={index}>
+            <div className="event-header">
+              <div className="date-container">
+                <ReactSVG src="/icons/tools/clock.svg" />
+                <span>{formatDate(event.date)}</span>
+              </div>
+              <Dropdown
+                menu={{
+                  items: items,
+                }}
+                placement="bottom"
+                trigger={["click"]}
+              >
+                <ReactSVG src="/icons/tools/dots-action.svg" />
+              </Dropdown>
+            </div>
+            <h3>{event.eventName}</h3>
+            <p className="ticket-time-date">
+              Available from {formatDate(event.startTime)} to{" "}
+              {formatDate(event.endTime)}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

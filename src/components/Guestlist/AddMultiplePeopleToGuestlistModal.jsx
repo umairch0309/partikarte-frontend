@@ -4,6 +4,7 @@ import "./ModalForm.scss";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import PrimaryButton from "../UI/PrimaryButton";
 import validateAddMultiplePeopleToGuest from "../../validation/AddMultiplePeopleToGuest";
+import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 
 const initialState = {
   guestInfo: "",
@@ -23,11 +24,10 @@ const AddMultiplePeopleToGuestlistModal = ({
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    const errors = await validateAddMultiplePeopleToGuest({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateAddMultiplePeopleToGuest, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -66,6 +66,7 @@ const AddMultiplePeopleToGuestlistModal = ({
             placeholder="Enter guests information and press enter to save next guest..."
             onChange={handleInputChange}
             value={formValues.guestInfo}
+            onBlur={handleOnBlur}
           />
           {formErrors.guestInfo && (
             <p className="error-message">{formErrors.guestInfo}</p>
@@ -80,6 +81,7 @@ const AddMultiplePeopleToGuestlistModal = ({
             name="guestType"
             id="guestType"
             value={formValues.guestType}
+            onBlur={handleOnBlur}
           >
             <option value="">Choose guest type</option>
             <option value="vip">VIP</option>
@@ -99,6 +101,7 @@ const AddMultiplePeopleToGuestlistModal = ({
               id="notifyPeople"
               onChange={handleInputChange}
               value={formValues.notifyPeople}
+              onBlur={handleOnBlur}
             />
             <label htmlFor="notifyPeople">Notify people</label>
           </div>

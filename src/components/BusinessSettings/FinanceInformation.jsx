@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./SettingsForm.scss";
 import PrimaryButton from "../UI/PrimaryButton";
 import validateFinanceInformation from "../../validation/FinanceInformation";
+import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 
 const initialState = {
   iban: "",
@@ -16,11 +17,10 @@ const FinanceInformation = () => {
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    const errors = await validateFinanceInformation({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateFinanceInformation, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -48,6 +48,7 @@ const FinanceInformation = () => {
             placeholder="IBAN"
             onChange={handleInputChange}
             value={formValues.iban}
+            onBlur={handleOnBlur}
           />
           {formErrors.iban && (
             <p className="error-message">{formErrors.iban}</p>
@@ -66,6 +67,7 @@ const FinanceInformation = () => {
             placeholder="Account name"
             onChange={handleInputChange}
             value={formValues.accountName}
+            onBlur={handleOnBlur}
           />
           {formErrors.accountName && (
             <p className="error-message">{formErrors.accountName}</p>
@@ -83,6 +85,7 @@ const FinanceInformation = () => {
           placeholder="Send invoice to email"
           onChange={handleInputChange}
           value={formValues.invoiceEmail}
+          onBlur={handleOnBlur}
         />
         {formErrors.invoiceEmail && (
           <p className="error-message">{formErrors.invoiceEmail}</p>

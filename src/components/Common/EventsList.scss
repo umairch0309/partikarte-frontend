@@ -1,43 +1,152 @@
 @import "../../styles/mixins";
 @import "../../styles/variables";
 
-.event-list-container {
+.event-list-main-container {
   width: calc(100vw - 320px);
   max-width: calc(1440px - 320px);
-  @include flex(row, "", center, 20px);
-  overflow-x: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .selected-event {
-    border: 1px solid $primaryColor;
-  }
-  .single-event-container {
-    width: 320px;
-    min-width: 320px;
-    padding: 20px 15px;
-    background-color: white;
-    border-radius: $primaryBorderRadius;
-    cursor: pointer;
-    @include flex(column, "", flex-start, 15px);
-    &:hover {
-      background-color: opacityColor($primaryColor, 0.02);
-    }
-    .event-header {
-      width: 100%;
-      margin-block: 5px;
-      @include flex(row, space-between, center);
-
-      .date-container {
-        svg {
-          display: block;
-        }
-        @include flex(row, "", center, 10px);
+  .event-list-header {
+    padding-block: 5px 15px;
+    @include flex(row, space-between, center);
+    .event-list-header-left {
+      h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: $secondaryColor;
       }
     }
-    h3 {
-      font-size: 18px;
+    .event-list-header-right {
+      @include flex(row, "", center, 30px);
+      .header-right-search-button-container {
+        @include flex(row, "", center, 15px);
+        .search-container {
+          width: 100%;
+          min-width: 200px;
+          @include flex(row, "", center);
+          height: 40px;
+          background-color: opacityColor($primaryColor, 0.08);
+          padding-inline: 10px;
+          border-radius: 10px;
+          &:focus-within {
+            outline: 1px solid $primaryColor;
+          }
+          svg {
+            display: block;
+          }
+          input {
+            border: none;
+            outline: none;
+            height: 40px;
+            font-size: 12px;
+            font-weight: 400;
+            color: $secondaryColor;
+            &::placeholder {
+              font-weight: 400;
+              color: opacityColor($secondaryColor, 0.7);
+            }
+          }
+        }
+        .add-new-event {
+          @include flex(row, "", center, 6px);
+          height: 40px;
+          span {
+            white-space: nowrap;
+          }
+          svg {
+            display: block;
+            height: 30px;
+            width: 20px;
+          }
+          &:hover {
+            svg {
+              path {
+                fill: $primaryColor;
+              }
+            }
+          }
+        }
+      }
+      .header-right-arrows {
+        @include flex(row, "", center, 10px);
+        .featured-header-arrow {
+          @include flex(row, center, center);
+          gap: 10px;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: 1px solid $tertiaryColor;
+          cursor: pointer;
+          svg {
+            margin: auto;
+            display: block;
+          }
+
+          // @media (max-width: 767px) {
+          //   width: 30px;
+          //   height: 30px;
+          //   svg {
+          //     width: 7px;
+          //   }
+          // }
+
+          &:hover {
+            background-color: $primaryColor;
+            border-color: transparent;
+            svg {
+              path {
+                stroke: white;
+              }
+            }
+          }
+        }
+        .arrow-left {
+          svg {
+            margin-right: 2px;
+          }
+        }
+        .arrow-right {
+          svg {
+            margin-left: 4px;
+          }
+        }
+      }
+    }
+  }
+  .event-list-container {
+    @include flex(row, "", center, 20px);
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .selected-event {
+      border: 1px solid $primaryColor;
+    }
+    .single-event-container {
+      width: 320px;
+      min-width: 320px;
+      padding: 20px 15px;
+      background-color: white;
+      border-radius: $primaryBorderRadius;
+      cursor: pointer;
+      @include flex(column, "", flex-start, 15px);
+      &:hover {
+        background-color: opacityColor($primaryColor, 0.02);
+      }
+      .event-header {
+        width: 100%;
+        margin-block: 5px;
+        @include flex(row, space-between, center);
+
+        .date-container {
+          svg {
+            display: block;
+          }
+          @include flex(row, "", center, 10px);
+        }
+      }
+      h3 {
+        font-size: 18px;
+      }
     }
   }
 }

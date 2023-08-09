@@ -1,8 +1,8 @@
 import React from "react";
 import { ReactSVG } from "react-svg";
 import "./Header.scss";
-import SecondaryButton from "../../UI/SecondaryButton";
 import { Link } from "react-router-dom";
+import PrimaryButton from "../../UI/PrimaryButton";
 
 const Header = () => {
   return (
@@ -16,9 +16,7 @@ const Header = () => {
             <h4>For Organizers</h4>
           </Link>
           <Link className="login-link-button" to="/business/login">
-            <SecondaryButton className="header-login-button">
-              Login
-            </SecondaryButton>
+            <PrimaryButton className="header-login-button">Login</PrimaryButton>
           </Link>
         </div>
       </div>

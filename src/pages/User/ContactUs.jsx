@@ -9,6 +9,7 @@ import { ReactSVG } from "react-svg";
 import StatusModal from "../../components/UI/StatusModal";
 import PrimaryButton from "../../components/UI/PrimaryButton";
 import HeaderPlaceHolder from "../../components/Layouts/UserLayout/HeaderPlaceHolder";
+import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 
 const Qualities = [
   {
@@ -47,7 +48,6 @@ const ContactUs = () => {
   const [formErrors, setFormErrors] = useState({});
   const [showSuccessStatus, setShowSuccessStatus] = useState(false);
   const [fileList, setFileList] = useState([]);
-  const [uploading, setUploading] = useState(false);
 
   const props = {
     onRemove: (file) => {
@@ -67,11 +67,10 @@ const ContactUs = () => {
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    const errors = await validateContactUsForm({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateContactUsForm, setFormErrors);
   };
 
   const contactUsFormSubmitHandler = async (e) => {
@@ -144,6 +143,7 @@ const ContactUs = () => {
                   placeholder="First Name"
                   onChange={handleInputChange}
                   value={formValues.firstName}
+                  onBlur={handleOnBlur}
                 />
                 {formErrors.firstName && (
                   <p className="error-message">{formErrors.firstName}</p>
@@ -160,6 +160,7 @@ const ContactUs = () => {
                   placeholder="Last Name"
                   onChange={handleInputChange}
                   value={formValues.lastName}
+                  onBlur={handleOnBlur}
                 />
                 {formErrors.lastName && (
                   <p className="error-message">{formErrors.lastName}</p>
@@ -175,6 +176,7 @@ const ContactUs = () => {
                 placeholder="Email address"
                 onChange={handleInputChange}
                 value={formValues.email}
+                onBlur={handleOnBlur}
               />
               {formErrors.email && (
                 <p className="error-message">{formErrors.email}</p>
@@ -196,6 +198,14 @@ const ContactUs = () => {
                     target: { value: e, name: "phoneNumber" },
                   })
                 }
+                onBlur={(e) =>
+                  handleOnBlur({
+                    target: {
+                      value: e,
+                      name: "phoneNumber",
+                    },
+                  })
+                }
               />
               {formErrors.phoneNumber && (
                 <p className="error-message">{formErrors.phoneNumber}</p>
@@ -211,6 +221,7 @@ const ContactUs = () => {
                 placeholder="Enter an Object/Topic "
                 onChange={handleInputChange}
                 value={formValues.object}
+                onBlur={handleOnBlur}
               />
               {formErrors.object && (
                 <p className="error-message">{formErrors.object}</p>
@@ -226,6 +237,7 @@ const ContactUs = () => {
                 placeholder="Description"
                 onChange={handleInputChange}
                 value={formValues.description}
+                onBlur={handleOnBlur}
               />
               {formErrors.description && (
                 <p className="error-message">{formErrors.description}</p>

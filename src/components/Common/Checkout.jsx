@@ -7,6 +7,7 @@ import "./Checkout.scss";
 import PrimaryButton from "../UI/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import StatusModal from "../UI/StatusModal";
+import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 
 const initialState = {
   termsAndConditions: false,
@@ -72,11 +73,10 @@ const Checkout = ({ totalPrice }) => {
       ...prevData,
       [name]: value,
     }));
-    const errors = await validateCheckoutForm({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateCheckoutForm, setFormErrors);
   };
 
   const handleRecaptchaChange = (value) => {
@@ -176,6 +176,7 @@ const Checkout = ({ totalPrice }) => {
             className="email"
             placeholder="Email address"
             onChange={cardInputsChangeHandler}
+            onBlur={handleOnBlur}
           />
           {formErrors.email && (
             <p className="error-message">{formErrors.email}</p>
@@ -200,6 +201,7 @@ const Checkout = ({ totalPrice }) => {
                   id="expiry"
                   name="expiry"
                   onChange={cardInputsChangeHandler}
+                  onBlur={handleOnBlur}
                 />
                 {formErrors.expiry && (
                   <p className="error-message">{formErrors.expiry}</p>
@@ -226,6 +228,7 @@ const Checkout = ({ totalPrice }) => {
                 placeholder="Address"
                 minLength={6}
                 onChange={cardInputsChangeHandler}
+                onBlur={handleOnBlur}
               />
               {formErrors.address && (
                 <p className="error-message">{formErrors.address}</p>
@@ -241,6 +244,7 @@ const Checkout = ({ totalPrice }) => {
                   placeholder="City"
                   minLength={2}
                   onChange={cardInputsChangeHandler}
+                  onBlur={handleOnBlur}
                 />
                 {formErrors.city && (
                   <p className="error-message">{formErrors.city}</p>
@@ -260,6 +264,7 @@ const Checkout = ({ totalPrice }) => {
                   minLength={0}
                   maxLength={9}
                   onChange={cardInputsChangeHandler}
+                  onBlur={handleOnBlur}
                 />
                 {formErrors.postalCode && (
                   <p className="error-message">{formErrors.postalCode}</p>
@@ -269,7 +274,11 @@ const Checkout = ({ totalPrice }) => {
                 className={`form-item ${formErrors?.country ? "error" : ""}`}
               >
                 <label htmlFor="country">Country*</label>
-                <select name="country" onChange={cardInputsChangeHandler}>
+                <select
+                  name="country"
+                  onChange={cardInputsChangeHandler}
+                  onBlur={handleOnBlur}
+                >
                   <option>Chose one</option>
                   <option value="slovakia">Slovakia</option>
                   <option value="usa">United States</option>
@@ -295,6 +304,7 @@ const Checkout = ({ totalPrice }) => {
             }
             minLength={6}
             onChange={cardInputsChangeHandler}
+            onBlur={handleOnBlur}
           />
           {formErrors.name && <p className="error-message">Something wrong!</p>}
         </div>
@@ -324,6 +334,14 @@ const Checkout = ({ totalPrice }) => {
                   },
                 })
               }
+              onBlur={() =>
+                handleOnBlur({
+                  target: {
+                    value: !paymentData.termsAndConditions,
+                    name: "termsAndConditions",
+                  },
+                })
+              }
               checked={paymentData.termsAndConditions}
             />
             <label htmlFor="termsAndConditions">
@@ -341,6 +359,14 @@ const Checkout = ({ totalPrice }) => {
                   target: {
                     value: !paymentData.recomendations,
                     name: "recommendations",
+                  },
+                })
+              }
+              onBlur={() =>
+                handleOnBlur({
+                  target: {
+                    value: !paymentData.recomendations,
+                    name: "recomendations",
                   },
                 })
               }

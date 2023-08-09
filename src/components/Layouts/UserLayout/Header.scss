@@ -46,6 +46,14 @@
       .login-link-button {
         .header-login-button {
           width: 150px;
+          background-color: white;
+          color: $primaryColor;
+          border-color: white;
+          &:hover {
+            color: white;
+            background-color: transparent;
+            border-color: white;
+          }
           @media (max-width: 767px) {
             width: 100%;
             padding-inline: 25px;

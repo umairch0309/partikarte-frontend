@@ -3,6 +3,7 @@ import "./SettingsForm.scss";
 import PrimaryButton from "../UI/PrimaryButton";
 import TertiaryButton from "../UI/TertiaryButton";
 import validateMarketingInformation from "../../validation/MarketingInformation";
+import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 
 const initialState = {
   metaPixel: "",
@@ -17,11 +18,10 @@ const MarketingInformation = () => {
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    const errors = await validateMarketingInformation({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateMarketingInformation, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -51,6 +51,7 @@ const MarketingInformation = () => {
           placeholder="Meta Pixel ID"
           onChange={handleInputChange}
           value={formValues.metaPixel}
+          onBlur={handleOnBlur}
         />
         {formErrors.metaPixel && (
           <p className="error-message">{formErrors.metaPixel}</p>
@@ -70,6 +71,7 @@ const MarketingInformation = () => {
           placeholder="Google Analytics ID"
           onChange={handleInputChange}
           value={formValues.googleAnalytics}
+          onBlur={handleOnBlur}
         />
         {formErrors.googleAnalytics && (
           <p className="error-message">{formErrors.googleAnalytics}</p>
@@ -90,6 +92,7 @@ const MarketingInformation = () => {
             placeholder="API Access Key"
             onChange={handleInputChange}
             value={formValues.apiAccessKey}
+            onBlur={handleOnBlur}
           />
           {formErrors.apiAccessKey && (
             <p className="error-message">{formErrors.apiAccessKey}</p>

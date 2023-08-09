@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../components/UI/PrimaryButton";
 import validateSignInForm from "../../../validation/SignIn";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
+import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 
 const initalState = {
   email: "",
@@ -21,11 +22,10 @@ const SignIn = ({ setLoggedIn }) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: newValue }));
-    const errors = await validateSignInForm({ [name]: newValue });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateSignInForm, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -67,6 +67,7 @@ const SignIn = ({ setLoggedIn }) => {
               value={formData.email}
               placeholder="Input your email"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             {formErrors.email && (
               <p className="error-message">{formErrors.email}</p>
@@ -81,6 +82,7 @@ const SignIn = ({ setLoggedIn }) => {
               value={formData.password}
               placeholder="Input your password"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             <ReactSVG
               onClick={togglePasswordVisibility}

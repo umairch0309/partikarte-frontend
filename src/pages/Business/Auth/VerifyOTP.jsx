@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../components/UI/PrimaryButton";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import validateVerifyOTPForm from "../../../validation/VerifyOTP";
+import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 
 const initalState = {
   otp: "",
@@ -16,11 +17,10 @@ const VerifyOTP = () => {
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-    const errors = await validateVerifyOTPForm({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateVerifyOTPForm, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -57,6 +57,7 @@ const VerifyOTP = () => {
               value={formData.otp}
               placeholder="Input your otp"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             {formErrors.otp && (
               <p className="error-message">{formErrors.otp}</p>

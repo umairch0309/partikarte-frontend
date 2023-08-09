@@ -14,8 +14,9 @@ $placeHolderColor: #dfdfdf;
 
 // Status colors
 $errorColor: #ff5959;
-$successColor: #219653;
-$pendingColor: #f6d240;
+$successColor: #02e082;
+$pendingColor: #ffd66b;
+$orangeColor: #ff8f28;
 
 @function opacityColor($color, $alpha) {
   @return rgba(red($color), green($color), blue($color), $alpha);

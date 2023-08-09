@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./SettingsForm.scss";
 import PrimaryButton from "../UI/PrimaryButton";
 import validateCompanyInformation from "../../validation/CompanyInformation";
+import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 
 const initialState = {
   companyName: "",
@@ -20,11 +21,10 @@ const CompanyInformation = () => {
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    const errors = await validateCompanyInformation({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateCompanyInformation, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -53,6 +53,7 @@ const CompanyInformation = () => {
           placeholder="Company name"
           onChange={handleInputChange}
           value={formValues.companyName}
+          onBlur={handleOnBlur}
         />
         {formErrors.companyName && (
           <p className="error-message">{formErrors.companyName}</p>
@@ -70,6 +71,7 @@ const CompanyInformation = () => {
             placeholder="VAT number"
             onChange={handleInputChange}
             value={formValues.vatNumber}
+            onBlur={handleOnBlur}
           />
           {formErrors.vatNumber && (
             <p className="error-message">{formErrors.vatNumber}</p>
@@ -88,6 +90,7 @@ const CompanyInformation = () => {
             placeholder="Registry number"
             onChange={handleInputChange}
             value={formValues.businessRegistryNumber}
+            onBlur={handleOnBlur}
           />
           {formErrors.businessRegistryNumber && (
             <p className="error-message">{formErrors.businessRegistryNumber}</p>
@@ -103,6 +106,7 @@ const CompanyInformation = () => {
           placeholder="Address"
           onChange={handleInputChange}
           value={formValues.address}
+          onBlur={handleOnBlur}
         />
         {formErrors.address && (
           <p className="error-message">{formErrors.address}</p>
@@ -118,6 +122,7 @@ const CompanyInformation = () => {
             name="country"
             id="country"
             value={formValues.country}
+            onBlur={handleOnBlur}
           >
             <option value="">Choose country</option>
             <option value="usa">United States</option>
@@ -135,6 +140,7 @@ const CompanyInformation = () => {
             name="city"
             id="city"
             value={formValues.city}
+            onBlur={handleOnBlur}
           >
             <option value="">Choose city/state</option>
             <option value="new-york">New York</option>
@@ -156,6 +162,7 @@ const CompanyInformation = () => {
             placeholder="Postal code"
             onChange={handleInputChange}
             value={formValues.postalCode}
+            onBlur={handleOnBlur}
           />
           {formErrors.postalCode && (
             <p className="error-message">{formErrors.postalCode}</p>

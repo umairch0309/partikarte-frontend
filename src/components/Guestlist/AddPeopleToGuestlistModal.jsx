@@ -4,6 +4,7 @@ import "./ModalForm.scss";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import PrimaryButton from "../UI/PrimaryButton";
 import validateAddPeopleToGuest from "../../validation/AddPeopleToGuest";
+import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 
 const initialState = {
   name: "",
@@ -26,11 +27,10 @@ const AddPeopleToGuestlistModal = ({
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    const errors = await validateAddPeopleToGuest({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateAddPeopleToGuest, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -70,6 +70,7 @@ const AddPeopleToGuestlistModal = ({
               placeholder="Name"
               onChange={handleInputChange}
               value={formValues.name}
+              onBlur={handleOnBlur}
             />
             {formErrors.name && (
               <p className="error-message">{formErrors.name}</p>
@@ -86,6 +87,7 @@ const AddPeopleToGuestlistModal = ({
               placeholder="Surname"
               onChange={handleInputChange}
               value={formValues.surname}
+              onBlur={handleOnBlur}
             />
             {formErrors.surname && (
               <p className="error-message">{formErrors.surname}</p>
@@ -101,6 +103,7 @@ const AddPeopleToGuestlistModal = ({
             name="guestType"
             id="guestType"
             value={formValues.guestType}
+            onBlur={handleOnBlur}
           >
             <option value="">Choose guest type</option>
             <option value="vip">VIP</option>
@@ -123,6 +126,7 @@ const AddPeopleToGuestlistModal = ({
               placeholder="Email address"
               onChange={handleInputChange}
               value={formValues.email}
+              onBlur={handleOnBlur}
             />
             {formErrors.email && (
               <p className="error-message">{formErrors.email}</p>
@@ -141,6 +145,7 @@ const AddPeopleToGuestlistModal = ({
               placeholder="Phone number"
               onChange={handleInputChange}
               value={formValues.phoneNumber}
+              onBlur={handleOnBlur}
             />
             {formErrors.phoneNumber && (
               <p className="error-message">{formErrors.phoneNumber}</p>
@@ -156,6 +161,7 @@ const AddPeopleToGuestlistModal = ({
               id="notifyPeople"
               onChange={handleInputChange}
               value={formValues.notifyPeople}
+              onBlur={handleOnBlur}
             />
             <label htmlFor="notifyPeople">Notify people</label>
           </div>

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../components/UI/PrimaryButton";
 import validateSignUpForm from "../../../validation/SignUp";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
+import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 
 const initalState = {
   email: "",
@@ -29,11 +30,10 @@ const SignUp = () => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: newValue }));
-    const errors = await validateSignUpForm({ [name]: newValue });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateSignUpForm, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -73,6 +73,7 @@ const SignUp = () => {
               value={formData.email}
               placeholder="Email"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             {formErrors.email && (
               <p className="error-message">{formErrors.email}</p>
@@ -87,6 +88,7 @@ const SignUp = () => {
               value={formData.username}
               placeholder="Username"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             {formErrors.username && (
               <p className="error-message">{formErrors.username}</p>
@@ -101,6 +103,7 @@ const SignUp = () => {
               value={formData.password}
               placeholder="Password"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             <ReactSVG
               onClick={togglePasswordVisibility}
@@ -120,6 +123,7 @@ const SignUp = () => {
               value={formData.businessName}
               placeholder="Business Name"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             {formErrors.businessName && (
               <p className="error-message">{formErrors.businessName}</p>
@@ -134,6 +138,7 @@ const SignUp = () => {
               value={formData.businessVatNum}
               placeholder="Business VAT Number"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             {formErrors.businessVatNum && (
               <p className="error-message">{formErrors.businessVatNum}</p>
@@ -154,6 +159,7 @@ const SignUp = () => {
               value={formData.businessRegisteryNumber}
               placeholder="Business Registery Number"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             {formErrors.businessRegisteryNumber && (
               <p className="error-message">
@@ -170,6 +176,7 @@ const SignUp = () => {
               value={formData.businessAddress}
               placeholder="Business Address"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             {formErrors.businessAddress && (
               <p className="error-message">{formErrors.businessAddress}</p>
@@ -185,6 +192,7 @@ const SignUp = () => {
                 value={formData.city}
                 placeholder="City"
                 onChange={handleInputChange}
+                onBlur={handleOnBlur}
               />
               {formErrors.city && (
                 <p className="error-message">{formErrors.city}</p>
@@ -199,6 +207,7 @@ const SignUp = () => {
                 value={formData.postalCode}
                 placeholder="Postal Code"
                 onChange={handleInputChange}
+                onBlur={handleOnBlur}
               />
               {formErrors.postalCode && (
                 <p className="error-message">{formErrors.postalCode}</p>
@@ -212,6 +221,7 @@ const SignUp = () => {
               name="country"
               value={formData.country}
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             >
               <option>Choose one</option>
               <option value={"usa"}>United States</option>

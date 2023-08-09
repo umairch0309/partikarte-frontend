@@ -6,6 +6,7 @@ import { ReactSVG } from "react-svg";
 import GuestTable from "../../components/Tables/GuestTable";
 import AddPeopleToGuestlistModal from "../../components/Guestlist/AddPeopleToGuestlistModal";
 import AddMultiplePeopleToGuestlistModal from "../../components/Guestlist/AddMultiplePeopleToGuestlistModal";
+import SecondaryButton from "../../components/UI/SecondaryButton";
 
 const Guestlist = () => {
   const [data, setData] = useState([]);
@@ -99,18 +100,18 @@ const Guestlist = () => {
               </select>
             </div>
             <div className="header-right">
-              <button onClick={() => setShowAddPeopleModal(true)}>
+              <SecondaryButton onClick={() => setShowAddPeopleModal(true)}>
                 <ReactSVG src="/icons/tools/people-list.svg" />
                 <span>Add People to Guest List</span>
-              </button>
-              <button className="royal-blue-button">
+              </SecondaryButton>
+              <SecondaryButton className="royal-blue-button">
                 <ReactSVG src="/icons/tools/download-sheet.svg" />
                 <span>Download Spreadsheet</span>
-              </button>
-              <button className="royal-blue-button">
+              </SecondaryButton>
+              <SecondaryButton className="royal-blue-button">
                 <ReactSVG src="/icons/tools/plus-person.svg" />
                 <span>Create Guest Lists</span>
-              </button>
+              </SecondaryButton>
             </div>
           </div>
           <GuestTable guestsData={data} />

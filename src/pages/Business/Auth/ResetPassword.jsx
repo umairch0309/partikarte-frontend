@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../components/UI/PrimaryButton";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import validateConfirmPasswordForm from "../../../validation/ResetPassword";
+import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 
 const initalState = {
   password: "",
@@ -20,11 +21,10 @@ const ResetPassword = () => {
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-    const errors = await validateConfirmPasswordForm({ [name]: value });
-    if (Object.keys(errors).length > 0) {
-      setFormErrors({ ...formErrors, [name]: errors[name] });
-      return;
-    }
+  };
+
+  const handleOnBlur = async (e) => {
+    useHandleOnBlur(e, validateConfirmPasswordForm, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -61,6 +61,7 @@ const ResetPassword = () => {
               value={formData.password}
               placeholder="Input your password"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             <ReactSVG
               onClick={() => setShowPassword(!showPassword)}
@@ -80,6 +81,7 @@ const ResetPassword = () => {
               value={formData.confirmPassword}
               placeholder="Input your confirmed password"
               onChange={handleInputChange}
+              onBlur={handleOnBlur}
             />
             <ReactSVG
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
