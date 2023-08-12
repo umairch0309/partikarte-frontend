@@ -1,0 +1,42 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.send-ticket-form-container {
+  width: 100%;
+  margin-top: 30px;
+  @include flex(column, "", center, 20px);
+
+  .form-item {
+    width: 100%;
+    position: relative;
+    label {
+      font-size: 16px;
+      color: $secondaryColor;
+      font-weight: 600;
+    }
+    input {
+      border-color: #e6e9ed;
+      font-size: 15px;
+      margin-top: 5px;
+      width: 100%;
+      background-color: white;
+    }
+  }
+  .error {
+    position: relative;
+    input {
+      border-color: $errorColor !important;
+      outline-color: $errorColor !important;
+    }
+    .error-message {
+      color: $errorColor;
+      font-size: 12px;
+      position: absolute;
+      top: 47px;
+      right: 10px;
+    }
+  }
+  button {
+    margin-left: auto;
+  }
+}

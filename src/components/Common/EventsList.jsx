@@ -6,7 +6,7 @@ import PrimaryButton from "../UI/PrimaryButton";
 import { useState } from "react";
 import { useRef } from "react";
 
-const EventsList = ({ showHeader, showInputs }) => {
+const EventsList = ({ showHeader, showInputs, setShowAddNewEventModal }) => {
   const items = [
     {
       label: "action 1",
@@ -106,7 +106,10 @@ const EventsList = ({ showHeader, showInputs }) => {
                     placeholder="Search events..."
                   />
                 </div>
-                <PrimaryButton className={"add-new-event"}>
+                <PrimaryButton
+                  onClick={() => setShowAddNewEventModal(true)}
+                  className={"add-new-event"}
+                >
                   <ReactSVG src="/icons/tools/add-event.svg" />
                   <span>Add new Event</span>
                 </PrimaryButton>

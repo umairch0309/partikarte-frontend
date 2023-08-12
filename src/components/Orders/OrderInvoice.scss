@@ -1,0 +1,25 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.order-invoice-main-container {
+  margin-top: 30px;
+  padding-inline: 6%;
+  @include flex(column, "", flex-start, 10px);
+  .invoice-item {
+    width: 100%;
+    @include flex(row, space-between, center, 10px);
+    color: $secondaryColor;
+    h4 {
+      font-size: 16px;
+      font-weight: 400;
+      width: 100%;
+      max-width: 100%;
+    }
+    h3 {
+      font-size: 20px;
+      font-weight: 500;
+      width: 100%;
+      text-align: end;
+    }
+  }
+}

@@ -24,6 +24,7 @@ const CustomModal = ({
         <ReactSVG className={"svg"} src="/icons/tools/cross-red.svg" />
       }
       maskClosable={false}
+      style={{ marginBlock: "40px" }}
       title={
         <>
           <h2 className="custom-modal-title">{title}</h2>

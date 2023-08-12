@@ -3,7 +3,10 @@
 
 .event-list-main-container {
   width: calc(100vw - 320px);
-  max-width: calc(1440px - 320px);
+  max-width: calc(100vw - 320px);
+  @media (min-width: 1300px) {
+    max-width: calc(1440px - 320px);
+  }
   .event-list-header {
     padding-block: 5px 15px;
     @include flex(row, space-between, center);

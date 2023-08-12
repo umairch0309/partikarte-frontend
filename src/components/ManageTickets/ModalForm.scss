@@ -1,0 +1,85 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.add-new-ticket-form-container {
+  margin-top: 30px;
+  @include flex(column, "", "", 20px);
+  .date-diff-error-message {
+    color: $errorColor;
+  }
+  .side-by-side-ticket-input {
+    width: 100%;
+    @include flex(row, space-between, center, 30px);
+  }
+
+  .single-form-item {
+    width: 100%;
+    label {
+      font-size: 16px;
+      font-weight: 500;
+      color: $secondaryColor;
+    }
+    select,
+    input,
+    textarea {
+      border-color: #e6e9ed;
+      font-size: 15px;
+      margin-top: 5px;
+      width: 100%;
+    }
+    textarea {
+      height: 100px;
+      padding-top: 10px;
+    }
+  }
+  .error {
+    width: 100%;
+    position: relative;
+    input,
+    select,
+    textarea {
+      border-color: $errorColor !important;
+      outline-color: $errorColor !important;
+    }
+    .error-message,
+    .select-error-message {
+      color: $errorColor;
+      font-size: 12px;
+      position: absolute;
+      top: 48px;
+      right: 10px;
+    }
+    .select-error-message {
+      margin-right: 30px;
+    }
+  }
+  .switch-form-item {
+    width: 60%;
+  }
+  .switch-label-container {
+    @include flex(row, flex-end, center, 5px);
+    height: 26px;
+    label {
+      font-size: 14px;
+    }
+    .inactive-label {
+      color: opacityColor($textColor, 0.5);
+    }
+  }
+  .inactive-label {
+    color: opacityColor($textColor, 0.5);
+  }
+  .form-submit-button {
+    margin-left: auto;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}

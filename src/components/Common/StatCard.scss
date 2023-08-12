@@ -70,6 +70,17 @@
         }
       }
     }
+    .orange-stat-card {
+      background-color: opacityColor($orangeColor, 0.2);
+      .stats-calendar-icon-container {
+        background-color: opacityColor($orangeColor, 0.2);
+        svg {
+          path {
+            fill: $orangeColor;
+          }
+        }
+      }
+    }
   }
   .stats-card-right {
     width: 100%;

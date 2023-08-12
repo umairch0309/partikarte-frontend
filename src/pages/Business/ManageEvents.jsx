@@ -10,11 +10,13 @@ import TopReferrersTable from "../../components/Tables/TopReferrersTable";
 import { useState, useEffect } from "react";
 import CountriesRevenueTable from "../../components/Tables/CountriesRevenueTable";
 import EventAnalyticsTable from "../../components/Tables/EventAnalyticsTable";
+import AddNewEventModal from "../../components/ManageEvents/AddNewEventModal";
 
 const ManageEvents = () => {
   const [referrers, setReferrers] = useState([]);
   const [countriesRevenues, setCountriesRevenues] = useState([]);
   const [analytics, setAnalytics] = useState([]);
+  const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
 
   useEffect(() => {
     const array = [];
@@ -62,11 +64,15 @@ const ManageEvents = () => {
         subtitle={"Manage your Events with Overview and Analytics"}
       />
       <div className="manage-events-page-container">
-        <EventsList showHeader={true} showInputs={true} />
+        <EventsList
+          setShowAddNewEventModal={setShowAddNewEventModal}
+          showHeader={true}
+          showInputs={true}
+        />
         <div className="event-page-actions">
           <SecondaryButton onClick={() => {}}>
             <ReactSVG src="/icons/tools/people-list.svg" />
-            <span>Add People to Guest List</span>
+            <span>Manage Guest Lists</span>
           </SecondaryButton>
           <SecondaryButton onClick={() => {}}>
             <ReactSVG src="/icons/tools/ticket-outlined.svg" />
@@ -128,6 +134,10 @@ const ManageEvents = () => {
           </div>
         </div>
       </div>
+      <AddNewEventModal
+        showAddNewEventModal={showAddNewEventModal}
+        setShowAddNewEventModal={setShowAddNewEventModal}
+      />
     </>
   );
 };
