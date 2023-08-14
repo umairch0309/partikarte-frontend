@@ -1,0 +1,50 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.organizer-settings-main-container {
+  @include flex(column, "", flex-start, 20px);
+
+  .organizer-settings-menu {
+    @include flex(row, space-between, center, 20px);
+    background-color: white;
+    border-radius: $primaryBorderRadius;
+    padding: 10px 20px;
+    position: sticky;
+    width: 100%;
+    a {
+      height: 45px;
+      width: 100%;
+      @include flex(row, flex-start, center, 10px);
+      padding-inline: 10px;
+      border-radius: $primaryBorderRadius;
+      color: $textColor;
+      font-weight: 500;
+      svg {
+        display: block;
+        path {
+          stroke: #9c9ca4;
+        }
+      }
+    }
+    .active,
+    a:hover {
+      background-color: $primaryColor;
+      color: white;
+      svg {
+        path {
+          stroke: white;
+        }
+      }
+    }
+  }
+
+  .organizer-settings-main-bottom {
+    width: 100%;
+    max-height: calc(100vh - 225px);
+    overflow-y: auto;
+    margin-bottom: 20px;
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+  }
+}

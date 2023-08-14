@@ -1,0 +1,19 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.delete-member-alert-buttons {
+  @include flex(row, "", center, 10px);
+  margin-top: 30px;
+  button {
+    width: 100%;
+  }
+  .red-button {
+    background-color: $errorColor;
+    color: white;
+    &:hover {
+      border-color: $errorColor;
+      background-color: white;
+      color: $errorColor;
+    }
+  }
+}

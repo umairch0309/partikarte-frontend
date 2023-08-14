@@ -30,6 +30,9 @@
         font-weight: 400;
         color: opacityColor($textColor, 0.5);
       }
+      svg {
+        min-width: 17px;
+      }
     }
     .active {
       background-color: $primaryColor;

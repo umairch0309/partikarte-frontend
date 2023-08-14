@@ -17,6 +17,7 @@ const ManageEvents = () => {
   const [countriesRevenues, setCountriesRevenues] = useState([]);
   const [analytics, setAnalytics] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     const array = [];
@@ -68,6 +69,8 @@ const ManageEvents = () => {
           setShowAddNewEventModal={setShowAddNewEventModal}
           showHeader={true}
           showInputs={true}
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
         />
         <div className="event-page-actions">
           <SecondaryButton onClick={() => {}}>

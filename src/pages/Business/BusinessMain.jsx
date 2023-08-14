@@ -14,6 +14,8 @@ import ManageEvents from "./ManageEvents";
 import ManageTickets from "./ManageTickets";
 import Orders from "./Orders";
 import TicketsScanning from "./TicketsScanning";
+import UserManagement from "./UserManagement";
+import OrganizerSettings from "./OrganizerSettings";
 
 const BusinessMain = () => {
   const [loggedIn, setLoggedIn] = useState(null);
@@ -49,6 +51,8 @@ const BusinessMain = () => {
         <Route path="/manage-tickets" element={<ManageTickets />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/ticket-scanning" element={<TicketsScanning />} />
+        <Route path="/user-management" element={<UserManagement />} />
+        <Route path="/organizer-settings/*" element={<OrganizerSettings />} />
 
         {/* Show 404 for any other unauthorized routes */}
         <Route path="*" element={<Navigate to="/business/dashboard" />} />

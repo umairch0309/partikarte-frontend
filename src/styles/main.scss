@@ -73,6 +73,7 @@ body {
 /* Set the width and height of the scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
+  height: 3px;
   @media (max-width: 767px) {
     height: 2px;
   }

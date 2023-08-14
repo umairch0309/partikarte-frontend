@@ -10,6 +10,7 @@ import SecondaryButton from "../../components/UI/SecondaryButton";
 
 const Guestlist = () => {
   const [data, setData] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
   const [showMultiplePeopleModal, setShowMultiplePeopleModal] = useState(false);
 
@@ -74,7 +75,10 @@ const Guestlist = () => {
         subtitle={"Explore or customise your guests!"}
       />
       <div className="guestlist-page-container">
-        <EventsList />
+        <EventsList
+          setSelectedEvent={setSelectedEvent}
+          selectedEvent={selectedEvent}
+        />
         <div className="guestlist-page-bottom-main">
           <div className="guestlist-page-bottom-main-header">
             <div className="header-left">

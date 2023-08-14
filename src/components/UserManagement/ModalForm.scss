@@ -1,0 +1,111 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables";
+
+.add-new-member-form-container {
+  margin-top: 30px;
+  @include flex(column, "", "", 20px);
+
+  .image-error-message {
+    color: $errorColor;
+  }
+
+  .side-by-side-guest-input {
+    @include flex(row, space-between, center, 30px);
+  }
+
+  .single-form-item {
+    width: 100%;
+    label {
+      font-size: 16px;
+      font-weight: 500;
+      color: $secondaryColor;
+    }
+    select,
+    input,
+    textarea {
+      border-color: #e6e9ed;
+      font-size: 15px;
+      margin-top: 5px;
+      width: 100%;
+    }
+    textarea {
+      height: 100px;
+      padding-top: 10px;
+    }
+  }
+  .error {
+    width: 100%;
+    position: relative;
+    input,
+    select,
+    textarea {
+      border-color: $errorColor !important;
+      outline-color: $errorColor !important;
+    }
+    .error-message,
+    .select-error-message {
+      color: $errorColor;
+      font-size: 12px;
+      position: absolute;
+      top: 48px;
+      right: 10px;
+    }
+    .select-error-message {
+      margin-right: 30px;
+    }
+  }
+  .add-new-member-images-container {
+    @include flex(row, space-between, center, 30px);
+    margin-top: 20px;
+    .single-image-upload-item {
+      width: 100%;
+      @include flex(row, space-between, center, 20px);
+      .id-placeholder-box {
+        @include flex(row, center, center);
+        height: 160px;
+        width: 100%;
+        background-color: $borderColor;
+        border-radius: $primaryBorderRadius;
+        border: 2px dashed opacityColor($textColor, 0.2);
+        cursor: pointer;
+      }
+      .image-error {
+        border-color: $errorColor;
+        color: red;
+      }
+      .id-image-container {
+        position: relative;
+        width: 100%;
+        border-radius: $primaryBorderRadius;
+        img {
+          width: 100%;
+          height: 160px;
+          object-fit: cover;
+          border-radius: $primaryBorderRadius;
+          display: block;
+        }
+        .upload-icon-container {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          height: 35px;
+          width: 35px;
+          background-color: white;
+          border-radius: 50%;
+          box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);
+          @include flex(row, center, center);
+          cursor: pointer;
+          svg {
+            display: block;
+          }
+        }
+      }
+      .image-input {
+        display: none !important;
+      }
+    }
+  }
+  .form-submit-button {
+    margin-left: auto;
+  }
+}

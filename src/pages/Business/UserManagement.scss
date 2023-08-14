@@ -1,0 +1,68 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.user-managment-page-container {
+  .user-managment-page-bottom-main {
+    background-color: white;
+    border-radius: $primaryBorderRadius;
+    padding-block: 20px;
+    .user-managment-page-bottom-main-header {
+      @include flex(row, space-between, center, 10px);
+      padding-inline: 20px;
+      margin-bottom: 20px;
+      .header-left {
+        @include flex(row, "", center, 5px);
+      }
+      .header-right {
+        @include flex(row, "", center, 5px);
+        .search-container {
+          width: 100%;
+          min-width: 200px;
+          @include flex(row, "", center);
+          height: 40px;
+          background-color: opacityColor($primaryColor, 0.08);
+          padding-inline: 10px;
+          border-radius: 10px;
+          &:focus-within {
+            outline: 1px solid $primaryColor;
+          }
+          svg {
+            display: block;
+          }
+          input {
+            border: none;
+            outline: none;
+            height: 40px;
+            font-size: 12px;
+            font-weight: 400;
+            color: $secondaryColor;
+            &::placeholder {
+              font-weight: 400;
+              color: opacityColor($secondaryColor, 0.7);
+            }
+          }
+        }
+        select {
+          min-width: 120px;
+          padding-inline: 10px;
+          height: 40px;
+          border-color: transparent;
+          background-color: opacityColor($primaryColor, 0.08);
+        }
+        svg {
+          display: block;
+        }
+        button {
+          width: 100%;
+          @include flex(row, "", center, 5px);
+        }
+        .royal-blue-button {
+          background-color: $secondaryColor;
+          &:hover {
+            background-color: opacityColor($secondaryColor, 0.7);
+          }
+        }
+      }
+    }
+  }
+}

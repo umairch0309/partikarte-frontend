@@ -12,6 +12,7 @@ import NewTicketModal from "../../components/ManageTickets/NewTicketModal";
 const ManageTickets = () => {
   const [data, setData] = useState([]);
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     const array = [];
@@ -37,8 +38,9 @@ const ManageTickets = () => {
       />
       <div className="manage-tickets-page-container">
         <EventsList
-          setShowNewTicketModal={setShowNewTicketModal}
           showHeader={true}
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
         />
         <div className="tickets-page-actions">
           <h3>Overview</h3>

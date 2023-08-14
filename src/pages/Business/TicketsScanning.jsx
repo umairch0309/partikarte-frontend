@@ -18,6 +18,7 @@ const TicketsScanning = () => {
   const [tickets, setTickets] = useState([]);
   const [guests, setGuests] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     const array = [];
@@ -54,7 +55,11 @@ const TicketsScanning = () => {
         subtitle={"Manage your Tickets with Overview and Analytics"}
       />
       <div className="tickets-scanning-page-container">
-        <EventsList showHeader={true} />
+        <EventsList
+          showHeader={true}
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
+        />
         <div className="stats-cards-header-container">
           <h3>Overview</h3>
           <div className="event-page-actions">

@@ -49,4 +49,14 @@ export const businessRoutes = [
     icon: "/icons/menu/customers-icon.svg",
     route: "/business/customers",
   },
+  {
+    title: "User Management",
+    icon: "/icons/menu/user-management.svg",
+    route: "/business/user-management",
+  },
+  {
+    title: "Organizer's Settings",
+    icon: "/icons/menu/organizer.svg",
+    route: "/business/organizer-settings",
+  },
 ];

@@ -11,6 +11,7 @@ import CustomersTable from "../../components/Tables/CustomersTable";
 
 const Orders = () => {
   const [data, setData] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     const array = [];
@@ -37,7 +38,11 @@ const Orders = () => {
         subtitle={"Manage your Events with Overview and Analytics"}
       />
       <div className="manage-events-page-container">
-        <EventsList showHeader={true} />
+        <EventsList
+          showHeader={true}
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
+        />
         <div className="stats-cards-container">
           <StatCard
             title={"Tickets sold"}

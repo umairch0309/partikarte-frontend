@@ -6,7 +6,13 @@ import PrimaryButton from "../UI/PrimaryButton";
 import { useState } from "react";
 import { useRef } from "react";
 
-const EventsList = ({ showHeader, showInputs, setShowAddNewEventModal }) => {
+const EventsList = ({
+  showHeader,
+  showInputs,
+  setShowAddNewEventModal,
+  setSelectedEvent,
+  selectedEvent,
+}) => {
   const items = [
     {
       label: "action 1",
@@ -132,7 +138,13 @@ const EventsList = ({ showHeader, showInputs, setShowAddNewEventModal }) => {
       )}
       <div className="event-list-container" ref={scrollContainerRef}>
         {eventsData.map((event, index) => (
-          <div className="single-event-container" key={index}>
+          <div
+            onClick={() => setSelectedEvent({ ...event, index })}
+            className={`single-event-container ${
+              selectedEvent?.index === index ? "selected-event" : ""
+            }`}
+            key={index}
+          >
             <div className="event-header">
               <div className="date-container">
                 <ReactSVG src="/icons/tools/clock.svg" />
