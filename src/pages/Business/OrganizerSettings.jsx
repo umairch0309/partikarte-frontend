@@ -6,6 +6,7 @@ import Topbar from "../../components/Layouts/BusinessLayout/Topbar";
 import Galleries from "../../components/OrganizerSettings/Main/Galleries";
 import ViewGallery from "../../components/OrganizerSettings/Main/ViewGallery";
 import News from "../../components/OrganizerSettings/Main/News";
+import Company from "../../components/OrganizerSettings/Main/Company";
 
 const OrganizerSettings = () => {
   const location = useLocation();
@@ -50,6 +51,7 @@ const OrganizerSettings = () => {
           <Routes>
             <Route index element={<Galleries />} />
             <Route path="/news" element={<News />} />
+            <Route path="/company-details" element={<Company />} />
 
             {/* SUB ROUTES  */}
             <Route path="/galleries/:galleryId" element={<ViewGallery />} />

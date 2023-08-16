@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "./News.scss";
 import SecondaryButton from "../../UI/SecondaryButton";
 import { ReactSVG } from "react-svg";
 import { Dropdown } from "antd";
+import AddNews from "../Forms/AddNews";
 
 const News = () => {
   const items = [
@@ -71,11 +72,13 @@ const News = () => {
     },
   ];
 
+  const [showAddNewsModal, setShowAddNewsModal] = useState(false);
+
   return (
     <div className="news-main-container">
       <div className="news-header">
         <h3>News</h3>
-        <SecondaryButton>
+        <SecondaryButton onClick={() => setShowAddNewsModal(true)}>
           <ReactSVG src="/icons/tools/add-gallery.svg" />
           <span>Add new News</span>
         </SecondaryButton>
@@ -111,6 +114,10 @@ const News = () => {
           </div>
         ))}
       </div>
+      <AddNews
+        setShowAddNewsModal={setShowAddNewsModal}
+        showAddNewsModal={showAddNewsModal}
+      />
     </div>
   );
 };

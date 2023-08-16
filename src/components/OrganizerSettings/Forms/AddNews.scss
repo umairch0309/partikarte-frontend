@@ -1,0 +1,95 @@
+@import "../../../styles/mixins.scss";
+@import "../../../styles/variables";
+
+.add-new-news-form-container {
+  margin-top: 30px;
+  @include flex(column, "", "", 20px);
+  .side-by-side-guest-input {
+    @include flex(row, space-between, center, 30px);
+  }
+  .add-new-news-header {
+    @include flex(row, space-between, center, 50px);
+    .new-news-header-left {
+      width: 60%;
+      @include flex(row, space-between, center, 20px);
+      .news-banner-placeholder-box {
+        @include flex(row, center, center);
+        height: 220px;
+        width: 100%;
+        background-color: $borderColor;
+        border-radius: $primaryBorderRadius;
+        border: 2px dashed opacityColor($textColor, 0.2);
+        cursor: pointer;
+      }
+      .image-error {
+        border-color: $errorColor;
+      }
+      .image-input {
+        display: none !important;
+      }
+    }
+    .new-news-header-right {
+      width: 38%;
+      @include flex(column, "", center, 10px);
+      overflow-y: auto;
+      height: 220px;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      img {
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+        border-radius: $primaryBorderRadius;
+      }
+    }
+  }
+  .image-error-message {
+    color: $errorColor;
+  }
+
+  .single-form-item {
+    width: 100%;
+    label {
+      font-size: 16px;
+      font-weight: 500;
+      color: $secondaryColor;
+    }
+    select,
+    input,
+    textarea {
+      border-color: #e6e9ed;
+      font-size: 15px;
+      margin-top: 5px;
+      width: 100%;
+    }
+    textarea {
+      height: 100px;
+      padding-top: 10px;
+    }
+  }
+  .error {
+    width: 100%;
+    position: relative;
+    input,
+    select,
+    textarea {
+      border-color: $errorColor !important;
+      outline-color: $errorColor !important;
+    }
+    .error-message,
+    .select-error-message {
+      color: $errorColor;
+      font-size: 12px;
+      position: absolute;
+      top: 46px;
+      right: 10px;
+    }
+    .select-error-message {
+      margin-right: 30px;
+    }
+  }
+  .form-submit-button {
+    margin-left: auto;
+  }
+}

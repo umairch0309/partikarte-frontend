@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Galleries.scss";
 import { useNavigate } from "react-router-dom";
 import SecondaryButton from "../../UI/SecondaryButton";
 import { ReactSVG } from "react-svg";
+import AddGalleryModal from "../Forms/AddGalleryModal";
 
 const Galleries = () => {
   const DUMMY_GALLERIES = [
@@ -58,12 +59,13 @@ const Galleries = () => {
     },
   ];
   const navigate = useNavigate();
+  const [showAddGalleryModal, setShowAddGalleryModal] = useState(false);
 
   return (
     <div className="galleries-main-container">
       <div className="galleries-header">
         <h3>Galleries</h3>
-        <SecondaryButton>
+        <SecondaryButton onClick={() => setShowAddGalleryModal(true)}>
           <ReactSVG src="/icons/tools/add-gallery.svg" />
           <span>Add New Gallery</span>
         </SecondaryButton>
@@ -95,6 +97,10 @@ const Galleries = () => {
           );
         })}
       </div>
+      <AddGalleryModal
+        showAddGalleryModal={showAddGalleryModal}
+        setShowAddGalleryModal={setShowAddGalleryModal}
+      />
     </div>
   );
 };
