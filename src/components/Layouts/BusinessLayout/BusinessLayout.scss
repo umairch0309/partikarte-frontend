@@ -8,6 +8,9 @@
     background-color: #fcfcfc;
     width: 100%;
     min-height: 100vh;
+    @media (max-width: 767px) {
+      padding-inline: 12px;
+    }
     .radio-input {
       @include flex(row, "", center, 10px);
       input {

@@ -7,6 +7,10 @@
   @media (min-width: 1300px) {
     max-width: calc(1440px - 320px);
   }
+  @media (max-width: 767px) {
+    min-width: 100%;
+    max-width: 100%;
+  }
   .event-list-header {
     padding-block: 5px 15px;
     @include flex(row, space-between, center);
@@ -21,6 +25,9 @@
       @include flex(row, "", center, 30px);
       .header-right-search-button-container {
         @include flex(row, "", center, 15px);
+        @media (max-width: 767px) {
+          display: none;
+        }
         .search-container {
           width: 100%;
           min-width: 200px;
@@ -83,14 +90,6 @@
             display: block;
           }
 
-          // @media (max-width: 767px) {
-          //   width: 30px;
-          //   height: 30px;
-          //   svg {
-          //     width: 7px;
-          //   }
-          // }
-
           &:hover {
             background-color: $primaryColor;
             border-color: transparent;
@@ -114,6 +113,60 @@
       }
     }
   }
+
+  .header-right-mobile-search-button-container {
+    display: none;
+    margin-bottom: 15px;
+    @media (max-width: 767px) {
+      @include flex(column, "", stretch, 15px);
+    }
+    .search-container {
+      width: 100%;
+      min-width: 200px;
+      @include flex(row, "", center);
+      height: 40px;
+      background-color: opacityColor($primaryColor, 0.08);
+      padding-inline: 10px;
+      border-radius: 10px;
+      &:focus-within {
+        outline: 1px solid $primaryColor;
+      }
+      svg {
+        display: block;
+      }
+      input {
+        border: none;
+        outline: none;
+        height: 40px;
+        font-size: 12px;
+        font-weight: 400;
+        color: $secondaryColor;
+        &::placeholder {
+          font-weight: 400;
+          color: opacityColor($secondaryColor, 0.7);
+        }
+      }
+    }
+    .add-new-event {
+      @include flex(row, "", center, 6px);
+      height: 40px;
+      span {
+        white-space: nowrap;
+      }
+      svg {
+        display: block;
+        height: 30px;
+        width: 20px;
+      }
+      &:hover {
+        svg {
+          path {
+            fill: $primaryColor;
+          }
+        }
+      }
+    }
+  }
   .event-list-container {
     @include flex(row, "", center, 20px);
     overflow-x: auto;
@@ -121,9 +174,6 @@
       display: none;
     }
 
-    .selected-event {
-      border: 1px solid $primaryColor;
-    }
     .single-event-container {
       width: 320px;
       min-width: 320px;
@@ -131,7 +181,12 @@
       background-color: white;
       border-radius: $primaryBorderRadius;
       cursor: pointer;
+      border: 1px solid transparent;
       @include flex(column, "", flex-start, 15px);
+      // @media (max-width: 767px) {
+      //   min-width: 100%;
+      //   max-width: 100%;
+      // }
       &:hover {
         background-color: opacityColor($primaryColor, 0.02);
       }
@@ -150,6 +205,9 @@
       h3 {
         font-size: 18px;
       }
+    }
+    .selected-event {
+      border-color: $primaryColor;
     }
   }
 }

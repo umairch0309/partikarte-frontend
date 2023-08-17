@@ -4,6 +4,9 @@
 .business-settings-page {
   .business-settings-main-container {
     @include flex(row, "", flex-start, 20px);
+    @media (max-width: 767px) {
+      flex-direction: column;
+    }
     .business-settings-left {
       max-height: calc(100vh - 150px);
       overflow-y: auto;
@@ -12,6 +15,10 @@
       padding: 20px;
       width: 330px;
       position: sticky;
+      @media (max-width: 767px) {
+        overflow-x: hidden;
+        width: 100%;
+      }
       h3 {
         font-size: 18px;
         font-weight: 600;
@@ -20,6 +27,11 @@
       .business-settings-menu {
         padding-top: 20px;
         @include flex(column, "", center, 20px);
+        @media (max-width: 767px) {
+          flex-direction: row;
+          max-width: 100%;
+          overflow-x: auto;
+        }
         a {
           height: 45px;
           width: 100%;
@@ -54,6 +66,9 @@
           font-size: 16px;
           font-weight: 500;
           color: $errorColor;
+          @media (max-width: 767px) {
+            padding-inline: 15px;
+          }
           &:hover {
             background-color: $errorColor;
             color: white;
@@ -69,6 +84,10 @@
       width: 100%;
       max-height: calc(100vh - 140px);
       overflow-y: auto;
+      @media (max-width: 767px) {
+        max-height: 100%;
+        margin-bottom: 20px;
+      }
     }
     ::-webkit-scrollbar {
       display: none;

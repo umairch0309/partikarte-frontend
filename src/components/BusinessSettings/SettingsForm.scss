@@ -17,6 +17,10 @@
   }
   .side-by-side-settings-input {
     @include flex(row, space-between, center, 30px);
+    @media (max-width: 767px) {
+      gap: 20px;
+      flex-direction: column;
+    }
     button {
       white-space: nowrap;
     }

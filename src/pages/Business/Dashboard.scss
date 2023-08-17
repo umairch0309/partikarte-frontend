@@ -3,8 +3,14 @@
 
 .dashboard-page-container {
   @include flex(row, space-between, flex-start, 20px);
+  @media (max-width: 767px) {
+    flex-direction: column-reverse;
+  }
   .dashboard-page-left {
     width: 69%;
+    @media (max-width: 767px) {
+      width: 100%;
+    }
     .chart-main-container {
       background-color: white;
       border-radius: $primaryBorderRadius;
@@ -13,6 +19,11 @@
         padding-left: 15px;
         margin-bottom: 20px;
         @include flex(row, space-between, center);
+        @media (max-width: 767px) {
+          flex-direction: column;
+          align-items: start;
+          gap: 10px;
+        }
         .header-left {
           h3 {
             color: $secondaryColor;
@@ -21,12 +32,19 @@
         }
         .header-right {
           @include flex(row, "", center, 10px);
+          @media (max-width: 767px) {
+            width: 100%;
+          }
           select {
             min-width: 120px;
             padding-inline: 10px;
             height: 40px;
             border-color: transparent;
             background-color: opacityColor($primaryColor, 0.03);
+            @media (max-width: 767px) {
+              min-width: 32%;
+              max-width: 32%;
+            }
           }
         }
       }
@@ -60,6 +78,9 @@
   }
   .dashboard-page-right {
     width: 30%;
+    @media (max-width: 767px) {
+      width: 100%;
+    }
     .active-events-container {
       padding: 10px 5px 10px 10px;
       background-color: white;

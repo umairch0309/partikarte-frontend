@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import CountriesRevenueTable from "../../components/Tables/CountriesRevenueTable";
 import EventAnalyticsTable from "../../components/Tables/EventAnalyticsTable";
 import AddNewEventModal from "../../components/ManageEvents/AddNewEventModal";
+import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 
 const ManageEvents = () => {
   const [referrers, setReferrers] = useState([]);
@@ -18,6 +19,8 @@ const ManageEvents = () => {
   const [analytics, setAnalytics] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedTable, setSelectedTable] = useState(0);
+  const isMobile = useIsMobileWidth();
 
   useEffect(() => {
     const array = [];
@@ -116,25 +119,77 @@ const ManageEvents = () => {
           </div>
           <Chart height={290} />
         </div>
+        {isMobile && (
+          <div className="tables-selection-buttons-container">
+            <button
+              className={selectedTable === 0 ? "selected-button" : ""}
+              onClick={() => setSelectedTable(0)}
+            >
+              Top Referrers
+            </button>
+            <button
+              className={selectedTable === 1 ? "selected-button" : ""}
+              onClick={() => setSelectedTable(1)}
+            >
+              Cities/Countries
+            </button>
+            <button
+              className={selectedTable === 2 ? "selected-button" : ""}
+              onClick={() => setSelectedTable(2)}
+            >
+              Analytics
+            </button>
+          </div>
+        )}
         <div className="all-tables-main-container">
-          <div className="table-container">
-            <div className="table-container-header">
-              <h3>Top referrers</h3>
+          {!isMobile && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Top referrers</h3>
+              </div>
+              <TopReferrersTable referrersData={referrers} />
             </div>
-            <TopReferrersTable referrersData={referrers} />
-          </div>
-          <div className="table-container">
-            <div className="table-container-header">
-              <h3>Cities/Countries</h3>
+          )}
+          {isMobile && selectedTable === 0 && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Top referrers</h3>
+              </div>
+              <TopReferrersTable referrersData={referrers} />
             </div>
-            <CountriesRevenueTable countriesData={countriesRevenues} />
-          </div>
-          <div className="table-container">
-            <div className="table-container-header">
-              <h3>Analytics</h3>
+          )}
+          {!isMobile && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Cities/Countries</h3>
+              </div>
+              <CountriesRevenueTable countriesData={countriesRevenues} />
             </div>
-            <EventAnalyticsTable analyticsData={analytics} />
-          </div>
+          )}
+          {isMobile && selectedTable === 1 && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Cities/Countries</h3>
+              </div>
+              <CountriesRevenueTable countriesData={countriesRevenues} />
+            </div>
+          )}
+          {!isMobile && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Analytics</h3>
+              </div>
+              <EventAnalyticsTable analyticsData={analytics} />
+            </div>
+          )}
+          {isMobile && selectedTable === 2 && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Analytics</h3>
+              </div>
+              <EventAnalyticsTable analyticsData={analytics} />
+            </div>
+          )}
         </div>
       </div>
       <AddNewEventModal

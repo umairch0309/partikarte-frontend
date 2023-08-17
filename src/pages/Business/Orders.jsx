@@ -34,10 +34,10 @@ const Orders = () => {
   return (
     <>
       <Topbar
-        title={"Manage Events"}
-        subtitle={"Manage your Events with Overview and Analytics"}
+        title={"Orders"}
+        subtitle={"Manage your Orders with Overview and Analytics"}
       />
-      <div className="manage-events-page-container">
+      <div className="manage-orders-page-container">
         <EventsList
           showHeader={true}
           selectedEvent={selectedEvent}

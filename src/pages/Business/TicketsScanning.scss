@@ -7,6 +7,10 @@
     padding-block: 20px;
     margin-top: 15px;
     @include flex(row, space-between, center);
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: stretch;
+    }
     h3 {
       font-size: 18px;
       font-weight: 600;
@@ -16,8 +20,15 @@
   .event-page-actions {
     width: 100%;
     @include flex(row, flex-end, center, 15px);
+    @media (max-width: 767px) {
+      margin-top: 10px;
+      justify-content: flex-start;
+    }
     button {
       @include flex(row, "", center, 5px);
+      @media (max-width: 767px) {
+        flex-grow: 1;
+      }
       svg {
         display: block;
       }
@@ -25,6 +36,32 @@
   }
   .stats-cards-container {
     @include flex(row, space-between, center, 20px);
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+  }
+  .tables-selection-buttons-container {
+    background-color: white;
+    border-radius: $primaryBorderRadius;
+    padding: 10px 20px;
+    margin-top: 30px;
+    @include flex(row, space-between, center);
+    button {
+      border: none;
+      height: 40px;
+      background-color: opacityColor($secondaryColor, 0.03);
+      border-radius: 5px;
+      flex-grow: 1;
+      color: $secondaryColor;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .selected-button {
+      background-color: $primaryColor;
+      color: white;
+    }
   }
   .order-analytics-chart-container {
     margin-top: 30px;

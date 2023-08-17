@@ -10,9 +10,46 @@
   background-color: #fcfcfcd3;
   backdrop-filter: blur(3px);
   z-index: 100;
+  @media (max-width: 767px) {
+    flex-direction: column-reverse;
+    align-items: start;
+    gap: 20px;
+    padding-top: 20px;
+  }
+  .mobile-top-bar-logo {
+    display: none;
+    @media (max-width: 767px) {
+      display: block;
+    }
+  }
+  .search-input-container {
+    @include flex(row, "", center, 10px);
+    border-radius: $primaryBorderRadius;
+    padding-inline: 5px 20px;
+    border: 1px solid opacityColor($textColor, 0.2);
+    width: 70%;
+    display: none;
+    @media (max-width: 767px) {
+      width: 100%;
+      display: flex;
+    }
+    input {
+      font-size: 14px;
+      border: none;
+      outline: none;
+    }
+
+    &:focus-within {
+      outline: 2px solid $primaryColor;
+      border-color: transparent;
+    }
+  }
   .topbar-left {
     color: $secondaryColor;
     @include flex(column, "", flex-start, 5px);
+    @media (max-width: 767px) {
+      margin-top: 10px;
+    }
     h2 {
       font-weight: 500;
       font-size: 28px;
@@ -23,26 +60,21 @@
     }
   }
   .topbar-right {
-    @include flex(row, flex-end, center, 20px);
+    @include flex(row, space-between, center, 20px);
     width: 50%;
+    @media (max-width: 767px) {
+      width: 100%;
+    }
+    .image-and-notification-container {
+      @include flex(row, flex-end, center, 20px);
+    }
     svg {
       display: block;
     }
     .search-input-container {
-      @include flex(row, "", center, 10px);
-      border-radius: $primaryBorderRadius;
-      padding-inline: 5px 20px;
-      border: 1px solid opacityColor($textColor, 0.2);
-      width: 70%;
-      input {
-        font-size: 14px;
-        border: none;
-        outline: none;
-      }
-
-      &:focus-within {
-        outline: 2px solid $primaryColor;
-        border-color: transparent;
+      display: flex;
+      @media (max-width: 767px) {
+        display: none;
       }
     }
     img {
@@ -50,6 +82,86 @@
       width: 60px;
       object-fit: cover;
       border-radius: 50%;
+      @media (max-width: 767px) {
+        height: 40px;
+        width: 40px;
+      }
+    }
+    .menu-icon-mobile {
+      display: none;
+      @media (max-width: 767px) {
+        display: block;
+        height: 35px;
+        width: 35px;
+        background-color: $primaryColor;
+        @include flex(row, center, center);
+        border-radius: 5px;
+        svg {
+          path {
+            fill: white;
+            fill-opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+.side-bar-mobile-main-container {
+  @include flex(column, "", center, 40px);
+  padding-top: 20px;
+  background-color: white;
+  min-width: 250px;
+  // max-width: 250px;
+  .sidebar-all-routes-container {
+    @include flex(column, "", center, 10px);
+    width: 100%;
+    svg {
+      display: block;
+    }
+    .single-sidebar-item {
+      width: 100%;
+      @include flex(row, "", center, 10px);
+      border-radius: 10px;
+      height: 45px;
+      padding-inline: 15px;
+      h5 {
+        font-size: 14px;
+        font-weight: 400;
+        color: opacityColor($textColor, 0.5);
+      }
+      svg {
+        min-width: 17px;
+      }
+    }
+    .active {
+      background-color: $primaryColor;
+      h5 {
+        color: white;
+      }
+      svg {
+        path {
+          fill: white;
+          fill-opacity: 1;
+        }
+      }
+    }
+  }
+  .logout-button {
+    width: 100%;
+    @include flex(row, "", center, 10px);
+    border-radius: 10px;
+    height: 45px;
+    padding-inline: 15px;
+    cursor: pointer;
+    margin-top: auto;
+    svg {
+      display: block;
+    }
+    h5 {
+      font-size: 14px;
+      font-weight: 400;
+      color: $errorColor;
     }
   }
 }

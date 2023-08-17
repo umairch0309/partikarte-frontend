@@ -97,44 +97,65 @@ const EventsList = ({
   return (
     <div className="event-list-main-container">
       {showHeader && (
-        <div className="event-list-header">
-          <div className="event-list-header-left">
-            <h3>Latest Events</h3>
-          </div>
-          <div className="event-list-header-right">
-            {showInputs && (
-              <div className="header-right-search-button-container">
-                <div className="search-container">
-                  <ReactSVG src="/icons/tools/search.svg" />
-                  <input
-                    type="text"
-                    name="search"
-                    placeholder="Search events..."
-                  />
+        <>
+          <div className="event-list-header">
+            <div className="event-list-header-left">
+              <h3>Latest Events</h3>
+            </div>
+            <div className="event-list-header-right">
+              {showInputs && (
+                <div className="header-right-search-button-container">
+                  <div className="search-container">
+                    <ReactSVG src="/icons/tools/search.svg" />
+                    <input
+                      type="text"
+                      name="search"
+                      placeholder="Search events..."
+                    />
+                  </div>
+                  <PrimaryButton
+                    onClick={() => setShowAddNewEventModal(true)}
+                    className={"add-new-event"}
+                  >
+                    <ReactSVG src="/icons/tools/add-event.svg" />
+                    <span>Add new Event</span>
+                  </PrimaryButton>
                 </div>
-                <PrimaryButton
-                  onClick={() => setShowAddNewEventModal(true)}
-                  className={"add-new-event"}
-                >
-                  <ReactSVG src="/icons/tools/add-event.svg" />
-                  <span>Add new Event</span>
-                </PrimaryButton>
+              )}
+              <div className="header-right-arrows">
+                <ReactSVG
+                  onClick={() => handleScroll(-320)}
+                  className="featured-header-arrow arrow-left"
+                  src="/icons/tools/arrow-head-left.svg"
+                />
+                <ReactSVG
+                  onClick={() => handleScroll(320)}
+                  className="featured-header-arrow arrow-right"
+                  src="/icons/tools/arrow-head-right.svg"
+                />
               </div>
-            )}
-            <div className="header-right-arrows">
-              <ReactSVG
-                onClick={() => handleScroll(-320)}
-                className="featured-header-arrow arrow-left"
-                src="/icons/tools/arrow-head-left.svg"
-              />
-              <ReactSVG
-                onClick={() => handleScroll(320)}
-                className="featured-header-arrow arrow-right"
-                src="/icons/tools/arrow-head-right.svg"
-              />
             </div>
           </div>
-        </div>
+          {showInputs && (
+            <div className="header-right-mobile-search-button-container">
+              <div className="search-container">
+                <ReactSVG src="/icons/tools/search.svg" />
+                <input
+                  type="text"
+                  name="search"
+                  placeholder="Search events..."
+                />
+              </div>
+              <PrimaryButton
+                onClick={() => setShowAddNewEventModal(true)}
+                className={"add-new-event"}
+              >
+                <ReactSVG src="/icons/tools/add-event.svg" />
+                <span>Add new Event</span>
+              </PrimaryButton>
+            </div>
+          )}
+        </>
       )}
       <div className="event-list-container" ref={scrollContainerRef}>
         {eventsData.map((event, index) => (

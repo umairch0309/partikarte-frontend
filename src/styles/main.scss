@@ -8,6 +8,7 @@
 
 body {
   height: 100%;
+  width: 100% !important;
   margin: 0;
   background-color: white;
   h1,
@@ -170,23 +171,17 @@ body {
 .ant-picker {
   background-color: transparent;
 }
+.ant-drawer {
+  max-height: 100vh;
+  overflow-y: auto;
+}
 
 .ant-drawer .ant-drawer-header {
-  border-bottom: none;
+  display: none;
 }
 
 .ant-tooltip .ant-tooltip-inner {
   font-size: 11px;
-}
-
-.ant-drawer .ant-drawer-close {
-  margin-block-start: 10px;
-  margin-inline-end: 0;
-}
-
-.ant-drawer-close {
-  margin-left: auto;
-  margin-right: 0;
 }
 
 .green {

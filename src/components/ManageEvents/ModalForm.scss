@@ -6,9 +6,17 @@
   @include flex(column, "", "", 20px);
   .add-new-event-header {
     @include flex(row, space-between, center, 50px);
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
     .new-event-header-left {
       width: 65%;
       @include flex(row, space-between, center, 20px);
+      @media (max-width: 767px) {
+        width: 100%;
+      }
       .event-banner-placeholder-box {
         @include flex(row, center, center);
         height: 220px;
@@ -53,6 +61,9 @@
       }
       .image-upload-guides {
         white-space: nowrap;
+        @media (max-width: 767px) {
+          white-space: break-spaces;
+        }
         h5 {
           font-size: 16px;
           font-weight: 500;
@@ -67,6 +78,10 @@
     .new-event-header-right {
       width: 30%;
       @include flex(column, "", center, 40px);
+      @media (max-width: 767px) {
+        width: 100%;
+        gap: 20px;
+      }
     }
   }
   .image-error-message {
@@ -78,6 +93,11 @@
   }
   .side-by-side-guest-input {
     @include flex(row, space-between, center, 30px);
+    @media (max-width: 767px) {
+      gap: 20px;
+      flex-direction: column;
+      width: 100%;
+    }
   }
 
   .single-form-item {
@@ -123,5 +143,8 @@
   }
   .form-submit-button {
     margin-left: auto;
+    @media (max-width: 767px) {
+      width: 100%;
+    }
   }
 }

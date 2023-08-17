@@ -6,19 +6,19 @@ import SecondaryButton from "../../components/UI/SecondaryButton";
 import { ReactSVG } from "react-svg";
 import StatCard from "../../components/Common/StatCard";
 import Chart from "../../components/Common/Chart";
-import TopReferrersTable from "../../components/Tables/TopReferrersTable";
 import { useState, useEffect } from "react";
-import CountriesRevenueTable from "../../components/Tables/CountriesRevenueTable";
-import EventAnalyticsTable from "../../components/Tables/EventAnalyticsTable";
 import AddNewEventModal from "../../components/ManageEvents/AddNewEventModal";
 import TicketsTableInScanning from "../../components/Tables/TicketsTableInScanning";
 import GuestsTableInScanning from "../../components/Tables/GuestsTableInScanning";
+import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 
 const TicketsScanning = () => {
   const [tickets, setTickets] = useState([]);
   const [guests, setGuests] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedTable, setSelectedTable] = useState(0);
+  const isMobile = useIsMobileWidth();
 
   useEffect(() => {
     const array = [];
@@ -109,27 +109,87 @@ const TicketsScanning = () => {
           </div>
           <Chart height={290} />
         </div>
+        {isMobile && (
+          <div className="tables-selection-buttons-container">
+            <button
+              className={selectedTable === 0 ? "selected-button" : ""}
+              onClick={() => setSelectedTable(0)}
+            >
+              Tickets Table
+            </button>
+            <button
+              className={selectedTable === 1 ? "selected-button" : ""}
+              onClick={() => setSelectedTable(1)}
+            >
+              Guests Table
+            </button>
+          </div>
+        )}
         <div className="all-tables-main-container">
-          <div className="table-container">
-            <div className="table-container-header">
-              <h3>Tickets</h3>
-              <div className="search-container">
-                <ReactSVG src="/icons/tools/search.svg" />
-                <input type="text" name="search" placeholder="Search tickets" />
+          {!isMobile && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Tickets</h3>
+                <div className="search-container">
+                  <ReactSVG src="/icons/tools/search.svg" />
+                  <input
+                    type="text"
+                    name="search"
+                    placeholder="Search tickets"
+                  />
+                </div>
               </div>
+              <TicketsTableInScanning ticketsData={tickets} />
             </div>
-            <TicketsTableInScanning ticketsData={tickets} />
-          </div>
-          <div className="table-container">
-            <div className="table-container-header">
-              <h3>Guests</h3>
-              <div className="search-container">
-                <ReactSVG src="/icons/tools/search.svg" />
-                <input type="text" name="search" placeholder="Search guests" />
+          )}
+          {isMobile && selectedTable === 0 && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Tickets</h3>
+                <div className="search-container">
+                  <ReactSVG src="/icons/tools/search.svg" />
+                  <input
+                    type="text"
+                    name="search"
+                    placeholder="Search tickets"
+                  />
+                </div>
               </div>
+              <TicketsTableInScanning ticketsData={tickets} />
             </div>
-            <GuestsTableInScanning guestsData={guests} />
-          </div>
+          )}
+          {!isMobile && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Guests</h3>
+                <div className="search-container">
+                  <ReactSVG src="/icons/tools/search.svg" />
+                  <input
+                    type="text"
+                    name="search"
+                    placeholder="Search guests"
+                  />
+                </div>
+              </div>
+              <GuestsTableInScanning guestsData={guests} />
+            </div>
+          )}
+          {isMobile && selectedTable === 1 && (
+            <div className="table-container">
+              <div className="table-container-header">
+                <h3>Guests</h3>
+                <div className="search-container">
+                  <ReactSVG src="/icons/tools/search.svg" />
+                  <input
+                    type="text"
+                    name="search"
+                    placeholder="Search guests"
+                  />
+                </div>
+              </div>
+              <GuestsTableInScanning guestsData={guests} />
+            </div>
+          )}
         </div>
       </div>
       <AddNewEventModal

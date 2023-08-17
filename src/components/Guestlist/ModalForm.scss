@@ -6,8 +6,14 @@
   @include flex(column, "", "", 20px);
   .side-by-side-guest-input {
     @include flex(row, space-between, center, 30px);
+    @media (max-width: 767px) {
+      gap: 20px;
+      flex-direction: column;
+      width: 100%;
+    }
     button {
       white-space: nowrap;
+      width: 100%;
     }
 
     .add-multiple-button {
