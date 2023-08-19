@@ -74,7 +74,7 @@ const MemebersTable = ({ membersData }) => {
       title: "Address",
       dataIndex: "address",
       key: "address",
-      width: "300px",
+      width: "100",
     },
     {
       title: "Actions",

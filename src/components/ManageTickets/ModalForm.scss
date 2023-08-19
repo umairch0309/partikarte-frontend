@@ -10,6 +10,15 @@
   .side-by-side-ticket-input {
     width: 100%;
     @include flex(row, space-between, center, 30px);
+    @media (max-width: 767px) {
+      gap: 20px;
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+  .side-by-side-multiple-header-input {
+    width: 100%;
+    @include flex(row, space-between, center, 30px);
   }
 
   .single-form-item {
@@ -71,6 +80,7 @@
   }
   .form-submit-button {
     margin-left: auto;
+    width: 100%;
   }
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {

@@ -5,6 +5,7 @@ import SecondaryButton from "../../UI/SecondaryButton";
 import { ReactSVG } from "react-svg";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import validateOrganizerCompanyDetails from "../../../validation/OrganizerCompanyDetails";
+import AddSocialMedia from "../Forms/AddSocialMedia";
 
 const Company = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const Company = () => {
   const [formErrors, setFormErrors] = useState({});
   const [profileImage, setProfileImage] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null);
+  const [showAddSocialMedia, setShowAddSocialMedia] = useState(false);
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -71,7 +73,7 @@ const Company = () => {
     <div className="company-details-main-container">
       <div className="company-details-header">
         <h3>Company</h3>
-        <SecondaryButton onClick={handleSubmit}>
+        <SecondaryButton type={"submit"} onClick={handleSubmit}>
           <span>Save</span>
         </SecondaryButton>
       </div>
@@ -195,7 +197,10 @@ const Company = () => {
         <div className="social-media-settings-container">
           <div className="social-settings-header">
             <h3>Social Media</h3>
-            <SecondaryButton onClick={handleSubmit}>
+            <SecondaryButton
+              onClick={() => setShowAddSocialMedia(true)}
+              type={"button"}
+            >
               <ReactSVG src="/icons/tools/add-gallery.svg" />
               <span>Add Social Media</span>
             </SecondaryButton>
@@ -235,6 +240,10 @@ const Company = () => {
           </div>
         </div>
       </div>
+      <AddSocialMedia
+        setShowAddSocialMedia={setShowAddSocialMedia}
+        showAddSocialMedia={showAddSocialMedia}
+      />
     </div>
   );
 };

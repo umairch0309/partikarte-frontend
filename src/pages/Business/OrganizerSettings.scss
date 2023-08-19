@@ -11,6 +11,12 @@
     padding: 10px 20px;
     position: sticky;
     width: 100%;
+    @media (max-width: 767px) {
+      overflow-x: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
     a {
       height: 45px;
       width: 100%;
@@ -19,6 +25,9 @@
       border-radius: $primaryBorderRadius;
       color: $textColor;
       font-weight: 500;
+      @media (max-width: 767px) {
+        white-space: nowrap;
+      }
       svg {
         display: block;
         path {
@@ -45,6 +54,11 @@
     margin-bottom: 20px;
     &::-webkit-scrollbar {
       width: 3px;
+    }
+    @media (max-width: 767px) {
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 }

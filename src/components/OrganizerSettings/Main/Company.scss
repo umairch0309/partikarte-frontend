@@ -18,6 +18,9 @@
       width: 10%;
       @include flex(row, center, center, 10px);
       white-space: nowrap;
+      @media (max-width: 767px) {
+        width: 100px;
+      }
     }
   }
   .company-details-main-bottom {
@@ -103,6 +106,11 @@
       @include flex(column, "", "", 20px);
       .side-by-side-guest-input {
         @include flex(row, space-between, center, 30px);
+        @media (max-width: 767px) {
+          flex-direction: column;
+          gap: 20px;
+          align-items: stretch;
+        }
         button {
           white-space: nowrap;
         }
@@ -154,6 +162,7 @@
       .social-settings-header {
         @include flex(row, space-between, center, 20px);
         margin-bottom: 20px;
+
         h3 {
           font-size: 18px;
           font-weight: 600;
@@ -175,8 +184,15 @@
         }
         .single-item-left {
           @include flex(row, "", center, 10px);
+          @media (max-width: 767px) {
+            flex-wrap: wrap;
+          }
           p {
             margin-left: 20px;
+            @media (max-width: 767px) {
+              margin-left: 0;
+              width: 100%;
+            }
           }
         }
         .single-item-right {

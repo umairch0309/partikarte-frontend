@@ -9,9 +9,17 @@
   }
   .add-new-news-header {
     @include flex(row, space-between, center, 50px);
+    @media (max-width: 767px) {
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+    }
     .new-news-header-left {
       width: 60%;
       @include flex(row, space-between, center, 20px);
+      @media (max-width: 767px) {
+        width: 100%;
+      }
       .news-banner-placeholder-box {
         @include flex(row, center, center);
         height: 220px;
@@ -33,6 +41,12 @@
       @include flex(column, "", center, 10px);
       overflow-y: auto;
       height: 220px;
+      @media (max-width: 767px) {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        overflow-x: auto;
+      }
       &::-webkit-scrollbar {
         display: none;
       }
@@ -41,6 +55,9 @@
         height: 130px;
         object-fit: cover;
         border-radius: $primaryBorderRadius;
+        @media (max-width: 767px) {
+          width: 60%;
+        }
       }
     }
   }
@@ -91,5 +108,8 @@
   }
   .form-submit-button {
     margin-left: auto;
+    @media (max-width: 767px) {
+      width: 100%;
+    }
   }
 }

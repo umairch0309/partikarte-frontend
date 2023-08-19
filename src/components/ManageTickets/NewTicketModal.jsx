@@ -124,7 +124,7 @@ const NewTicketModal = ({ setShowNewTicketModal, showNewTicketModal }) => {
           </div>
         </div>
         <div className="side-by-side-ticket-input">
-          <div className="side-by-side-ticket-input">
+          <div className="side-by-side-multiple-header-input">
             <div
               className={`single-form-item ${
                 formErrors.ticketPrice ? "error" : ""
@@ -197,7 +197,7 @@ const NewTicketModal = ({ setShowNewTicketModal, showNewTicketModal }) => {
               formErrors.numberOfTickets ? "error" : ""
             }`}
           >
-            <div className="side-by-side-ticket-input">
+            <div className="side-by-side-multiple-header-input">
               <label htmlFor="numberOfTickets">No. of Tickets</label>
               <div className="switch-label-container">
                 <label

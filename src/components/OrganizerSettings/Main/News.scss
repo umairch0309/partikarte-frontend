@@ -40,6 +40,11 @@
           height: 110px;
           object-fit: cover;
           border-radius: $primaryBorderRadius;
+          @media (max-width: 767px) {
+            width: 90px;
+            min-width: 90px;
+            height: 90px;
+          }
         }
         .news-info-container {
           @include flex(column, "", flex-start, 10px);

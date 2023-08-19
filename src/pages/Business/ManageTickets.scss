@@ -21,6 +21,10 @@
   }
   .stats-cards-container {
     @include flex(row, space-between, center, 20px);
+    @media (max-width: 767px) {
+      flex-direction: column;
+      gap: 10px;
+    }
   }
   .order-analytics-chart-container {
     margin-top: 30px;
@@ -49,6 +53,11 @@
     .table-container-header {
       padding: 20px;
       @include flex(row, space-between, center);
+      @media (max-width: 767px) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
       h3 {
         font-size: 18px;
         font-weight: 600;
@@ -86,6 +95,7 @@
         button {
           white-space: nowrap;
           @include flex(row, "", center, 5px);
+
           svg {
             display: block;
           }

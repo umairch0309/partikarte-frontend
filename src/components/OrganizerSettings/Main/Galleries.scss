@@ -8,6 +8,7 @@
   border-radius: $primaryBorderRadius;
   .galleries-header {
     @include flex(row, space-between, center, 20px);
+
     margin-bottom: 10px;
     h3 {
       font-size: 18px;
@@ -24,7 +25,13 @@
   }
   .galleries-main-bottom {
     @include flex(row, flex-start, center, 5px);
+
     flex-wrap: wrap;
+    @media (max-width: 767px) {
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+    }
     svg {
       display: block;
     }
@@ -35,6 +42,9 @@
       padding: 10px;
       cursor: pointer;
       margin-bottom: 15px;
+      @media (max-width: 767px) {
+        width: 100%;
+      }
       &:hover {
         box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.03);
       }

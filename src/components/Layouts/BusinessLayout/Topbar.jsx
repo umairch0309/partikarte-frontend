@@ -4,10 +4,11 @@ import { ReactSVG } from "react-svg";
 import useIsMobileWidth from "../../../hooks/useIsMobileWidth";
 import { Drawer } from "antd";
 import { businessRoutes } from "../../../Routes";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Topbar = ({ title, subtitle }) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const showDrawer = () => {
     setOpen(true);
@@ -34,7 +35,11 @@ const Topbar = ({ title, subtitle }) => {
             <ReactSVG src="/icons/tools/search.svg" />
           </div>
 
-          <ReactSVG className="mobile-top-bar-logo" src="/blue-logo.svg" />
+          <ReactSVG
+            onClick={() => navigate("/")}
+            className="mobile-top-bar-logo"
+            src="/blue-logo.svg"
+          />
           <div className="image-and-notification-container">
             <ReactSVG src="/icons/tools/notification.svg" />
             <img src="/images/business-profile.jpg" />
@@ -57,7 +62,7 @@ const Topbar = ({ title, subtitle }) => {
         className="mobile-menu-drawer"
       >
         <div className="side-bar-mobile-main-container">
-          <ReactSVG src="/blue-logo.svg" />
+          <ReactSVG onClick={() => navigate("/")} src="/blue-logo.svg" />
           <div className="sidebar-all-routes-container">
             {businessRoutes.map((route) => {
               return (
