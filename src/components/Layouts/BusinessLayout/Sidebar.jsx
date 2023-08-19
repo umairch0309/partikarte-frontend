@@ -3,8 +3,16 @@ import "./Sidebar.scss";
 import { ReactSVG } from "react-svg";
 import { businessRoutes } from "../../../Routes";
 import { NavLink } from "react-router-dom";
+import { useAuthContext } from "../../../context/auth-context";
 
 const Sidebar = () => {
+  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
   return (
     <aside className="side-bar-main-container">
       <ReactSVG src="/blue-logo.svg" />
@@ -18,7 +26,7 @@ const Sidebar = () => {
           );
         })}
       </div>
-      <div className="logout-button">
+      <div onClick={handleLogout} className="logout-button">
         <ReactSVG src={"/icons/menu/logout-icon.svg"} />
         <h5>Logout</h5>
       </div>

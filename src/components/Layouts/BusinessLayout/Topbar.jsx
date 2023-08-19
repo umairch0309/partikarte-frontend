@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import "./Topbar.scss";
 import { ReactSVG } from "react-svg";
-import useIsMobileWidth from "../../../hooks/useIsMobileWidth";
 import { Drawer } from "antd";
 import { businessRoutes } from "../../../Routes";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../context/auth-context";
 
 const Topbar = ({ title, subtitle }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
 
   const showDrawer = () => {
     setOpen(true);
@@ -41,8 +47,14 @@ const Topbar = ({ title, subtitle }) => {
             src="/blue-logo.svg"
           />
           <div className="image-and-notification-container">
-            <ReactSVG src="/icons/tools/notification.svg" />
-            <img src="/images/business-profile.jpg" />
+            <ReactSVG
+              className="notifications-icon"
+              src="/icons/tools/notification.svg"
+            />
+            <img
+              onClick={() => navigate("/business/settings")}
+              src="/images/business-profile.jpg"
+            />
 
             <ReactSVG
               onClick={showDrawer}
@@ -73,7 +85,7 @@ const Topbar = ({ title, subtitle }) => {
               );
             })}
           </div>
-          <div className="logout-button">
+          <div onClick={handleLogout} className="logout-button">
             <ReactSVG src={"/icons/menu/logout-icon.svg"} />
             <h5>Logout</h5>
           </div>

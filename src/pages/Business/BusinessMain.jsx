@@ -16,19 +16,19 @@ import Orders from "./Orders";
 import TicketsScanning from "./TicketsScanning";
 import UserManagement from "./UserManagement";
 import OrganizerSettings from "./OrganizerSettings";
+import { useAuthContext } from "../../context/auth-context";
 
 const BusinessMain = () => {
-  const [loggedIn, setLoggedIn] = useState(null);
-
-  useEffect(() => {
-    setLoggedIn(localStorage.getItem("loggedIn"));
-  });
+  const { setIsLoggedIn, isLoggedIn } = useAuthContext();
 
   // If not logged in, show authentication-related routes
-  if (!loggedIn) {
+  if (!isLoggedIn) {
     return (
       <Routes>
-        <Route path="/login" element={<SignIn setLoggedIn={setLoggedIn} />} />
+        <Route
+          path="/login"
+          element={<SignIn setIsLoggedIn={setIsLoggedIn} />}
+        />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />

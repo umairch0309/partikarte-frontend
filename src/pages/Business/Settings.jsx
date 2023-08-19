@@ -7,9 +7,17 @@ import CompanyInformation from "../../components/BusinessSettings/CompanyInforma
 import FinanceInformation from "../../components/BusinessSettings/FinanceInformation";
 import MarketingInformation from "../../components/BusinessSettings/MarketingInformation";
 import AccountInformation from "../../components/BusinessSettings/AccountInformation";
+import { useAuthContext } from "../../context/auth-context";
 
 const Settings = () => {
   const location = useLocation();
+  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
   return (
     <div className="business-settings-page">
       <Topbar
@@ -44,7 +52,9 @@ const Settings = () => {
               <ReactSVG src="/icons/menu/user-square.svg" />
               <span>Account</span>
             </NavLink>
-            <button className="logout-button-settings">Logout</button>
+            <button onClick={handleLogout} className="logout-button-settings">
+              Logout
+            </button>
           </div>
         </aside>
         <div className="business-settings-right">

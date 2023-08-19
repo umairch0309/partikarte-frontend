@@ -56,16 +56,6 @@
       height: 100px;
       padding-top: 10px;
     }
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    /* Firefox */
-    input[type="number"] {
-      -moz-appearance: textfield;
-    }
 
     .show-password-icon {
       position: absolute;

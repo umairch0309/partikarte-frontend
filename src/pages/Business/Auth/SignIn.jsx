@@ -12,7 +12,7 @@ const initalState = {
   password: "",
   remember: false,
 };
-const SignIn = ({ setLoggedIn }) => {
+const SignIn = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
@@ -37,9 +37,12 @@ const SignIn = ({ setLoggedIn }) => {
     }
 
     // use api here
-    localStorage.setItem("loggedIn", true);
-    setLoggedIn(true);
-    navigate("/");
+
+    localStorage.setItem("token", "token1234567890987654321");
+    setIsLoggedIn(true);
+
+    navigate("/business/dashboard");
+
     //   after submitting form
     setFormErrors({});
     setFormData(initalState);

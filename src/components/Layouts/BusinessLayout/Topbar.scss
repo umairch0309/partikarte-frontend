@@ -66,11 +66,15 @@
     @media (max-width: 767px) {
       width: 100%;
     }
+
     .image-and-notification-container {
       @include flex(row, flex-end, center, 20px);
     }
     svg {
       display: block;
+    }
+    .notifications-icon {
+      cursor: pointer;
     }
     .search-input-container {
       display: flex;
@@ -83,6 +87,7 @@
       width: 60px;
       object-fit: cover;
       border-radius: 50%;
+      cursor: pointer;
       @media (max-width: 767px) {
         height: 40px;
         width: 40px;
