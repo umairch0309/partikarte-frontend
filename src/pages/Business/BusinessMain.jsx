@@ -19,16 +19,13 @@ import OrganizerSettings from "./OrganizerSettings";
 import { useAuthContext } from "../../context/auth-context";
 
 const BusinessMain = () => {
-  const { setIsLoggedIn, isLoggedIn } = useAuthContext();
+  const { isLoggedIn } = useAuthContext();
 
   // If not logged in, show authentication-related routes
   if (!isLoggedIn) {
     return (
       <Routes>
-        <Route
-          path="/login"
-          element={<SignIn setIsLoggedIn={setIsLoggedIn} />}
-        />
+        <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />

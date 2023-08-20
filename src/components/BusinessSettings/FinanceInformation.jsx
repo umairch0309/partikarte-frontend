@@ -3,9 +3,12 @@ import "./SettingsForm.scss";
 import PrimaryButton from "../UI/PrimaryButton";
 import validateFinanceInformation from "../../validation/FinanceInformation";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
+import { usePutApi } from "../../hooks/api-hooks/usePutApi";
+import { useProfileDetails } from "../../api/profile";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
-  iban: "",
+  IBAN: "",
   accountName: "",
   invoiceEmail: "",
 };
@@ -13,6 +16,19 @@ const initialState = {
 const FinanceInformation = () => {
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
+  const [data, setData] = useState(null);
+
+  const { response, isLoading: profileLoading } = useProfileDetails((res) => {
+    setData(res?.data);
+    setFormValues({
+      IBAN: res?.data?.business?.financialInformation?.IBAN,
+      accountName: res?.data?.business?.financialInformation?.accountName,
+      invoiceEmail: res?.data?.business?.financialInformation?.invoiceEmail,
+    });
+  });
+
+  const { handleMutation, isLoading: isProfileUpdating } = usePutApi();
+  const queryClient = useQueryClient();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -31,27 +47,37 @@ const FinanceInformation = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("iban", formValues.iban);
+    setFormErrors({});
+
+    handleMutation(
+      {
+        path: "business/financial-information",
+        data: formValues,
+      },
+      (res) => {
+        queryClient.invalidateQueries("get-profile");
+      },
+      (res) => {}
+    );
   };
 
   return (
     <form className="business-settings-form" onSubmit={handleSubmit}>
       <h3>Finance Information</h3>
       <div className="side-by-side-settings-input">
-        <div className={`single-form-item ${formErrors.iban ? "error" : ""}`}>
-          <label htmlFor="iban">IBAN</label>
+        <div className={`single-form-item ${formErrors.IBAN ? "error" : ""}`}>
+          <label htmlFor="IBAN">IBAN</label>
           <input
-            name="iban"
+            name="IBAN"
             type="text"
-            id="iban"
+            id="IBAN"
             placeholder="IBAN"
             onChange={handleInputChange}
-            value={formValues.iban}
+            value={formValues.IBAN}
             onBlur={handleOnBlur}
           />
-          {formErrors.iban && (
-            <p className="error-message">{formErrors.iban}</p>
+          {formErrors.IBAN && (
+            <p className="error-message">{formErrors.IBAN}</p>
           )}
         </div>
         <div
@@ -62,7 +88,7 @@ const FinanceInformation = () => {
           <label htmlFor="accountName">Account name</label>
           <input
             name="accountName"
-            type="number"
+            type="text"
             id="accountName"
             placeholder="Account name"
             onChange={handleInputChange}
@@ -92,7 +118,10 @@ const FinanceInformation = () => {
         )}
       </div>
 
-      <PrimaryButton className={"settings-form-submit-button"}>
+      <PrimaryButton
+        disabled={profileLoading || isProfileUpdating}
+        className={"settings-form-submit-button"}
+      >
         Save changes
       </PrimaryButton>
     </form>

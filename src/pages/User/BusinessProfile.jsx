@@ -207,7 +207,7 @@ const BusinessProfile = () => {
                 </div>
                 <div className="social-media-item">
                   <div className="social-media-item-left">
-                    <ReactSVG src="/icons/tools/insta-color.svg" />
+                    <ReactSVG src="/icons/tools/instagram-color.svg" />
                     <h5>Instagram</h5>
                   </div>
                   <ReactSVG

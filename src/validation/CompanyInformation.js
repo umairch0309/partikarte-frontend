@@ -2,9 +2,9 @@ import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
   companyName: Yup.string().required("Required"),
-  vatNumber: Yup.string().required("Required"),
-  businessRegistryNumber: Yup.string().required("Required"),
-  address: Yup.string().required("Required"),
+  companyVAT: Yup.string().required("Required"),
+  companyRegistryNumber: Yup.string().required("Required"),
+  addressDescription: Yup.string().required("Required"),
   country: Yup.string().required("Required"),
   city: Yup.string().required("Required"),
   postalCode: Yup.string().required("Required"),

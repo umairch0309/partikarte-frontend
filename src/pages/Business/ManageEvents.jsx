@@ -14,7 +14,7 @@ import AddNewEventModal from "../../components/ManageEvents/AddNewEventModal";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 
 const ManageEvents = () => {
-  const [referrers, setReferrers] = useState([]);
+  // const [referrers, setReferrers] = useState([]);
   const [countriesRevenues, setCountriesRevenues] = useState([]);
   const [analytics, setAnalytics] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
@@ -22,18 +22,18 @@ const ManageEvents = () => {
   const [selectedTable, setSelectedTable] = useState(0);
   const isMobile = useIsMobileWidth();
 
-  useEffect(() => {
-    const array = [];
-    for (let i = 0; i < 5; i++) {
-      const row = {
-        key: i,
-        name: "John",
-        revenueGenerated: "23480",
-      };
-      array.push(row);
-    }
-    setReferrers(array);
-  }, []);
+  // useEffect(() => {
+  //   const array = [];
+  //   for (let i = 0; i < 5; i++) {
+  //     const row = {
+  //       key: i,
+  //       name: "John",
+  //       revenueGenerated: "23480",
+  //     };
+  //     array.push(row);
+  //   }
+  //   setReferrers(array);
+  // }, []);
 
   useEffect(() => {
     const array = [];
@@ -121,12 +121,12 @@ const ManageEvents = () => {
         </div>
         {isMobile && (
           <div className="tables-selection-buttons-container">
-            <button
+            {/* <button
               className={selectedTable === 0 ? "selected-button" : ""}
               onClick={() => setSelectedTable(0)}
             >
               Top Referrers
-            </button>
+            </button> */}
             <button
               className={selectedTable === 1 ? "selected-button" : ""}
               onClick={() => setSelectedTable(1)}
@@ -142,7 +142,7 @@ const ManageEvents = () => {
           </div>
         )}
         <div className="all-tables-main-container">
-          {!isMobile && (
+          {/* {!isMobile && (
             <div className="table-container">
               <div className="table-container-header">
                 <h3>Top referrers</h3>
@@ -157,7 +157,7 @@ const ManageEvents = () => {
               </div>
               <TopReferrersTable referrersData={referrers} />
             </div>
-          )}
+          )} */}
           {!isMobile && (
             <div className="table-container">
               <div className="table-container-header">

@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
-  iban: Yup.string().required("Required"),
+  IBAN: Yup.string().required("Required"),
   accountName: Yup.string().required("Required"),
   invoiceEmail: Yup.string().required("Required"),
 });

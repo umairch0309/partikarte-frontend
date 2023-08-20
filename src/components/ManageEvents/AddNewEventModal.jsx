@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomModal from "../UI/CustomModal";
 import "./ModalForm.scss";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
@@ -6,6 +6,10 @@ import PrimaryButton from "../UI/PrimaryButton";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { ReactSVG } from "react-svg";
 import validateAddNewEvent from "../../validation/AddNewEvent";
+import AutocompleteInput from "../service-components/AutoCompleteInput";
+import { useCountriesList } from "../../api/services";
+import { usePostApi } from "../../hooks/api-hooks/usePostApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
   title: "",
@@ -20,6 +24,8 @@ const initialState = {
   postalCode: "",
   startingDate: "",
   endingDate: "",
+  lng: "",
+  lat: "",
 };
 
 const AddNewEventModal = ({
@@ -27,9 +33,41 @@ const AddNewEventModal = ({
   showAddNewEventModal,
 }) => {
   const isMobile = useIsMobileWidth();
+
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
   const [imageToUpload, setImageToUpload] = useState(null);
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [countries, setCountries] = useState([]);
+
+  const { isLoading: countriesLoading } = useCountriesList(
+    (res) => {
+      setCountries(res);
+    },
+    (res) => {
+      console.log(res, "countries list error");
+    }
+  );
+  const { handleMutation, isLoading: isEventCreating } = usePostApi();
+  const queryClient = useQueryClient();
+
+  const handlePlaceSelect = (place) => {
+    setSelectedPlace(place);
+  };
+
+  useEffect(() => {
+    if (selectedPlace) {
+      setFormValues({
+        ...formValues,
+        address: selectedPlace.formatted_address,
+        country: selectedPlace.country,
+        city: selectedPlace.city,
+        postalCode: selectedPlace.postal_code,
+        lat: selectedPlace.lat,
+        lng: selectedPlace.lng,
+      });
+    }
+  }, [selectedPlace]);
 
   const handleImageUpload = (e) => {
     const imageFile = e.target.files[0];
@@ -83,8 +121,35 @@ const AddNewEventModal = ({
     }
 
     const formData = new FormData();
-    formData.append("title", formValues.name);
-    setShowAddNewEventModal(false);
+    formData.append("eventName", formValues.title);
+    formData.append("eventStart", formValues.startingDate);
+    formData.append("eventEnd", formValues.endingDate);
+    formData.append("eventType", formValues.eventType);
+    formData.append("eventCategory", formValues.category);
+    formData.append("addressDescription", formValues.address);
+    formData.append("city", formValues.city);
+    formData.append("postalCode", formValues.postalCode);
+    formData.append("country", formValues.country);
+    formData.append("eventCoordinatesX", formValues.lng);
+    formData.append("eventCoordinatesY", formValues.lat);
+    formData.append("eventVenue", formValues.venueName);
+    formData.append("eventDescription", formValues.description);
+    formData.append("eventBanner", imageToUpload);
+
+    setFormErrors({});
+
+    handleMutation(
+      {
+        path: "events/new-event",
+        data: formData,
+      },
+      (res) => {
+        queryClient.invalidateQueries("get-all-events");
+        setShowAddNewEventModal(false);
+        setFormValues(initialState);
+      },
+      (res) => {}
+    );
   };
 
   return (
@@ -282,15 +347,15 @@ const AddNewEventModal = ({
           className={`single-form-item ${formErrors.address ? "error" : ""}`}
         >
           <label htmlFor="address">Address</label>
-          <input
+          <AutocompleteInput
             name="address"
             type="text"
-            id="address"
             placeholder="Enter address"
-            onChange={handleInputChange}
-            value={formValues.address}
+            id="address"
             onBlur={handleOnBlur}
+            onPlaceSelect={handlePlaceSelect}
           />
+
           {formErrors.address && (
             <p className="error-message">{formErrors.address}</p>
           )}
@@ -308,9 +373,11 @@ const AddNewEventModal = ({
               onBlur={handleOnBlur}
             >
               <option value="">Choose country</option>
-              <option value="vip">USA</option>
-              <option value="vvip">UK</option>
-              <option value="economy">Slovakia</option>
+              {!countriesLoading &&
+                countries?.length > 0 &&
+                countries?.map((el) => (
+                  <option value={el?.countryName}>{el?.countryName}</option>
+                ))}
             </select>
             {formErrors.country && (
               <p className="select-error-message">{formErrors.country}</p>
@@ -318,7 +385,7 @@ const AddNewEventModal = ({
           </div>
           <div className={`single-form-item ${formErrors.city ? "error" : ""}`}>
             <label htmlFor="city">City/State</label>
-            <select
+            {/* <select
               onChange={handleInputChange}
               name="city"
               id="city"
@@ -329,9 +396,19 @@ const AddNewEventModal = ({
               <option value="vip">New York</option>
               <option value="vvip">Washington DC</option>
               <option value="economy">London</option>
-            </select>
+            </select> */}
+            <input
+              name="city"
+              type="text"
+              id="city"
+              placeholder="City name"
+              onChange={handleInputChange}
+              value={formValues.city}
+              onBlur={handleOnBlur}
+            />
+
             {formErrors.city && (
-              <p className="select-error-message">{formErrors.city}</p>
+              <p className="error-message">{formErrors.city}</p>
             )}
           </div>
           <div
@@ -342,7 +419,7 @@ const AddNewEventModal = ({
             <label htmlFor="postalCode">Postal Code</label>
             <input
               name="postalCode"
-              type="number"
+              type="text"
               id="postalCode"
               placeholder="Postal code"
               onChange={handleInputChange}

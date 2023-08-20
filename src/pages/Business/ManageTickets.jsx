@@ -4,32 +4,29 @@ import "./ManageTickets.scss";
 import Topbar from "../../components/Layouts/BusinessLayout/Topbar";
 import EventsList from "../../components/Common/EventsList";
 import StatCard from "../../components/Common/StatCard";
-import Chart from "../../components/Common/Chart";
 import SecondaryButton from "../../components/UI/SecondaryButton";
 import TicketsTable from "../../components/Tables/TicketsTable";
 import NewTicketModal from "../../components/ManageTickets/NewTicketModal";
+import { useAllTickets } from "../../api/manage-tickets";
 
 const ManageTickets = () => {
   const [data, setData] = useState([]);
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
+  const {
+    data: ticketsData,
+    isLoading,
+    isError,
+  } = useAllTickets(selectedEvent?._id);
+
   useEffect(() => {
-    const array = [];
-    for (let i = 0; i < 100; i++) {
-      const row = {
-        key: i,
-        ticketName: `Red line Folded Front Seats`,
-        ticketType: "Party Tickets",
-        availability: "24 Jan, 2023  to 24 April, 2023",
-        numberOfTicketsOrdered: Math.floor(Math.random() * 10),
-        remainingTickets: Math.floor(Math.random() * 50),
-        revenueGenerated: `$${Math.floor(Math.random() * 1000)}`,
-      };
-      array.push(row);
+    if (ticketsData) {
+      console.log(ticketsData);
+      setData(ticketsData.tickets);
     }
-    setData(array);
-  }, []);
+  }, [ticketsData, selectedEvent]);
+
   return (
     <>
       <Topbar
@@ -54,14 +51,14 @@ const ManageTickets = () => {
         <div className="stats-cards-container">
           <StatCard
             title={"Tickets sold"}
-            number={186}
+            number={selectedEvent?.ticketsSold ? selectedEvent?.ticketsSold : 0}
             icon={<ReactSVG src="/icons/tools/ticket-filled-colored.svg" />}
             variant={"yellow-stat-card"}
             showCalendar={true}
           />
           <StatCard
             title={"Revenue generated"}
-            number={"$" + "23,186"}
+            number={"$" + selectedEvent?.revenue ? selectedEvent?.revenue : 0}
             icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
             variant={"green-stat-card"}
             showCalendar={true}
@@ -91,6 +88,7 @@ const ManageTickets = () => {
       <NewTicketModal
         showNewTicketModal={showNewTicketModal}
         setShowNewTicketModal={setShowNewTicketModal}
+        selectedEvent={selectedEvent}
       />
     </>
   );

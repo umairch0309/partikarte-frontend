@@ -6,16 +6,16 @@ import PrimaryButton from "../../../components/UI/PrimaryButton";
 import validateSignUpForm from "../../../validation/SignUp";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
+import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
 
 const initalState = {
   email: "",
   password: "",
-  remember: false,
   username: "",
-  businessName: "",
-  businessVatNum: "",
-  businessRegisteryNumber: "",
-  businessAddress: "",
+  companyName: "",
+  companyVAT: "",
+  companyRegistryNumber: "",
+  addressDescription: "",
   city: "",
   postalCode: "",
   country: "",
@@ -25,6 +25,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
+
+  const { handleMutation, isLoading } = usePostApi();
 
   const handleInputChange = async (e) => {
     const { name, value, type, checked } = e.target;
@@ -43,12 +45,23 @@ const SignUp = () => {
       setFormErrors(errors);
       return;
     }
+    setFormErrors({});
 
     // use api here
-    navigate("/business/login");
+    handleMutation(
+      {
+        path: "auth/register",
+        data: formData,
+      },
+      (res) => {
+        navigate("/business/login");
+        setFormData(initalState);
+      },
+      (res) => {
+        console.log(res);
+      }
+    );
     //   after submitting form
-    setFormErrors({});
-    setFormData(initalState);
   };
 
   const togglePasswordVisibility = () => {
@@ -114,72 +127,74 @@ const SignUp = () => {
               <p className="error-message">{formErrors.password}</p>
             )}
           </div>
-          <div className={`form-item ${formErrors.businessName && "error"}`}>
-            <label htmlFor="businessName">Business Name</label>
+          <div className={`form-item ${formErrors.companyName && "error"}`}>
+            <label htmlFor="companyName">Business Name</label>
             <input
-              id="businessName"
+              id="companyName"
               type="text"
-              name="businessName"
-              value={formData.businessName}
+              name="companyName"
+              value={formData.companyName}
               placeholder="Business Name"
               onChange={handleInputChange}
               onBlur={handleOnBlur}
             />
-            {formErrors.businessName && (
-              <p className="error-message">{formErrors.businessName}</p>
+            {formErrors.companyName && (
+              <p className="error-message">{formErrors.companyName}</p>
             )}
           </div>
-          <div className={`form-item ${formErrors.businessVatNum && "error"}`}>
-            <label htmlFor="businessVatNum">Business VAT Number</label>
+          <div className={`form-item ${formErrors.companyVAT && "error"}`}>
+            <label htmlFor="companyVAT">Business VAT Number</label>
             <input
-              id="businessVatNum"
+              id="companyVAT"
               type="text"
-              name="businessVatNum"
-              value={formData.businessVatNum}
+              name="companyVAT"
+              value={formData.companyVAT}
               placeholder="Business VAT Number"
               onChange={handleInputChange}
               onBlur={handleOnBlur}
             />
-            {formErrors.businessVatNum && (
-              <p className="error-message">{formErrors.businessVatNum}</p>
+            {formErrors.companyVAT && (
+              <p className="error-message">{formErrors.companyVAT}</p>
             )}
           </div>
           <div
             className={`form-item ${
-              formErrors.businessRegisteryNumber && "error"
+              formErrors.companyRegistryNumber && "error"
             }`}
           >
-            <label htmlFor="businessRegisteryNumber">
+            <label htmlFor="companyRegistryNumber">
               Business Registry Number
             </label>
             <input
-              id="businessRegisteryNumber"
+              id="companyRegistryNumber"
               type="text"
-              name="businessRegisteryNumber"
-              value={formData.businessRegisteryNumber}
+              name="companyRegistryNumber"
+              value={formData.companyRegistryNumber}
               placeholder="Business Registery Number"
               onChange={handleInputChange}
               onBlur={handleOnBlur}
             />
-            {formErrors.businessRegisteryNumber && (
+            {formErrors.companyRegistryNumber && (
               <p className="error-message">
-                {formErrors.businessRegisteryNumber}
+                {formErrors.companyRegistryNumber}
               </p>
             )}
           </div>
-          <div className={`form-item ${formErrors.businessAddress && "error"}`}>
-            <label htmlFor="businessAddress">Business Address</label>
+          <div
+            className={`form-item ${formErrors.addressDescription && "error"}`}
+          >
+            <label htmlFor="addressDescription">Business Address</label>
             <input
-              id="businessAddress"
+              id="addressDescription"
               type="text"
-              name="businessAddress"
-              value={formData.businessAddress}
+              name="addressDescription"
+              value={formData.addressDescription}
               placeholder="Business Address"
               onChange={handleInputChange}
               onBlur={handleOnBlur}
             />
-            {formErrors.businessAddress && (
-              <p className="error-message">{formErrors.businessAddress}</p>
+            {formErrors.addressDescription && (
+              <p className="error-message">{formErrors.addressDescription}</p>
             )}
           </div>
           <div className="top-line">

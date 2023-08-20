@@ -1,37 +1,53 @@
 import React, { useState } from "react";
+import { Skeleton } from "antd";
 import "./SettingsForm.scss";
 import PrimaryButton from "../UI/PrimaryButton";
 import validateAccountInformation from "../../validation/AccountInformation";
 import { ReactSVG } from "react-svg";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
+import { usePutApi } from "../../hooks/api-hooks/usePutApi";
+import { useProfileDetails } from "../../api/profile";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
-  username: "",
-  email: "",
   oldPassword: "",
   newPassword: "",
-  profileImage: null,
+  email: "",
+  username: "",
 };
 
 const AccountInformation = () => {
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
   const [showPasswords, setShowPasswords] = useState([false, false]);
-  const [imageToUpload, setImageToUpload] = useState(null);
+  const [data, setData] = useState(null);
+
+  const { response, isLoading: profileLoading } = useProfileDetails((res) => {
+    setData(res?.data);
+    setFormValues((prevState) => ({
+      ...prevState,
+      username: res?.data?.user?.username,
+      email: res?.data?.user?.email,
+    }));
+  });
+
+  const { handleMutation, isLoading: isProfileUpdating } = usePutApi();
+  const queryClient = useQueryClient();
 
   const handleImageUpload = (e) => {
     const imageFile = e.target.files[0];
     if (imageFile) {
-      const reader = new FileReader();
-
-      reader.onload = (event) => {
-        setFormValues({
-          ...formValues,
-          profileImage: event.target.result,
-        });
-      };
-      reader.readAsDataURL(imageFile);
-      setImageToUpload(imageFile);
+      const formData = new FormData();
+      formData.append("profile_image", imageFile);
+      handleMutation(
+        {
+          path: "business/update-profile",
+          data: formData,
+        },
+        (res) => {
+          queryClient.invalidateQueries("auth/get-profile");
+        }
+      );
     }
   };
 
@@ -52,9 +68,26 @@ const AccountInformation = () => {
       return;
     }
 
+    setFormErrors({});
+
     const formData = new FormData();
-    formData.append("metaPixel", formValues.metaPixel);
-    formData.append("profileImage", imageToUpload);
+    formData.append("password", formValues.oldPassword);
+    formData.append("newPassword", formValues.newPassword);
+    handleMutation(
+      {
+        path: "auth/change-password",
+        data: formData,
+      },
+      (res) => {},
+      (res) => {
+        setFormErrors({ oldPassword: "Incorrect", newPassword: "Incorrect" });
+      }
+    );
+    setFormValues((prevState) => ({
+      ...prevState,
+      newPassword: "",
+      oldPassword: "",
+    }));
   };
 
   return (
@@ -62,8 +95,10 @@ const AccountInformation = () => {
       <h3>Account Information</h3>
 
       <div className="account-info-image-container">
-        {formValues.profileImage ? (
-          <img src={formValues.profileImage} />
+        {profileLoading || isProfileUpdating ? (
+          <Skeleton.Avatar active={true} size={150} shape={"circle"} />
+        ) : data?.user?.profile_image ? (
+          <img src={data?.user?.profile_image} />
         ) : (
           <ReactSVG
             className="avatar-container"
@@ -91,15 +126,18 @@ const AccountInformation = () => {
           className={`single-form-item ${formErrors.username ? "error" : ""}`}
         >
           <label htmlFor="username">Username</label>
+
           <input
             name="username"
             type="text"
             id="username"
             placeholder="Username"
-            onChange={handleInputChange}
+            onChange={() => {}}
+            disabled
             value={formValues.username}
             onBlur={handleOnBlur}
           />
+
           {formErrors.username && (
             <p className="error-message">{formErrors.username}</p>
           )}
@@ -111,7 +149,8 @@ const AccountInformation = () => {
             type="text"
             id="email"
             placeholder="Email Address"
-            onChange={handleInputChange}
+            onChange={() => {}}
+            disabled
             onBlur={handleOnBlur}
             value={formValues.email}
           />
@@ -184,7 +223,10 @@ const AccountInformation = () => {
         </div>
       </div>
 
-      <PrimaryButton className={"settings-form-submit-button"}>
+      <PrimaryButton
+        disabled={isProfileUpdating || profileLoading}
+        className={"settings-form-submit-button"}
+      >
         Save changes
       </PrimaryButton>
     </form>

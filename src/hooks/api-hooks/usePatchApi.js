@@ -3,18 +3,18 @@ import axios from "axios";
 import { BASE_URL } from "../../constants";
 import { useAuthContext } from "../../context/auth-context";
 import {
-  useMessageError,
-  useMessageLoading,
-  useMessageSuccess,
-} from "../useMessage";
+  ShowMessageError,
+  ShowMessageSuccess,
+  ShowMessageLoading,
+} from "../ShowMessage";
+import { useEffect } from "react";
+
+const path = new Date().getTime().toString();
 
 export function usePatchApi() {
   const { token } = useAuthContext();
-  let path = "";
 
   function patchApiCall(data) {
-    path = data.path;
-
     return axios.patch(`${BASE_URL}${data.path}`, data.data && data.data, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -24,19 +24,21 @@ export function usePatchApi() {
 
   const { mutate, isLoading } = useMutation(patchApiCall);
 
-  if (isLoading) {
-    useMessageLoading(path);
-  }
+  useEffect(() => {
+    if (isLoading && path) {
+      ShowMessageLoading(path);
+    }
+  }, [isLoading]);
 
   function handleMutation(data, afterSucess = () => {}, afterError = () => {}) {
     mutate(data, {
       onSuccess: async (res) => {
-        useMessageSuccess(res?.data?.message, path);
-        afterSucess(res);
+        ShowMessageSuccess(res?.data?.message, path);
+        afterSucess(res?.data);
       },
-      onError: async (err) => {
-        useMessageError(res?.data?.message, path);
-        afterError(res);
+      onError: async (res) => {
+        ShowMessageError(res?.response?.data?.message, path);
+        afterError(res?.response?.data);
       },
     });
   }

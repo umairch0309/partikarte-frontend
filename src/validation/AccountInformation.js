@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().required("Required"),
-  email: Yup.string().email("Write valid email").required("Required"),
+  oldPassword: Yup.string().required("Required"),
+  newPassword: Yup.string().required("Required"),
 });
 
 const validateAccountInformation = async (formValues) => {

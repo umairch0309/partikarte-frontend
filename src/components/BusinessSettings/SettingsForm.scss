@@ -114,6 +114,7 @@
       width: 150px;
       height: 150px;
       border-radius: 50%;
+      object-fit: cover;
     }
     .upload-icon-container {
       position: absolute;
@@ -142,5 +143,8 @@
         color: opacityColor($textColor, 0.7);
       }
     }
+  }
+  input:disabled {
+    background-color: #f8f8f8;
   }
 }

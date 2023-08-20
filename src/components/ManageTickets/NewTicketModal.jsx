@@ -6,6 +6,8 @@ import PrimaryButton from "../UI/PrimaryButton";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { Switch } from "antd";
 import validateNewTicket from "../../validation/NewTicket";
+import { usePostApi } from "../../hooks/api-hooks/usePostApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
   ticketName: "",
@@ -20,10 +22,17 @@ const initialState = {
   limitedTickets: true,
 };
 
-const NewTicketModal = ({ setShowNewTicketModal, showNewTicketModal }) => {
+const NewTicketModal = ({
+  selectedEvent,
+  setShowNewTicketModal,
+  showNewTicketModal,
+}) => {
   const isMobile = useIsMobileWidth();
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
+
+  const { handleMutation, isLoading: isEventCreating } = usePostApi();
+  const queryClient = useQueryClient();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -38,19 +47,38 @@ const NewTicketModal = ({ setShowNewTicketModal, showNewTicketModal }) => {
     e.preventDefault();
     const errors = await validateNewTicket(formValues);
     if (Object.keys(errors).length > 0) {
-      const newErrors = Object.entries(errors).reduce((acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = value;
-        }
-        return acc;
-      }, {});
-      setFormErrors(newErrors);
-      if (Object.keys(newErrors).length > 0) return;
+      setFormErrors(errors);
+      return;
+    } else {
+      setFormErrors({});
     }
 
     const formData = new FormData();
-    formData.append("title", formValues.name);
-    setShowNewTicketModal(false);
+    formData.append("ticketName", formValues.ticketName);
+    formData.append("validFrom", formValues.startingDate);
+    formData.append("validTo", formValues.endingDate);
+    formData.append("maxCapacity", formValues.numberOfTickets);
+    formData.append("capacityLimitation", formValues.limitedTickets);
+    formData.append("paidTicket", formValues.paidTicket);
+    formData.append("price", formValues.ticketPrice);
+    formData.append("vatPercentage", formValues.vatPercentage);
+    formData.append("descriptionWeb", formValues.descriptionOnWeb);
+    formData.append("descriptionTicket", formValues.descriptionOnTicket);
+
+    setFormErrors({});
+
+    handleMutation(
+      {
+        path: `/event/${selectedEvent?._id}/tickets/new-ticket`,
+        data: formData,
+      },
+      (res) => {
+        queryClient.invalidateQueries("get-all-tickets");
+        setShowNewTicketModal(false);
+        setFormValues(initialState);
+      },
+      (res) => {}
+    );
   };
 
   return (
@@ -136,7 +164,9 @@ const NewTicketModal = ({ setShowNewTicketModal, showNewTicketModal }) => {
                 type="number"
                 id="ticketPrice"
                 placeholder="Enter ticket price"
-                onChange={handleInputChange}
+                onChange={(e) =>
+                  formValues.paidTicket ? handleInputChange(e) : () => {}
+                }
                 value={formValues.ticketPrice || 0}
                 onBlur={handleOnBlur}
                 disabled={!formValues.paidTicket}
@@ -182,7 +212,9 @@ const NewTicketModal = ({ setShowNewTicketModal, showNewTicketModal }) => {
                 id="vatPercentage"
                 placeholder="VAT%"
                 min={0}
-                onChange={handleInputChange}
+                onChange={(e) =>
+                  formValues.paidTicket ? handleInputChange(e) : () => {}
+                }
                 value={formValues.vatPercentage || 0}
                 onBlur={handleOnBlur}
                 disabled={!formValues.paidTicket}
@@ -233,7 +265,9 @@ const NewTicketModal = ({ setShowNewTicketModal, showNewTicketModal }) => {
               id="numberOfTickets"
               placeholder="Enter No. of Tickets"
               min={"0"}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                formValues.limitedTickets ? handleInputChange(e) : () => {}
+              }
               value={
                 formValues.limitedTickets
                   ? formValues.numberOfTickets || 0

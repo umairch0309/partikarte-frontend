@@ -1,38 +1,67 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AddSocialMedia.scss";
 import CustomModal from "../../UI/CustomModal";
 import PrimaryButton from "../../UI/PrimaryButton";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
-import validateAddNews from "../../../validation/AddNews";
+import validateAddNewSocialMedia from "../../../validation/AddSocialMedia";
+import { usePutApi } from "../../../hooks/api-hooks/usePutApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
-  name: "",
+  platform: "",
   link: "",
 };
 
-const AddSocialMedia = ({ showAddSocialMedia, setShowAddSocialMedia }) => {
+const AddSocialMedia = ({
+  showAddSocialMedia,
+  setShowAddSocialMedia,
+  initialStateForEditSocialMedia,
+}) => {
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
+
+  const { handleMutation, isLoading: isProfileUpdating } = usePutApi();
+  const queryClient = useQueryClient();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
 
+  useEffect(() => {
+    setFormValues(
+      initialStateForEditSocialMedia?.platform !== ""
+        ? initialStateForEditSocialMedia
+        : initialState
+    );
+  }, [initialStateForEditSocialMedia]);
+
   const handleOnBlur = async (e) => {
-    useHandleOnBlur(e, validateAddNews, setFormErrors);
+    useHandleOnBlur(e, validateAddNewSocialMedia, setFormErrors);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = await validateAddNews(formValues);
+    const errors = await validateAddNewSocialMedia(formValues);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
 
-    const formData = new FormData();
-    formData.append("name", formValues.name);
+    setFormErrors({});
+
+    handleMutation(
+      {
+        path: "business/set-social-link",
+        data: formValues,
+      },
+      (res) => {
+        queryClient.invalidateQueries("get-profile");
+        setShowAddSocialMedia(false);
+        setFormValues(initialState);
+      },
+      (res) => {}
+    );
   };
   return (
     <CustomModal
@@ -46,13 +75,15 @@ const AddSocialMedia = ({ showAddSocialMedia, setShowAddSocialMedia }) => {
         className="add-new-social-media-form-container"
         onSubmit={handleSubmit}
       >
-        <div className={`single-form-item ${formErrors.name ? "error" : ""}`}>
-          <label htmlFor="name">Social Media</label>
+        <div
+          className={`single-form-item ${formErrors.platform ? "error" : ""}`}
+        >
+          <label htmlFor="platform">Social Media</label>
           <select
             onChange={handleInputChange}
-            name="name"
-            id="name"
-            value={formValues.name}
+            name="platform"
+            id="platform"
+            value={formValues.platform}
             onBlur={handleOnBlur}
           >
             <option value="">Choose one</option>
@@ -60,8 +91,8 @@ const AddSocialMedia = ({ showAddSocialMedia, setShowAddSocialMedia }) => {
             <option value="instagram">Instagram</option>
             <option value="linkedin">LinkedIn</option>
           </select>
-          {formErrors.name && (
-            <p className="select-error-message">{formErrors.name}</p>
+          {formErrors.platform && (
+            <p className="select-error-message">{formErrors.platform}</p>
           )}
         </div>
 

@@ -19,7 +19,11 @@ const Sidebar = () => {
       <div className="sidebar-all-routes-container">
         {businessRoutes.map((route) => {
           return (
-            <NavLink className="single-sidebar-item" to={route.route}>
+            <NavLink
+              key={route.title}
+              className="single-sidebar-item"
+              to={route.route}
+            >
               <ReactSVG src={route.icon} />
               <h5>{route.title}</h5>
             </NavLink>

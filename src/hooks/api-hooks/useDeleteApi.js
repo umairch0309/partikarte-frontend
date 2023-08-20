@@ -2,19 +2,19 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
 import {
-  useMessageDelete,
-  useMessageError,
-  useMessageLoading,
-} from "../useMessage";
+  ShowMessageSuccess,
+  ShowMessageError,
+  ShowMessageLoading,
+} from "../ShowMessage";
 import { useAuthContext } from "../../context/auth-context";
+import { useEffect } from "react";
+
+const path = new Date().getTime().toString();
 
 export function useDeleteApi() {
   const { token } = useAuthContext();
 
-  let path = "";
-
   function deleteApi(data) {
-    path = data.path;
     return axios.delete(`${BASE_URL}/${data.path}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -23,18 +23,20 @@ export function useDeleteApi() {
   }
   const { mutate, isLoading } = useMutation(deleteApi);
 
-  if (isLoading) {
-    useMessageLoading(path);
-  }
+  useEffect(() => {
+    if (isLoading && path) {
+      ShowMessageLoading(path);
+    }
+  }, [isLoading]);
 
   function handleMutation(data, afterSucess = () => {}, afterError = () => {}) {
     mutate(data, {
       onSuccess: async (res) => {
-        useMessageDelete(res?.data?.message, path);
+        ShowMessageSuccess(res?.data?.message, path);
         afterSucess(res);
       },
-      onError: async (err) => {
-        useMessageError(res?.data?.message, path);
+      onError: async (res) => {
+        ShowMessageError(res?.response?.data?.message, path);
         afterError(res);
       },
     });

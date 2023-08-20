@@ -6,17 +6,23 @@ import PrimaryButton from "../../../components/UI/PrimaryButton";
 import validateSignInForm from "../../../validation/SignIn";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
+import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
+import { useAuthContext } from "../../../context/auth-context";
 
 const initalState = {
   email: "",
   password: "",
   remember: false,
 };
-const SignIn = ({ setIsLoggedIn }) => {
+
+const SignIn = () => {
+  const { setIsLoggedIn, setRole } = useAuthContext();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
+
+  const { handleMutation, isLoading } = usePostApi();
 
   const handleInputChange = async (e) => {
     const { name, value, type, checked } = e.target;
@@ -35,17 +41,28 @@ const SignIn = ({ setIsLoggedIn }) => {
       setFormErrors(errors);
       return;
     }
+    setFormErrors({});
 
     // use api here
-
-    localStorage.setItem("token", "token1234567890987654321");
-    setIsLoggedIn(true);
-
-    navigate("/business/dashboard");
-
-    //   after submitting form
-    setFormErrors({});
-    setFormData(initalState);
+    handleMutation(
+      {
+        path: "auth/login",
+        data: formData,
+      },
+      (res) => {
+        localStorage.setItem("token", res?.data?.token);
+        localStorage.setItem("role", res?.data?.role);
+        setRole(res?.data?.role);
+        setIsLoggedIn(true);
+        navigate("/business/dashboard");
+      },
+      (res) => {
+        setFormErrors({
+          email: "Incorrect",
+          password: "Incorrect",
+        });
+      }
+    );
   };
 
   const togglePasswordVisibility = () => {

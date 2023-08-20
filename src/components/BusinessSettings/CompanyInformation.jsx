@@ -3,12 +3,15 @@ import "./SettingsForm.scss";
 import PrimaryButton from "../UI/PrimaryButton";
 import validateCompanyInformation from "../../validation/CompanyInformation";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
+import { usePutApi } from "../../hooks/api-hooks/usePutApi";
+import { useProfileDetails } from "../../api/profile";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
   companyName: "",
-  vatNumber: "",
-  businessRegistryNumber: "",
-  address: "",
+  companyVAT: "",
+  companyRegistryNumber: "",
+  addressDescription: "",
   country: "",
   city: "",
   postalCode: "",
@@ -17,6 +20,25 @@ const initialState = {
 const CompanyInformation = () => {
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
+  const [data, setData] = useState(null);
+
+  const { response, isLoading: profileLoading } = useProfileDetails((res) => {
+    setData(res?.data);
+    setFormValues({
+      companyName: res?.data?.business?.company?.companyName,
+      companyRegistryNumber:
+        res?.data?.business?.company?.companyRegistryNumber,
+      companyVAT: res?.data?.business?.company?.companyVAT,
+      addressDescription:
+        res?.data?.business?.company?.companyAddress?.addressDescription,
+      city: res?.data?.business?.company?.companyAddress?.city,
+      country: res?.data?.business?.company?.companyAddress?.country,
+      postalCode: res?.data?.business?.company?.companyAddress?.postalCode,
+    });
+  });
+
+  const { handleMutation, isLoading: isProfileUpdating } = usePutApi();
+  const queryClient = useQueryClient();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -35,8 +57,21 @@ const CompanyInformation = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("companyName", formValues.companyName);
+    setFormErrors({});
+
+    handleMutation(
+      {
+        path: "business/information",
+        data: formValues,
+      },
+      (res) => {
+        console.log(res);
+        queryClient.invalidateQueries("get-profile");
+      },
+      (res) => {
+        console.log(res);
+      }
+    );
   };
 
   return (
@@ -61,55 +96,59 @@ const CompanyInformation = () => {
       </div>
       <div className="side-by-side-settings-input">
         <div
-          className={`single-form-item ${formErrors.vatNumber ? "error" : ""}`}
+          className={`single-form-item ${formErrors.companyVAT ? "error" : ""}`}
         >
-          <label htmlFor="vatNumber">VAT number</label>
+          <label htmlFor="companyVAT">VAT number</label>
           <input
-            name="vatNumber"
+            name="companyVAT"
             type="number"
-            id="vatNumber"
+            id="companyVAT"
             placeholder="VAT number"
             onChange={handleInputChange}
-            value={formValues.vatNumber}
+            value={formValues.companyVAT}
             onBlur={handleOnBlur}
           />
-          {formErrors.vatNumber && (
-            <p className="error-message">{formErrors.vatNumber}</p>
+          {formErrors.companyVAT && (
+            <p className="error-message">{formErrors.companyVAT}</p>
           )}
         </div>
         <div
           className={`single-form-item ${
-            formErrors.businessRegistryNumber ? "error" : ""
+            formErrors.companyRegistryNumber ? "error" : ""
           }`}
         >
-          <label htmlFor="businessRegistryNumber">Registry number</label>
+          <label htmlFor="companyRegistryNumber">Registry number</label>
           <input
-            name="businessRegistryNumber"
+            name="companyRegistryNumber"
             type="number"
-            id="businessRegistryNumber"
+            id="companyRegistryNumber"
             placeholder="Registry number"
             onChange={handleInputChange}
-            value={formValues.businessRegistryNumber}
+            value={formValues.companyRegistryNumber}
             onBlur={handleOnBlur}
           />
-          {formErrors.businessRegistryNumber && (
-            <p className="error-message">{formErrors.businessRegistryNumber}</p>
+          {formErrors.companyRegistryNumber && (
+            <p className="error-message">{formErrors.companyRegistryNumber}</p>
           )}
         </div>
       </div>
-      <div className={`single-form-item ${formErrors.address ? "error" : ""}`}>
-        <label htmlFor="address">Address</label>
+      <div
+        className={`single-form-item ${
+          formErrors.addressDescription ? "error" : ""
+        }`}
+      >
+        <label htmlFor="addressDescription">Address</label>
         <input
-          name="address"
+          name="addressDescription"
           type="text"
-          id="address"
+          id="addressDescription"
           placeholder="Address"
           onChange={handleInputChange}
-          value={formValues.address}
+          value={formValues.addressDescription}
           onBlur={handleOnBlur}
         />
-        {formErrors.address && (
-          <p className="error-message">{formErrors.address}</p>
+        {formErrors.addressDescription && (
+          <p className="error-message">{formErrors.addressDescription}</p>
         )}
       </div>
       <div className="side-by-side-settings-input">
@@ -169,7 +208,10 @@ const CompanyInformation = () => {
           )}
         </div>
       </div>
-      <PrimaryButton className={"settings-form-submit-button"}>
+      <PrimaryButton
+        disabled={profileLoading || isProfileUpdating}
+        className={"settings-form-submit-button"}
+      >
         Save changes
       </PrimaryButton>
     </form>

@@ -6,24 +6,52 @@ import { ReactSVG } from "react-svg";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import validateOrganizerCompanyDetails from "../../../validation/OrganizerCompanyDetails";
 import AddSocialMedia from "../Forms/AddSocialMedia";
+import { usePatchApi } from "../../../hooks/api-hooks/usePatchApi";
+import { useProfileDetails } from "../../../api/profile";
+import { useQueryClient } from "@tanstack/react-query";
+import { Skeleton } from "antd";
+import { useDeleteApi } from "../../../hooks/api-hooks/useDeleteApi";
+
+const initialState = {
+  companyName: "",
+  email: "",
+  phoneNumber: "",
+  description: "",
+  coverPhoto: null,
+  profileImage: null,
+};
 
 const Company = () => {
   const navigate = useNavigate();
-
-  const initialState = {
-    organizerName: "",
-    email: "",
-    phoneNumber: "",
-    description: "",
-    coverPhoto: null,
-    profileImage: null,
-  };
-
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
   const [profileImage, setProfileImage] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null);
   const [showAddSocialMedia, setShowAddSocialMedia] = useState(false);
+  const [data, setData] = useState(null);
+  const [initialStateForEditSocialMedia, setInitialStateForEditSocialMedia] =
+    useState({
+      platform: "",
+      link: "",
+    });
+
+  const { response, isLoading: profileLoading } = useProfileDetails((res) => {
+    setData(res?.data);
+    setFormValues({
+      companyName: res?.data?.business?.company?.companyName,
+      email: res?.data?.business?.contactInformation?.email,
+      phoneNumber: res?.data?.business?.contactInformation?.phoneNumber,
+      description: res?.data?.business?.description,
+      profileImage: res?.data?.business?.organizerImage,
+      coverPhoto: res?.data?.business?.organizerImageBanner,
+    });
+  });
+
+  const { handleMutation, isLoading: isProfileUpdating } = usePatchApi();
+  const { handleMutation: handleDeleteMutation, isLoading: isDeleting } =
+    useDeleteApi();
+
+  const queryClient = useQueryClient();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -55,7 +83,25 @@ const Company = () => {
     useHandleOnBlur(e, validateOrganizerCompanyDetails, setFormErrors);
   };
 
-  console.log(formErrors, " form errors");
+  const handleEditClick = (platform, link) => {
+    setInitialStateForEditSocialMedia({ platform, link });
+    setShowAddSocialMedia(true);
+  };
+
+  const handleDeleteClick = (platform) => {
+    // Handle delete functionality
+    if (!isDeleting) {
+      handleDeleteMutation(
+        {
+          path: `business/delete-social-link/${platform}`,
+        },
+        (res) => {
+          queryClient.invalidateQueries("get-profile");
+        },
+        (res) => {}
+      );
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,8 +111,26 @@ const Company = () => {
       return;
     }
 
+    setFormErrors({});
+
     const formData = new FormData();
-    formData.append("organizer", formValues.name);
+    formData.append("companyName", formValues.companyName);
+    formData.append("email", formValues.email);
+    formData.append("phoneNumber", formValues.phoneNumber);
+    formData.append("description", formValues.description);
+    formData.append("organizerImage", profileImage);
+    formData.append("organizerImageBanner", coverPhoto);
+
+    handleMutation(
+      {
+        path: "business/organizer-details/update",
+        data: formData,
+      },
+      (res) => {
+        queryClient.invalidateQueries("get-profile");
+      },
+      (res) => {}
+    );
   };
 
   return (
@@ -79,8 +143,13 @@ const Company = () => {
       </div>
       <div className="company-details-main-bottom">
         <div className="company-details-images-container">
-          {formValues.coverPhoto ? (
-            <img src="/images/event-3.jpg" alt="" />
+          {isProfileUpdating || profileLoading ? (
+            <Skeleton.Node
+              active={true}
+              style={{ width: "100%", height: "350px" }}
+            ></Skeleton.Node>
+          ) : formValues.coverPhoto ? (
+            <img src={formValues.coverPhoto} alt="" />
           ) : (
             <label htmlFor="coverPhoto" className="cover-photo-placeholder">
               <ReactSVG src="/icons/tools/add-gallery.svg" />
@@ -97,7 +166,9 @@ const Company = () => {
           />
           <div className="profile-image-container">
             <div className="image-inner-container">
-              {formValues.profileImage ? (
+              {isProfileUpdating || profileLoading ? (
+                <Skeleton.Avatar active={true} size={130} shape={"circle"} />
+              ) : formValues.profileImage ? (
                 <img src={formValues.profileImage} />
               ) : (
                 <ReactSVG
@@ -121,21 +192,21 @@ const Company = () => {
           <div className="side-by-side-guest-input">
             <div
               className={`single-form-item ${
-                formErrors.organizerName ? "error" : ""
+                formErrors.companyName ? "error" : ""
               }`}
             >
-              <label htmlFor="organizerName">Organizer name</label>
+              <label htmlFor="companyName">Organizer name</label>
               <input
-                name="organizerName"
+                name="companyName"
                 type="text"
-                id="organizerName"
+                id="companyName"
                 placeholder="Organizer name"
                 onChange={handleInputChange}
-                value={formValues.organizerName}
+                value={formValues.companyName}
                 onBlur={handleOnBlur}
               />
-              {formErrors.organizerName && (
-                <p className="error-message">{formErrors.organizerName}</p>
+              {formErrors.companyName && (
+                <p className="error-message">{formErrors.companyName}</p>
               )}
             </div>
             <div
@@ -205,47 +276,131 @@ const Company = () => {
               <span>Add Social Media</span>
             </SecondaryButton>
           </div>
-          <div className="single-social-media-item">
-            <div className="single-item-left">
-              <ReactSVG src="/icons/tools/facebook-color.svg" />
-              <span>Facebook</span>
-              <p>www.facebook.com/678sdfkj-zs09asds98dasds0d9ui</p>
+          {/* {data?.business?.socialLinks?.facebook && (
+            <div className="single-social-media-item">
+              <div className="single-item-left">
+                <ReactSVG src="/icons/tools/facebook-color.svg" />
+                <span>Facebook</span>
+                <p>{data?.business?.socialLinks?.facebook}</p>
+              </div>
+              <div className="single-item-right">
+                <ReactSVG
+                  onClick={() => {
+                    setShowAddSocialMedia(true);
+                    setInitialStateForEditSocialMedia({
+                      platform: "facebook",
+                      link: data?.business?.socialLinks?.facebook,
+                    });
+                  }}
+                  className="button-icon"
+                  src="/icons/tools/edit.svg"
+                />
+                <ReactSVG
+                  className="button-icon"
+                  src="/icons/tools/delete.svg"
+                />
+              </div>
             </div>
-            <div className="single-item-right">
-              <ReactSVG className="button-icon" src="/icons/tools/edit.svg" />
-              <ReactSVG className="button-icon" src="/icons/tools/delete.svg" />
+          )}
+          {data?.business?.socialLinks?.instagram && (
+            <div className="single-social-media-item">
+              <div className="single-item-left">
+                <ReactSVG src="/icons/tools/insta-color.svg" />
+                <span>Instagram</span>
+                <p>{data?.business?.socialLinks?.facebook}</p>
+              </div>
+              <div className="single-item-right">
+                <ReactSVG
+                  onClick={() => {
+                    setShowAddSocialMedia(true);
+                    setInitialStateForEditSocialMedia({
+                      platform: "instagram",
+                      link: data?.business?.socialLinks?.instagram,
+                    });
+                  }}
+                  className="button-icon"
+                  src="/icons/tools/edit.svg"
+                />
+                <ReactSVG
+                  className="button-icon"
+                  src="/icons/tools/delete.svg"
+                />
+              </div>
             </div>
-          </div>
-          <div className="single-social-media-item">
-            <div className="single-item-left">
-              <ReactSVG src="/icons/tools/insta-color.svg" />
-              <span>Instagram</span>
-              <p>www.Instagram.com/678sdfkj-zs09asds98dasds0d9ui</p>
+          )}
+          {data?.business?.socialLinks?.linkedin && (
+            <div className="single-social-media-item">
+              <div className="single-item-left">
+                <ReactSVG src="/icons/tools/linkedin-color.svg" />
+                <span>Linkedin</span>
+                <p>{data?.business?.socialLinks?.linkedin}</p>
+              </div>
+              <div className="single-item-right">
+                <ReactSVG
+                  onClick={() => {
+                    setShowAddSocialMedia(true);
+                    setInitialStateForEditSocialMedia({
+                      platform: "linkedin",
+                      link: data?.business?.socialLinks?.linkedin,
+                    });
+                  }}
+                  className="button-icon"
+                  src="/icons/tools/edit.svg"
+                />
+                <ReactSVG
+                  className="button-icon"
+                  src="/icons/tools/delete.svg"
+                />
+              </div>
             </div>
-            <div className="single-item-right">
-              <ReactSVG className="button-icon" src="/icons/tools/edit.svg" />
-              <ReactSVG className="button-icon" src="/icons/tools/delete.svg" />
-            </div>
-          </div>{" "}
-          <div className="single-social-media-item">
-            <div className="single-item-left">
-              <ReactSVG src="/icons/tools/linkedin-color.svg" />
-              <span>Linkedin</span>
-              <p>www.linkedinwww.com/678sdfkj-zs09asds98dasds0d9ui</p>
-            </div>
-            <div className="single-item-right">
-              <ReactSVG className="button-icon" src="/icons/tools/edit.svg" />
-              <ReactSVG className="button-icon" src="/icons/tools/delete.svg" />
-            </div>
-          </div>
+          )} */}
+          {data?.business?.socialLinks &&
+            Object.keys(data?.business?.socialLinks).map((platform) => (
+              <SingleSocialMediaItem
+                key={platform}
+                platform={platform}
+                link={data?.business?.socialLinks[platform]}
+                onEditClick={handleEditClick}
+                onDeleteClick={handleDeleteClick}
+              />
+            ))}
         </div>
       </div>
       <AddSocialMedia
         setShowAddSocialMedia={setShowAddSocialMedia}
         showAddSocialMedia={showAddSocialMedia}
+        initialStateForEditSocialMedia={initialStateForEditSocialMedia}
       />
     </div>
   );
 };
 
 export default Company;
+
+function SingleSocialMediaItem({ platform, link, onEditClick, onDeleteClick }) {
+  return (
+    <div className="single-social-media-item">
+      <div className="single-item-left">
+        <ReactSVG src={`/icons/tools/${platform}-color.svg`} />
+        <span>{platform}</span>
+        <p>{link}</p>
+      </div>
+      <div className="single-item-right">
+        <ReactSVG
+          onClick={() => {
+            onEditClick(platform, link);
+          }}
+          className="button-icon"
+          src="/icons/tools/edit.svg"
+        />
+        <ReactSVG
+          onClick={() => {
+            onDeleteClick(platform);
+          }}
+          className="button-icon"
+          src="/icons/tools/delete.svg"
+        />
+      </div>
+    </div>
+  );
+}

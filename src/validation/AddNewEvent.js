@@ -19,10 +19,7 @@ const validationSchema = Yup.object().shape({
     test: function () {
       const startingDate = new Date(this.parent.startingDate).getTime();
       const endingDate = new Date(this.parent.endingDate).getTime();
-      console.log(this.parent.startingDate, this.parent.endingDate);
-      console.log(startingDate, endingDate);
       const differenceInMilliseconds = endingDate - startingDate;
-      console.log(differenceInMilliseconds > 15 * 1000);
       return differenceInMilliseconds > 15 * 1000;
     },
   }),

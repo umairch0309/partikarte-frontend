@@ -20,7 +20,9 @@
     width: 100%;
     @include flex(row, space-between, center, 30px);
   }
-
+  input:disabled {
+    background-color: opacityColor($textColor, 0.04);
+  }
   .single-form-item {
     width: 100%;
     label {

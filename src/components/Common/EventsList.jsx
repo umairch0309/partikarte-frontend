@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./EventsList.scss";
 import { ReactSVG } from "react-svg";
 import { Dropdown } from "antd";
 import PrimaryButton from "../UI/PrimaryButton";
 import { useState } from "react";
 import { useRef } from "react";
+import { useAllEvents } from "../../api/manage-events";
+import { Skeleton } from "antd";
 
 const EventsList = ({
   showHeader,
@@ -36,50 +38,16 @@ const EventsList = ({
       .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
   };
 
-  const eventsData = [
-    {
-      date: "2023-02-21T00:00:00.000Z",
-      eventName: "Introduction Basic Programming HTML & CSS",
-      startTime: "2023-07-13T20:00:00.000Z",
-      endTime: "2023-07-13T23:30:00.000Z",
-    },
-    {
-      date: "2023-02-21T00:00:00.000Z",
-      eventName: "Introduction Basic Programming HTML & CSS",
-      startTime: "2023-07-13T20:00:00.000Z",
-      endTime: "2023-07-13T23:30:00.000Z",
-    },
-    {
-      date: "2023-02-21T00:00:00.000Z",
-      eventName: "Introduction Basic Programming HTML & CSS",
-      startTime: "2023-07-13T20:00:00.000Z",
-      endTime: "2023-07-13T23:30:00.000Z",
-    },
-    {
-      date: "2023-02-21T00:00:00.000Z",
-      eventName: "Introduction Basic Programming HTML & CSS",
-      startTime: "2023-07-13T20:00:00.000Z",
-      endTime: "2023-07-13T23:30:00.000Z",
-    },
-    {
-      date: "2023-02-21T00:00:00.000Z",
-      eventName: "Introduction Basic Programming HTML & CSS",
-      startTime: "2023-07-13T20:00:00.000Z",
-      endTime: "2023-07-13T23:30:00.000Z",
-    },
-    {
-      date: "2023-02-21T00:00:00.000Z",
-      eventName: "Introduction Basic Programming HTML & CSS",
-      startTime: "2023-07-13T20:00:00.000Z",
-      endTime: "2023-07-13T23:30:00.000Z",
-    },
-    {
-      date: "2023-02-21T00:00:00.000Z",
-      eventName: "Introduction Basic Programming HTML & CSS",
-      startTime: "2023-07-13T20:00:00.000Z",
-      endTime: "2023-07-13T23:30:00.000Z",
-    },
-  ];
+  const [eventsData, setEventsData] = useState([]);
+  const { isLoading } = useAllEvents((res) => {
+    setEventsData(res?.events);
+  });
+
+  useEffect(() => {
+    if (!selectedEvent && eventsData?.length > 0) {
+      setSelectedEvent(eventsData[0]);
+    }
+  }, [eventsData]);
 
   const scrollContainerRef = useRef(null);
 
@@ -158,36 +126,42 @@ const EventsList = ({
         </>
       )}
       <div className="event-list-container" ref={scrollContainerRef}>
-        {eventsData.map((event, index) => (
-          <div
-            onClick={() => setSelectedEvent({ ...event, index })}
-            className={`single-event-container ${
-              selectedEvent?.index === index ? "selected-event" : ""
-            }`}
-            key={index}
-          >
-            <div className="event-header">
-              <div className="date-container">
-                <ReactSVG src="/icons/tools/clock.svg" />
-                <span>{formatDate(event.date)}</span>
+        {isLoading ? (
+          <Skeleton active={true} paragraph={{ rows: 5 }} size={"small"} />
+        ) : (
+          eventsData &&
+          eventsData?.length > 0 &&
+          eventsData.map((event) => (
+            <div
+              onClick={() => setSelectedEvent(event)}
+              className={`single-event-container ${
+                selectedEvent?._id === event?._id ? "selected-event" : ""
+              }`}
+              key={event?._id}
+            >
+              <div className="event-header">
+                <div className="date-container">
+                  <ReactSVG src="/icons/tools/clock.svg" />
+                  <span>{formatDate(event?.createdAt)}</span>
+                </div>
+                <Dropdown
+                  menu={{
+                    items: items,
+                  }}
+                  placement="bottom"
+                  trigger={["click"]}
+                >
+                  <ReactSVG src="/icons/tools/dots-action.svg" />
+                </Dropdown>
               </div>
-              <Dropdown
-                menu={{
-                  items: items,
-                }}
-                placement="bottom"
-                trigger={["click"]}
-              >
-                <ReactSVG src="/icons/tools/dots-action.svg" />
-              </Dropdown>
+              <h3>{event?.eventName}</h3>
+              <p className="ticket-time-date">
+                Available from {formatDate(event?.eventStart)} to{" "}
+                {formatDate(event?.eventEnd)}
+              </p>
             </div>
-            <h3>{event.eventName}</h3>
-            <p className="ticket-time-date">
-              Available from {formatDate(event.startTime)} to{" "}
-              {formatDate(event.endTime)}
-            </p>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

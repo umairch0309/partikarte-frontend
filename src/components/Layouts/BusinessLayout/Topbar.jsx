@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import "./Topbar.scss";
 import { ReactSVG } from "react-svg";
-import { Drawer } from "antd";
+import { Drawer, Skeleton } from "antd";
 import { businessRoutes } from "../../../Routes";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../context/auth-context";
+import { useProfileDetails } from "../../../api/profile";
 
 const Topbar = ({ title, subtitle }) => {
+  const [data, setData] = useState(null);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+
+  const { response, isLoading } = useProfileDetails((res) => {
+    setData(res?.data);
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -51,10 +57,14 @@ const Topbar = ({ title, subtitle }) => {
               className="notifications-icon"
               src="/icons/tools/notification.svg"
             />
-            <img
-              onClick={() => navigate("/business/settings")}
-              src="/images/business-profile.jpg"
-            />
+            {data?.user?.profile_image ? (
+              <img
+                onClick={() => navigate("/business/settings")}
+                src={data?.user?.profile_image}
+              />
+            ) : (
+              <Skeleton.Avatar active={true} size={60} shape={"circle"} />
+            )}
 
             <ReactSVG
               onClick={showDrawer}
@@ -78,7 +88,11 @@ const Topbar = ({ title, subtitle }) => {
           <div className="sidebar-all-routes-container">
             {businessRoutes.map((route) => {
               return (
-                <NavLink className="single-sidebar-item" to={route.route}>
+                <NavLink
+                  key={route.title}
+                  className="single-sidebar-item"
+                  to={route.route}
+                >
                   <ReactSVG src={route.icon} />
                   <h5>{route.title}</h5>
                 </NavLink>

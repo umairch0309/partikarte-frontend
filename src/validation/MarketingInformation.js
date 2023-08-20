@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
-  metaPixel: Yup.string().required("Required"),
-  googleAnalytics: Yup.string().required("Required"),
+  metaPixelId: Yup.string().required("Required"),
+  googleAnalyticsId: Yup.string().required("Required"),
   apiAccessKey: Yup.string().required("Required"),
 });
 

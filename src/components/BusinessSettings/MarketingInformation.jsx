@@ -4,16 +4,33 @@ import PrimaryButton from "../UI/PrimaryButton";
 import TertiaryButton from "../UI/TertiaryButton";
 import validateMarketingInformation from "../../validation/MarketingInformation";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
+import { usePutApi } from "../../hooks/api-hooks/usePutApi";
+import { useProfileDetails } from "../../api/profile";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
-  metaPixel: "",
-  googleAnalytics: "",
+  metaPixelId: "",
+  googleAnalyticsId: "",
   apiAccessKey: "",
 };
 
 const MarketingInformation = () => {
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
+  const [data, setData] = useState(null);
+
+  const { response, isLoading: profileLoading } = useProfileDetails((res) => {
+    setData(res?.data);
+    setFormValues({
+      metaPixelId: res?.data?.business?.marketingInformation?.metaPixelId,
+      googleAnalyticsId:
+        res?.data?.business?.marketingInformation?.googleAnalyticsId,
+      apiAccessKey: res?.data?.business?.marketingInformation?.apiAccessKey,
+    });
+  });
+
+  const { handleMutation, isLoading: isProfileUpdating } = usePutApi();
+  const queryClient = useQueryClient();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -32,8 +49,18 @@ const MarketingInformation = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("metaPixel", formValues.metaPixel);
+    setFormErrors({});
+
+    handleMutation(
+      {
+        path: "business/marketing-information",
+        data: formValues,
+      },
+      (res) => {
+        queryClient.invalidateQueries("get-profile");
+      },
+      (res) => {}
+    );
   };
 
   return (
@@ -41,40 +68,40 @@ const MarketingInformation = () => {
       <h3>Marketing Information</h3>
 
       <div
-        className={`single-form-item ${formErrors.metaPixel ? "error" : ""}`}
+        className={`single-form-item ${formErrors.metaPixelId ? "error" : ""}`}
       >
-        <label htmlFor="metaPixel">Meta Pixel ID</label>
+        <label htmlFor="metaPixelId">Meta Pixel ID</label>
         <input
-          name="metaPixel"
+          name="metaPixelId"
           type="text"
-          id="metaPixel"
+          id="metaPixelId"
           placeholder="Meta Pixel ID"
           onChange={handleInputChange}
-          value={formValues.metaPixel}
+          value={formValues.metaPixelId}
           onBlur={handleOnBlur}
         />
-        {formErrors.metaPixel && (
-          <p className="error-message">{formErrors.metaPixel}</p>
+        {formErrors.metaPixelId && (
+          <p className="error-message">{formErrors.metaPixelId}</p>
         )}
       </div>
 
       <div
         className={`single-form-item ${
-          formErrors.googleAnalytics ? "error" : ""
+          formErrors.googleAnalyticsId ? "error" : ""
         }`}
       >
-        <label htmlFor="googleAnalytics">Google Analytics ID</label>
+        <label htmlFor="googleAnalyticsId">Google Analytics ID</label>
         <input
-          name="googleAnalytics"
+          name="googleAnalyticsId"
           type="text"
-          id="googleAnalytics"
+          id="googleAnalyticsId"
           placeholder="Google Analytics ID"
           onChange={handleInputChange}
-          value={formValues.googleAnalytics}
+          value={formValues.googleAnalyticsId}
           onBlur={handleOnBlur}
         />
-        {formErrors.googleAnalytics && (
-          <p className="error-message">{formErrors.googleAnalytics}</p>
+        {formErrors.googleAnalyticsId && (
+          <p className="error-message">{formErrors.googleAnalyticsId}</p>
         )}
       </div>
 
@@ -103,7 +130,10 @@ const MarketingInformation = () => {
         </TertiaryButton>
       </div>
 
-      <PrimaryButton className={"settings-form-submit-button"}>
+      <PrimaryButton
+        disabled={profileLoading || isProfileUpdating}
+        className={"settings-form-submit-button"}
+      >
         Save changes
       </PrimaryButton>
     </form>

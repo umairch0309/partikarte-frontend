@@ -7,6 +7,7 @@ import Galleries from "../../components/OrganizerSettings/Main/Galleries";
 import ViewGallery from "../../components/OrganizerSettings/Main/ViewGallery";
 import News from "../../components/OrganizerSettings/Main/News";
 import Company from "../../components/OrganizerSettings/Main/Company";
+import CustomizeTickets from "../../components/OrganizerSettings/Main/CustomizeTickets";
 
 const OrganizerSettings = () => {
   const location = useLocation();
@@ -52,6 +53,10 @@ const OrganizerSettings = () => {
             <Route index element={<Galleries />} />
             <Route path="/news" element={<News />} />
             <Route path="/company-details" element={<Company />} />
+            <Route
+              path="/tickets-customization"
+              element={<CustomizeTickets />}
+            />
 
             {/* SUB ROUTES  */}
             <Route path="/galleries/:galleryId" element={<ViewGallery />} />
