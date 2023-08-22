@@ -53,8 +53,9 @@ const SignIn = () => {
         localStorage.setItem("token", res?.data?.token);
         localStorage.setItem("role", res?.data?.role);
         setRole(res?.data?.role);
+        navigate(res?.data?.token);
         setIsLoggedIn(true);
-        navigate("/business/dashboard");
+        setToken();
       },
       (res) => {
         setFormErrors({

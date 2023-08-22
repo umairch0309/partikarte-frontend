@@ -8,12 +8,12 @@ const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(localStorage.getItem("role"));
 
   useEffect(() => {
-    console.log("isLoggedIn", isLoggedIn);
+    setToken(localStorage.getItem("token"));
   }, [isLoggedIn]);
 
   return (
     <AuthContext.Provider
-      value={{ role, setRole, token, setIsLoggedIn, isLoggedIn }}
+      value={{ role, setRole, setToken, token, setIsLoggedIn, isLoggedIn }}
     >
       {children}
     </AuthContext.Provider>

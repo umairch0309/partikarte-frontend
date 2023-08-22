@@ -1,10 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { ReactSVG } from "react-svg";
 import "./Header.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../UI/PrimaryButton";
+import { useAuthContext } from "../../../context/auth-context";
+import { useProfileDetails } from "../../../api/profile";
+import { Dropdown, Skeleton } from "antd";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+  const [data, setData] = useState(null);
+
+  const { response, isLoading } = useProfileDetails((res) => {
+    setData(res?.data);
+  });
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
+  const items = [
+    {
+      label: (
+        <div
+          onClick={() => navigate("/business/dashboard")}
+          className="button-in-dropdown"
+        >
+          <span>Dashboard</span>
+        </div>
+      ),
+      key: "0",
+      className: "blue-button-dropdown",
+    },
+    {
+      label: (
+        <div onClick={handleLogout} className="button-in-dropdown">
+          <span>Logout</span>
+        </div>
+      ),
+      key: "1",
+      className: "red-button-dropdown",
+    },
+  ];
   return (
     <div className="user-layout-header-container">
       <div className="user-layout-header">
@@ -15,9 +54,28 @@ const Header = () => {
           <Link to={"/join-business"}>
             <h4>For Organizers</h4>
           </Link>
-          <Link className="login-link-button" to="/business/login">
-            <PrimaryButton className="header-login-button">Login</PrimaryButton>
-          </Link>
+          {!isLoggedIn ? (
+            <Link className="login-link-button" to="/business/login">
+              <PrimaryButton className="header-login-button">
+                Login
+              </PrimaryButton>
+            </Link>
+          ) : (
+            <Dropdown
+              menu={{
+                items,
+              }}
+              trigger={["click"]}
+              placement="bottomRight"
+              className="dropdown-table-actions"
+            >
+              {data?.user?.profile_image && !isLoading ? (
+                <img src={data?.user?.profile_image} />
+              ) : (
+                <Skeleton.Avatar active={true} size={60} shape={"circle"} />
+              )}
+            </Dropdown>
+          )}
         </div>
       </div>
     </div>

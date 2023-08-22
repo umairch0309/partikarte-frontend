@@ -65,7 +65,11 @@ const AddSocialMedia = ({
   };
   return (
     <CustomModal
-      onCancel={() => setShowAddSocialMedia(false)}
+      onCancel={() => {
+        setFormValues(initialState);
+        setFormErrors({});
+        setShowAddSocialMedia(false);
+      }}
       open={showAddSocialMedia}
       onOk={() => setShowAddSocialMedia(false)}
       title={"Add Social Media"}

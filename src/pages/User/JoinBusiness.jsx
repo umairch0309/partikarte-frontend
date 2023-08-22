@@ -8,8 +8,10 @@ import UniqueFeatuers from "../../components/UserLandingPagesSections/UniqueFeat
 import Calculate from "../../components/UserLandingPagesSections/Calculate";
 import Reviews from "../../components/UserLandingPagesSections/Reviews";
 import { ReactSVG } from "react-svg";
+import { useNavigate } from "react-router-dom";
 
 const JoinBusiness = () => {
+  const navigate = useNavigate();
   return (
     <div className="join-business-page">
       <div className="join-business-hero-section">
@@ -19,7 +21,10 @@ const JoinBusiness = () => {
             <h1>Supercharge your event organizing with Par.karte</h1>
             <h5>An AI powered event .cke.ng solu.on to improve your events</h5>
           </div>
-          <PrimaryButton className={"become-a-partner-button"}>
+          <PrimaryButton
+            onClick={() => navigate("/business/dashboard")}
+            className={"become-a-partner-button"}
+          >
             Become a Partner
           </PrimaryButton>
         </div>

@@ -1,23 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AddNews.scss";
 import CustomModal from "../../UI/CustomModal";
 import useIsMobileWidth from "../../../hooks/useIsMobileWidth";
 import PrimaryButton from "../../UI/PrimaryButton";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import validateAddNews from "../../../validation/AddNews";
+import { useAllEvents } from "../../../api/manage-events";
+import { useQueryClient } from "@tanstack/react-query";
+import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
+import DateTimeLocalConverter from "../../../utilities/DateTimeLocalConverter";
+import { usePutApi } from "../../../hooks/api-hooks/usePutApi";
 
 const initialState = {
-  galleryTitle: "",
+  name: "",
   startingDate: "",
   event: "",
   newsImages: [],
+  description: "",
 };
 
-const AddNews = ({ showAddNewsModal, setShowAddNewsModal }) => {
+const AddNews = ({
+  showAddNewsModal,
+  setShowAddNewsModal,
+  selectedNews,
+  setSelectedNewsStatus,
+  selectedNewsStatus,
+}) => {
   const isMobile = useIsMobileWidth();
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
   const [imagesArray, setImagesArray] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
+
+  useEffect(() => {
+    if (selectedNews && selectedNewsStatus) {
+      setFormValues({
+        ...selectedNews,
+        startingDate: DateTimeLocalConverter(selectedNews?.date),
+        newsImages: selectedNews?.images || [],
+        event: selectedNews?.eventId,
+      });
+    }
+  }, [selectedNews, selectedNewsStatus]);
+
+  const { isLoading: isEventsLoading } = useAllEvents((res) => {
+    setEventsData(res?.events);
+  });
+
+  const { handleMutation, isLoading: isNewsCreating } = usePostApi();
+  const { handleMutation: handleUpdate, isLoading: isNewsUpdating } =
+    usePutApi();
+
+  const queryClient = useQueryClient();
 
   const handleImageUpload = (e) => {
     const imageFile = e.target.files[0];
@@ -28,13 +62,21 @@ const AddNews = ({ showAddNewsModal, setShowAddNewsModal }) => {
           ...formValues,
           newsImages: [...prevState.newsImages, event.target.result],
         }));
+        useHandleOnBlur(
+          {
+            target: {
+              name: "newsImages",
+              value: [...formValues.newsImages, event.target.result],
+            },
+          },
+          validateAddNews,
+          setFormErrors
+        );
       };
       reader.readAsDataURL(imageFile);
       setImagesArray([...imagesArray, imageFile]);
     }
   };
-
-  console.log(formValues.newsImages);
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -55,14 +97,69 @@ const AddNews = ({ showAddNewsModal, setShowAddNewsModal }) => {
 
     const formData = new FormData();
     formData.append("name", formValues.name);
+    formData.append("eventId", formValues.event);
+    formData.append("date", formValues.startingDate);
+    formData.append("description", formValues.description);
+    if (selectedNews?.images && selectedNewsStatus) {
+      selectedNews?.images?.forEach((image) => {
+        formData.append("images[]", image);
+      });
+    }
+
+    imagesArray.map((image, index) => {
+      formData.append(`newImages${index}`, image);
+    });
+
+    setFormErrors({});
+
+    if (selectedNews?._id && selectedNewsStatus) {
+      handleUpdate(
+        {
+          path: `news/update-news/${selectedNews?._id}`,
+          data: formData,
+        },
+        (res) => {
+          queryClient.invalidateQueries("get-all-news");
+          setFormValues(initialState);
+          setImagesArray([]);
+          setShowAddNewsModal(false);
+          setSelectedNewsStatus(false);
+        },
+        (res) => {}
+      );
+    } else {
+      handleMutation(
+        {
+          path: "news/create-news",
+          data: formData,
+        },
+        (res) => {
+          queryClient.invalidateQueries("get-all-news");
+          setFormValues(initialState);
+          setImagesArray([]);
+          setShowAddNewsModal(false);
+        },
+        (res) => {}
+      );
+    }
   };
   return (
     <CustomModal
-      onCancel={() => setShowAddNewsModal(false)}
+      onCancel={() => {
+        setFormValues(initialState);
+        setFormErrors({});
+        setImagesArray([]);
+        setShowAddNewsModal(false);
+        setSelectedNewsStatus(false);
+      }}
       open={showAddNewsModal}
       onOk={() => setShowAddNewsModal(false)}
-      title={"Add News"}
-      subtitle={"Please enter the information to add News"}
+      title={`${
+        selectedNews?._id && selectedNewsStatus ? "Edit " : "Add"
+      } News`}
+      subtitle={`Please enter the information to ${
+        selectedNews?._id && selectedNewsStatus ? "edit" : "add"
+      } News`}
       width={!isMobile && 700}
     >
       <form className="add-new-news-form-container" onSubmit={handleSubmit}>
@@ -92,23 +189,19 @@ const AddNews = ({ showAddNewsModal, setShowAddNewsModal }) => {
         {formErrors.newsImages && (
           <p className="image-error-message">{formErrors.newsImages}</p>
         )}
-        <div
-          className={`single-form-item ${
-            formErrors.galleryTitle ? "error" : ""
-          }`}
-        >
-          <label htmlFor="galleryTitle">Gallery title</label>
+        <div className={`single-form-item ${formErrors.name ? "error" : ""}`}>
+          <label htmlFor="name">Name</label>
           <input
-            name="galleryTitle"
+            name="name"
             type="text"
-            id="galleryTitle"
-            placeholder="Gallery title"
+            id="name"
+            placeholder="Name"
             onChange={handleInputChange}
-            value={formValues.galleryTitle}
+            value={formValues.name}
             onBlur={handleOnBlur}
           />
-          {formErrors.galleryTitle && (
-            <p className="error-message">{formErrors.galleryTitle}</p>
+          {formErrors.name && (
+            <p className="error-message">{formErrors.name}</p>
           )}
         </div>
 
@@ -163,9 +256,10 @@ const AddNews = ({ showAddNewsModal, setShowAddNewsModal }) => {
             onBlur={handleOnBlur}
           >
             <option value="">Choose event</option>
-            <option value="event0">Event 1</option>
-            <option value="event1">Event 2</option>
-            <option value="event2">Event 3</option>
+            {eventsData?.length > 0 &&
+              eventsData?.map((el) => (
+                <option value={el?._id}>{el?.eventName}</option>
+              ))}
           </select>
           {formErrors.event && (
             <p className="select-error-message">{formErrors.event}</p>

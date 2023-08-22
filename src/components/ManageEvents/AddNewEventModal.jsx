@@ -3,19 +3,19 @@ import CustomModal from "../UI/CustomModal";
 import "./ModalForm.scss";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import PrimaryButton from "../UI/PrimaryButton";
-import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { ReactSVG } from "react-svg";
-import validateAddNewEvent from "../../validation/AddNewEvent";
+import { AddNewEventSchema } from "../../validation/AddNewEvent";
 import AutocompleteInput from "../service-components/AutoCompleteInput";
 import { useCountriesList } from "../../api/services";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import { useQueryClient } from "@tanstack/react-query";
+import { useFormik } from "formik";
 
 const initialState = {
   title: "",
   description: "",
   category: "",
-  eventType: "",
+  eventType: "Venue",
   venueName: "",
   address: "",
   eventBanner: "",
@@ -26,6 +26,7 @@ const initialState = {
   endingDate: "",
   lng: "",
   lat: "",
+  eventLink: "",
 };
 
 const AddNewEventModal = ({
@@ -33,9 +34,6 @@ const AddNewEventModal = ({
   showAddNewEventModal,
 }) => {
   const isMobile = useIsMobileWidth();
-
-  const [formValues, setFormValues] = useState(initialState);
-  const [formErrors, setFormErrors] = useState({});
   const [imageToUpload, setImageToUpload] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [countries, setCountries] = useState([]);
@@ -55,10 +53,65 @@ const AddNewEventModal = ({
     setSelectedPlace(place);
   };
 
+  const handleSubmit = async (values, { resetForm }) => {
+    const formData = new FormData();
+    formData.append("eventName", values.title);
+    formData.append("eventStart", values.startingDate);
+    formData.append("eventEnd", values.endingDate);
+    formData.append("eventType", values.eventType);
+    formData.append("eventCategory", values.category);
+    formData.append("eventVenue", values.venueName);
+    formData.append("eventDescription", values.description);
+    formData.append("eventBanner", imageToUpload);
+
+    if (values?.eventType === "Venue") {
+      formData.append("addressDescription", values.address);
+      formData.append("city", values.city);
+      formData.append("postalCode", values.postalCode);
+      formData.append("country", values.country);
+      formData.append("eventCoordinatesX", values.lng);
+      formData.append("eventCoordinatesY", values.lat);
+    }
+    if (values?.eventType === "Online") {
+      formData.append("eventLink", values.eventLink);
+    }
+
+    handleMutation(
+      {
+        path: "events/new-event",
+        data: formData,
+      },
+      (res) => {
+        queryClient.invalidateQueries("get-all-events");
+        setShowAddNewEventModal(false);
+        resetForm();
+      },
+      (res) => {}
+    );
+  };
+
+  const formik = useFormik({
+    initialValues: initialState,
+    validationSchema: AddNewEventSchema,
+    onSubmit: handleSubmit,
+  });
+
+  const handleImageUpload = (e) => {
+    const imageFile = e.target.files[0];
+    if (imageFile) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        formik.setFieldValue("eventBanner", event.target.result);
+      };
+      reader.readAsDataURL(imageFile);
+      setImageToUpload(imageFile);
+    }
+  };
+
   useEffect(() => {
     if (selectedPlace) {
-      setFormValues({
-        ...formValues,
+      formik.setValues({
+        ...formik.values,
         address: selectedPlace.formatted_address,
         country: selectedPlace.country,
         city: selectedPlace.city,
@@ -69,89 +122,6 @@ const AddNewEventModal = ({
     }
   }, [selectedPlace]);
 
-  const handleImageUpload = (e) => {
-    const imageFile = e.target.files[0];
-    if (imageFile) {
-      const reader = new FileReader();
-
-      reader.onload = (event) => {
-        setFormValues({
-          ...formValues,
-          eventBanner: event.target.result,
-        });
-      };
-      reader.readAsDataURL(imageFile);
-      setImageToUpload(imageFile);
-    }
-  };
-
-  const handleInputChange = async (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
-  const handleOnBlur = async (e) => {
-    useHandleOnBlur(e, validateAddNewEvent, setFormErrors);
-    if (["startingDate", "endingDate"].includes(e.target.name)) {
-      const errors = await validateAddNewEvent({
-        startingDate: formValues.startingDate,
-        endingDate: formValues.endingDate,
-        dateDifference: "",
-      });
-      if (Object.keys(errors).length > 0) {
-        setFormErrors({
-          dateDifference: errors.dateDifference,
-          startingDate: errors.startingDate,
-          endingDate: errors.endingDate,
-        });
-        return;
-      }
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const errors = await validateAddNewEvent(formValues);
-    console.log(errors);
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
-    } else {
-      setFormErrors({});
-    }
-
-    const formData = new FormData();
-    formData.append("eventName", formValues.title);
-    formData.append("eventStart", formValues.startingDate);
-    formData.append("eventEnd", formValues.endingDate);
-    formData.append("eventType", formValues.eventType);
-    formData.append("eventCategory", formValues.category);
-    formData.append("addressDescription", formValues.address);
-    formData.append("city", formValues.city);
-    formData.append("postalCode", formValues.postalCode);
-    formData.append("country", formValues.country);
-    formData.append("eventCoordinatesX", formValues.lng);
-    formData.append("eventCoordinatesY", formValues.lat);
-    formData.append("eventVenue", formValues.venueName);
-    formData.append("eventDescription", formValues.description);
-    formData.append("eventBanner", imageToUpload);
-
-    setFormErrors({});
-
-    handleMutation(
-      {
-        path: "events/new-event",
-        data: formData,
-      },
-      (res) => {
-        queryClient.invalidateQueries("get-all-events");
-        setShowAddNewEventModal(false);
-        setFormValues(initialState);
-      },
-      (res) => {}
-    );
-  };
-
   return (
     <CustomModal
       onCancel={() => setShowAddNewEventModal(false)}
@@ -161,21 +131,24 @@ const AddNewEventModal = ({
       subtitle={"Please enter the information to add Events."}
       width={!isMobile && 900}
     >
-      <form className="add-new-event-form-container" onSubmit={handleSubmit}>
+      <form
+        className="add-new-event-form-container"
+        onSubmit={formik.handleSubmit}
+      >
         <div className="add-new-event-header">
           <div className="new-event-header-left">
-            {!formValues.eventBanner ? (
+            {!formik.values.eventBanner ? (
               <label
                 htmlFor="upload-event-banner"
                 className={`event-banner-placeholder-box ${
-                  formErrors.eventBanner ? "image-error" : ""
+                  formik.errors.eventBanner ? "image-error" : ""
                 }`}
               >
                 Click to upload
               </label>
             ) : (
               <div className="event-banner-image-container">
-                <img src={formValues.eventBanner} />
+                <img src={formik.values.eventBanner} />
                 <label
                   htmlFor="upload-event-banner"
                   className="upload-icon-container"
@@ -199,7 +172,9 @@ const AddNewEventModal = ({
           <div className="new-event-header-right">
             <div
               className={`single-form-item ${
-                formErrors.startingDate ? "error" : ""
+                formik.touched.startingDate && formik.errors.startingDate
+                  ? "error"
+                  : ""
               }`}
             >
               <label htmlFor="startingDate">Starting (Date-Time)</label>
@@ -208,18 +183,20 @@ const AddNewEventModal = ({
                 type="datetime-local"
                 id="startingDate"
                 placeholder="Select date and time..."
-                onChange={handleInputChange}
-                value={formValues.startingDate}
-                onBlur={handleOnBlur}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.startingDate}
               />
 
-              {formErrors.startingDate && (
-                <p className="error-message">{formErrors.startingDate}</p>
+              {formik.touched.startingDate && formik.errors.startingDate && (
+                <p className="error-message">{formik.errors.startingDate}</p>
               )}
             </div>
             <div
               className={`single-form-item ${
-                formErrors.endingDate ? "error" : ""
+                formik.touched.endingDate && formik.errors.endingDate
+                  ? "error"
+                  : ""
               }`}
             >
               <label htmlFor="endingDate">Ending (Date-Time)</label>
@@ -228,44 +205,50 @@ const AddNewEventModal = ({
                 type="datetime-local"
                 id="endingDate"
                 placeholder="Select date and time..."
-                onChange={handleInputChange}
-                value={formValues.endingDate}
-                onBlur={handleOnBlur}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.endingDate}
               />
-              {formErrors.endingDate && (
-                <p className="error-message">{formErrors.endingDate}</p>
+              {formik.touched.endingDate && formik.errors.endingDate && (
+                <p className="error-message">{formik.errors.endingDate}</p>
               )}
             </div>
           </div>
         </div>
         <div className="side-by-side-guest-input">
-          {formErrors.eventBanner && (
-            <p className="image-error-message">{formErrors.eventBanner}</p>
+          {formik.errors.eventBanner && (
+            <p className="image-error-message">{formik.errors.eventBanner}</p>
           )}
-          {formErrors.dateDifference && (
+          {formik.errors.dateDifference && (
             <p className="date-diff-error-message">
-              {formErrors.dateDifference}
+              {formik.errors.dateDifference}
             </p>
           )}
         </div>
-        <div className={`single-form-item ${formErrors.title ? "error" : ""}`}>
+        <div
+          className={`single-form-item ${
+            formik.touched.title && formik.errors.title ? "error" : ""
+          }`}
+        >
           <label htmlFor="title">Event Title</label>
           <input
             name="title"
             type="text"
             id="title"
             placeholder="Enter event title"
-            onChange={handleInputChange}
-            value={formValues.title}
-            onBlur={handleOnBlur}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.title}
           />
-          {formErrors.title && (
-            <p className="error-message">{formErrors.title}</p>
+          {formik.touched.title && formik.errors.title && (
+            <p className="error-message">{formik.errors.title}</p>
           )}
         </div>
         <div
           className={`single-form-item ${
-            formErrors.description ? "error" : ""
+            formik.touched.description && formik.errors.description
+              ? "error"
+              : ""
           }`}
         >
           <label htmlFor="description">Description</label>
@@ -274,60 +257,60 @@ const AddNewEventModal = ({
             type="text"
             id="description"
             placeholder="Describe the event..."
-            onChange={handleInputChange}
-            value={formValues.description}
-            onBlur={handleOnBlur}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.description}
           />
-          {formErrors.description && (
-            <p className="error-message">{formErrors.description}</p>
+          {formik.touched.description && formik.errors.description && (
+            <p className="error-message">{formik.errors.description}</p>
           )}
         </div>
         <div className="side-by-side-guest-input">
           <div
-            className={`single-form-item ${formErrors.category ? "error" : ""}`}
+            className={`single-form-item ${
+              formik.touched.category && formik.errors.category ? "error" : ""
+            }`}
           >
-            <label htmlFor="category">Choose category</label>
-            <select
-              onChange={handleInputChange}
+            <label htmlFor="category">Event Category</label>
+            <input
               name="category"
+              type="text"
               id="category"
-              value={formValues.category}
-              onBlur={handleOnBlur}
-            >
-              <option value="">Choose category</option>
-              <option value="vip">VIP</option>
-              <option value="vvip">VVIP</option>
-              <option value="economy">Economy</option>
-            </select>
-            {formErrors.category && (
-              <p className="select-error-message">{formErrors.category}</p>
+              placeholder="Enter event category"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.category}
+            />
+            {formik.touched.category && formik.errors.category && (
+              <p className="error-message">{formik.errors.category}</p>
             )}
           </div>
           <div
             className={`single-form-item ${
-              formErrors.eventType ? "error" : ""
+              formik.touched.eventType && formik.errors.eventType ? "error" : ""
             }`}
           >
             <label htmlFor="eventType">Event Type</label>
             <select
-              onChange={handleInputChange}
               name="eventType"
               id="eventType"
-              value={formValues.eventType}
-              onBlur={handleOnBlur}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.eventType}
             >
               <option value="">Choose event type</option>
-              <option value="vip">VIP</option>
-              <option value="vvip">VVIP</option>
-              <option value="economy">Economy</option>
+              <option value="Venue">Venue</option>
+              <option value="Online">Online</option>
             </select>
-            {formErrors.eventType && (
-              <p className="select-error-message">{formErrors.eventType}</p>
+            {formik.touched.eventType && formik.errors.eventType && (
+              <p className="select-error-message">{formik.errors.eventType}</p>
             )}
           </div>
         </div>
         <div
-          className={`single-form-item ${formErrors.venueName ? "error" : ""}`}
+          className={`single-form-item ${
+            formik.touched.venueName && formik.errors.venueName ? "error" : ""
+          }`}
         >
           <label htmlFor="venueName">Venue Name</label>
           <input
@@ -335,103 +318,134 @@ const AddNewEventModal = ({
             type="text"
             id="venueName"
             placeholder="Enter venue name"
-            onChange={handleInputChange}
-            value={formValues.venueName}
-            onBlur={handleOnBlur}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.venueName}
           />
-          {formErrors.venueName && (
-            <p className="error-message">{formErrors.venueName}</p>
+          {formik.touched.venueName && formik.errors.venueName && (
+            <p className="error-message">{formik.errors.venueName}</p>
           )}
         </div>
-        <div
-          className={`single-form-item ${formErrors.address ? "error" : ""}`}
-        >
-          <label htmlFor="address">Address</label>
-          <AutocompleteInput
-            name="address"
-            type="text"
-            placeholder="Enter address"
-            id="address"
-            onBlur={handleOnBlur}
-            onPlaceSelect={handlePlaceSelect}
-          />
-
-          {formErrors.address && (
-            <p className="error-message">{formErrors.address}</p>
-          )}
-        </div>
-        <div className="side-by-side-guest-input">
-          <div
-            className={`single-form-item ${formErrors.country ? "error" : ""}`}
-          >
-            <label htmlFor="country">Choose country</label>
-            <select
-              onChange={handleInputChange}
-              name="country"
-              id="country"
-              value={formValues.country}
-              onBlur={handleOnBlur}
+        {formik.values.eventType === "Venue" && (
+          <>
+            {" "}
+            <div
+              className={`single-form-item ${
+                formik.touched.address && formik.errors.address ? "error" : ""
+              }`}
             >
-              <option value="">Choose country</option>
-              {!countriesLoading &&
-                countries?.length > 0 &&
-                countries?.map((el) => (
-                  <option value={el?.countryName}>{el?.countryName}</option>
-                ))}
-            </select>
-            {formErrors.country && (
-              <p className="select-error-message">{formErrors.country}</p>
-            )}
-          </div>
-          <div className={`single-form-item ${formErrors.city ? "error" : ""}`}>
-            <label htmlFor="city">City/State</label>
-            {/* <select
-              onChange={handleInputChange}
-              name="city"
-              id="city"
-              value={formValues.city}
-              onBlur={handleOnBlur}
-            >
-              <option value="">Choose city</option>
-              <option value="vip">New York</option>
-              <option value="vvip">Washington DC</option>
-              <option value="economy">London</option>
-            </select> */}
-            <input
-              name="city"
-              type="text"
-              id="city"
-              placeholder="City name"
-              onChange={handleInputChange}
-              value={formValues.city}
-              onBlur={handleOnBlur}
-            />
+              <label htmlFor="address">Address</label>
+              <AutocompleteInput
+                name="address"
+                type="text"
+                placeholder="Enter address"
+                id="address"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                onPlaceSelect={handlePlaceSelect}
+                value={formik.values.address}
+              />
 
-            {formErrors.city && (
-              <p className="error-message">{formErrors.city}</p>
-            )}
-          </div>
+              {formik.touched.address && formik.errors.address && (
+                <p className="error-message">{formik.errors.address}</p>
+              )}
+            </div>
+            <div className="side-by-side-guest-input">
+              <div
+                className={`single-form-item ${
+                  formik.touched.country && formik.errors.country ? "error" : ""
+                }`}
+              >
+                <label htmlFor="country">Choose country</label>
+                <select
+                  name="country"
+                  id="country"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.country}
+                >
+                  <option value="">Choose country</option>
+                  {!countriesLoading &&
+                    countries?.length > 0 &&
+                    countries?.map((el) => (
+                      <option value={el?.countryName}>{el?.countryName}</option>
+                    ))}
+                </select>
+                {formik.touched.country && formik.errors.country && (
+                  <p className="error-message">{formik.errors.country}</p>
+                )}
+              </div>
+              <div
+                className={`single-form-item ${
+                  formik.touched.city && formik.errors.city ? "error" : ""
+                }`}
+              >
+                <label htmlFor="city">City/State</label>
+                <input
+                  name="city"
+                  type="text"
+                  id="city"
+                  placeholder="City name"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.city}
+                />
+
+                {formik.touched.city && formik.errors.city && (
+                  <p className="error-message">{formik.errors.city}</p>
+                )}
+              </div>
+              <div
+                className={`single-form-item ${
+                  formik.touched.postalCode && formik.errors.postalCode
+                    ? "error"
+                    : ""
+                }`}
+              >
+                <label htmlFor="postalCode">Postal Code</label>
+                <input
+                  name="postalCode"
+                  type="text"
+                  id="postalCode"
+                  placeholder="Postal code"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.postalCode}
+                />
+                {formik.touched.postalCode && formik.errors.postalCode && (
+                  <p className="error-message">{formik.errors.postalCode}</p>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+        {formik.values.eventType === "Online" && (
           <div
             className={`single-form-item ${
-              formErrors.postalCode ? "error" : ""
+              formik.touched.eventLink && formik.errors.eventLink ? "error" : ""
             }`}
           >
-            <label htmlFor="postalCode">Postal Code</label>
+            <label htmlFor="eventLink">Event Link</label>
             <input
-              name="postalCode"
+              name="eventLink"
               type="text"
-              id="postalCode"
-              placeholder="Postal code"
-              onChange={handleInputChange}
-              value={formValues.postalCode}
-              onBlur={handleOnBlur}
+              id="eventLink"
+              placeholder="Enter venue name"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.eventLink}
             />
-            {formErrors.postalCode && (
-              <p className="error-message">{formErrors.postalCode}</p>
+            {formik.touched.eventLink && formik.errors.eventLink && (
+              <p className="error-message">{formik.errors.eventLink}</p>
             )}
           </div>
-        </div>
-        <PrimaryButton className={"form-submit-button"}>Confirm</PrimaryButton>
+        )}
+        <PrimaryButton
+          disabled={isEventCreating}
+          className={"form-submit-button"}
+        >
+          Confirm
+        </PrimaryButton>
       </form>
     </CustomModal>
   );

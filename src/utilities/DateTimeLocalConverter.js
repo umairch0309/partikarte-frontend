@@ -1,0 +1,12 @@
+const DateTimeLocalConverter = (string) => {
+  const date = new Date(string);
+  const formattedDateTime = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}T${date
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+  return formattedDateTime;
+};
+
+export default DateTimeLocalConverter;

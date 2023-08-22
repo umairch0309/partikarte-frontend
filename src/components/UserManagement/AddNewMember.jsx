@@ -6,6 +6,8 @@ import PrimaryButton from "../UI/PrimaryButton";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { ReactSVG } from "react-svg";
 import validateAddNewMember from "../../validation/AddNewMember";
+import { useQueryClient } from "@tanstack/react-query";
+import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 
 const initialState = {
   name: "",
@@ -27,6 +29,9 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
   const [formErrors, setFormErrors] = useState({});
   const [frontSideImage, setFrontSideImage] = useState(null);
   const [backSideImage, setBackSideImage] = useState(null);
+
+  const { handleMutation, isLoading: isEventCreating } = usePostApi();
+  const queryClient = useQueryClient();
 
   const handleImageUpload = (e) => {
     const imageFile = e.target.files[0];
@@ -67,8 +72,33 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
     }
 
     const formData = new FormData();
-    formData.append("title", formValues.name);
-    setShowAddNewMember(false);
+    formData.append("name", formValues.name);
+    formData.append("surname", formValues.surname);
+    formData.append("email", formValues.email);
+    formData.append("role", formValues.memberType);
+    formData.append("dob", formValues.dateOfBirth);
+    formData.append("guestType", formValues.guestType);
+    formData.append("addressDescription", formValues.address);
+    formData.append("city", formValues.city);
+    formData.append("postalCode", formValues.postalCode);
+    formData.append("country", formValues.country);
+    formData.append("IDFront", frontSideImage);
+    formData.append("IDBack", backSideImage);
+
+    setFormErrors({});
+
+    handleMutation(
+      {
+        path: `business/business-managers/add`,
+        data: formData,
+      },
+      (res) => {
+        queryClient.invalidateQueries("get-all-members");
+        setShowAddNewMember(false);
+        setFormValues(initialState);
+      },
+      (res) => {}
+    );
   };
 
   return (
@@ -149,7 +179,7 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
               <option value="">Choose guest type</option>
               <option value="vip">VIP</option>
               <option value="vvip">VVIP</option>
-              <option value="economy">Economy</option>
+              <option value="normal">Normal</option>
             </select>
             {formErrors.guestType && (
               <p className="select-error-message">{formErrors.guestType}</p>

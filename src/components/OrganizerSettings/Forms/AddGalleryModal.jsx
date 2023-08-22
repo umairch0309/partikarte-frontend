@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AddGalleryModal.scss";
 import CustomModal from "../../UI/CustomModal";
 import "./AddGalleryModal.scss";
@@ -6,6 +6,11 @@ import useIsMobileWidth from "../../../hooks/useIsMobileWidth";
 import PrimaryButton from "../../UI/PrimaryButton";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import validateAddNewGallery from "../../../validation/AddNewGallery";
+import { useAllEvents } from "../../../api/manage-events";
+import { useQueryClient } from "@tanstack/react-query";
+import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
+import { usePutApi } from "../../../hooks/api-hooks/usePutApi";
+import DateTimeLocalConverter from "../../../utilities/DateTimeLocalConverter";
 
 const initialState = {
   galleryTitle: "",
@@ -14,11 +19,36 @@ const initialState = {
   galleryImages: [],
 };
 
-const AddGalleryModal = ({ showAddGalleryModal, setShowAddGalleryModal }) => {
+const AddGalleryModal = ({
+  showAddGalleryModal,
+  setShowAddGalleryModal,
+  selectedGallery,
+  setSelectedGalleryStatus,
+  selectedGalleryStatus,
+}) => {
   const isMobile = useIsMobileWidth();
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
   const [imagesArray, setImagesArray] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
+
+  useEffect(() => {
+    if (selectedGallery && selectedGalleryStatus) {
+      setFormValues({
+        galleryTitle: selectedGallery?.name,
+        event: selectedGallery?.event,
+        startingDate: DateTimeLocalConverter(selectedGallery?.startingDate),
+        galleryImages: selectedGallery?.images || [],
+      });
+    }
+  }, [selectedGallery, selectedGalleryStatus]);
+
+  const { isLoading: isEventsLoading } = useAllEvents((res) => {
+    setEventsData(res?.events);
+  });
+
+  const { handleMutation, isLoading: isNewsUpdating } = usePutApi();
+  const queryClient = useQueryClient();
 
   const handleImageUpload = (e) => {
     const imageFile = e.target.files[0];
@@ -34,8 +64,6 @@ const AddGalleryModal = ({ showAddGalleryModal, setShowAddGalleryModal }) => {
       setImagesArray([...imagesArray, imageFile]);
     }
   };
-
-  console.log(formValues.galleryImages);
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -55,14 +83,66 @@ const AddGalleryModal = ({ showAddGalleryModal, setShowAddGalleryModal }) => {
     }
 
     const formData = new FormData();
-    formData.append("name", formValues.name);
+    formData.append("galleryName", formValues.galleryTitle);
+    formData.append("event", formValues.event);
+    formData.append("date", formValues.startingDate);
+    imagesArray.map((image, index) => {
+      formData.append(`newImages${index}`, image);
+    });
+
+    if (selectedGallery?.images && selectedGalleryStatus) {
+      selectedGallery?.images?.forEach((image) => {
+        formData.append("images[]", image);
+      });
+    }
+
+    setFormErrors({});
+
+    if (selectedGallery?._id && selectedGalleryStatus) {
+      handleMutation(
+        {
+          path: `business/gallery/update/${selectedGallery?._id}`,
+          data: formData,
+        },
+        (res) => {
+          queryClient.invalidateQueries("get-all-galleries");
+          setFormValues(initialState);
+          setImagesArray([]);
+          setShowAddGalleryModal(false);
+          setSelectedGalleryStatus(false);
+        },
+        (res) => {}
+      );
+    } else {
+      handleMutation(
+        {
+          path: "business/gallery/add",
+          data: formData,
+        },
+        (res) => {
+          queryClient.invalidateQueries("get-all-galleries");
+          setFormValues(initialState);
+          setImagesArray([]);
+          setShowAddGalleryModal(false);
+        },
+        (res) => {}
+      );
+    }
   };
   return (
     <CustomModal
-      onCancel={() => setShowAddGalleryModal(false)}
+      onCancel={() => {
+        setFormValues(initialState);
+        setFormErrors({});
+        setImagesArray([]);
+        setShowAddGalleryModal(false);
+        setSelectedGalleryStatus(false);
+      }}
       open={showAddGalleryModal}
       onOk={() => setShowAddGalleryModal(false)}
-      title={"Add Gallery"}
+      title={`${
+        selectedGallery?._id && selectedGalleryStatus ? "Edit" : "Add"
+      } Gallery`}
       subtitle={"Please enter the information to add Gallery"}
       width={!isMobile && 700}
     >
@@ -144,9 +224,10 @@ const AddGalleryModal = ({ showAddGalleryModal, setShowAddGalleryModal }) => {
             onBlur={handleOnBlur}
           >
             <option value="">Choose event</option>
-            <option value="event0">Event 1</option>
-            <option value="event1">Event 2</option>
-            <option value="event2">Event 3</option>
+            {eventsData?.length > 0 &&
+              eventsData?.map((el) => (
+                <option value={el?._id}>{el?.eventName}</option>
+              ))}
           </select>
           {formErrors.event && (
             <p className="select-error-message">{formErrors.event}</p>

@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
-  galleryTitle: Yup.string().required("Required"),
+  name: Yup.string().required("Required"),
   event: Yup.string().required("Required"),
   startingDate: Yup.string().required("Required"),
   description: Yup.string().required("Required"),

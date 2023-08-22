@@ -83,7 +83,11 @@ const NewTicketModal = ({
 
   return (
     <CustomModal
-      onCancel={() => setShowNewTicketModal(false)}
+      onCancel={() => {
+        setFormValues(initialState);
+        setFormErrors({});
+        setShowNewTicketModal(false);
+      }}
       open={showNewTicketModal}
       onOk={() => setShowNewTicketModal(false)}
       title={"Add Tickets"}

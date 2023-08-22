@@ -46,7 +46,11 @@ const AddMultiplePeopleToGuestlistModal = ({
 
   return (
     <CustomModal
-      onCancel={() => setShowMultiplePeopleModal(false)}
+      onCancel={() => {
+        setFormValues(initialState);
+        setFormErrors({});
+        setShowMultiplePeopleModal(false);
+      }}
       open={showMultiplePeopleModal}
       onOk={() => setShowMultiplePeopleModal(false)}
       title={"Add Multiple Guests"}

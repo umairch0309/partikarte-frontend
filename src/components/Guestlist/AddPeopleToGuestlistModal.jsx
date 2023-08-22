@@ -52,7 +52,11 @@ const AddPeopleToGuestlistModal = ({
 
   return (
     <CustomModal
-      onCancel={() => setShowAddPeopleModal(false)}
+      onCancel={() => {
+        setFormValues(initialState);
+        setFormErrors({});
+        setShowAddPeopleModal(false);
+      }}
       open={showAddPeopleModal}
       onOk={() => setShowAddPeopleModal(false)}
       title={"Add Guest"}

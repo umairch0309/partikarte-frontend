@@ -7,6 +7,8 @@ const AutocompleteInput = ({
   placeholder,
   id,
   onBlur,
+  onChange,
+  value,
 }) => {
   const handlePlaceSelect = async (place) => {
     try {
@@ -70,6 +72,8 @@ const AutocompleteInput = ({
       placeholder={placeholder}
       id={id}
       onBlur={onBlur}
+      value={value}
+      onChange={onChange}
     />
   );
 };

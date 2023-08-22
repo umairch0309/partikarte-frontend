@@ -6,34 +6,21 @@ import SecondaryButton from "../../components/UI/SecondaryButton";
 import { ReactSVG } from "react-svg";
 import StatCard from "../../components/Common/StatCard";
 import Chart from "../../components/Common/Chart";
-import TopReferrersTable from "../../components/Tables/TopReferrersTable";
 import { useState, useEffect } from "react";
 import CountriesRevenueTable from "../../components/Tables/CountriesRevenueTable";
 import EventAnalyticsTable from "../../components/Tables/EventAnalyticsTable";
 import AddNewEventModal from "../../components/ManageEvents/AddNewEventModal";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
+import { useNavigate } from "react-router-dom";
 
 const ManageEvents = () => {
-  // const [referrers, setReferrers] = useState([]);
+  const navigate = useNavigate();
   const [countriesRevenues, setCountriesRevenues] = useState([]);
   const [analytics, setAnalytics] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedTable, setSelectedTable] = useState(0);
   const isMobile = useIsMobileWidth();
-
-  // useEffect(() => {
-  //   const array = [];
-  //   for (let i = 0; i < 5; i++) {
-  //     const row = {
-  //       key: i,
-  //       name: "John",
-  //       revenueGenerated: "23480",
-  //     };
-  //     array.push(row);
-  //   }
-  //   setReferrers(array);
-  // }, []);
 
   useEffect(() => {
     const array = [];
@@ -80,7 +67,11 @@ const ManageEvents = () => {
             <ReactSVG src="/icons/tools/people-list.svg" />
             <span>Manage Guest Lists</span>
           </SecondaryButton>
-          <SecondaryButton onClick={() => {}}>
+          <SecondaryButton
+            onClick={() => {
+              navigate("/business/manage-tickets");
+            }}
+          >
             <ReactSVG src="/icons/tools/ticket-outlined.svg" />
             <span>Manage tickets</span>
           </SecondaryButton>
@@ -121,12 +112,6 @@ const ManageEvents = () => {
         </div>
         {isMobile && (
           <div className="tables-selection-buttons-container">
-            {/* <button
-              className={selectedTable === 0 ? "selected-button" : ""}
-              onClick={() => setSelectedTable(0)}
-            >
-              Top Referrers
-            </button> */}
             <button
               className={selectedTable === 1 ? "selected-button" : ""}
               onClick={() => setSelectedTable(1)}
@@ -142,22 +127,6 @@ const ManageEvents = () => {
           </div>
         )}
         <div className="all-tables-main-container">
-          {/* {!isMobile && (
-            <div className="table-container">
-              <div className="table-container-header">
-                <h3>Top referrers</h3>
-              </div>
-              <TopReferrersTable referrersData={referrers} />
-            </div>
-          )}
-          {isMobile && selectedTable === 0 && (
-            <div className="table-container">
-              <div className="table-container-header">
-                <h3>Top referrers</h3>
-              </div>
-              <TopReferrersTable referrersData={referrers} />
-            </div>
-          )} */}
           {!isMobile && (
             <div className="table-container">
               <div className="table-container-header">
