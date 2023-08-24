@@ -8,6 +8,7 @@ import { ReactSVG } from "react-svg";
 import validateAddNewMember from "../../validation/AddNewMember";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
+import { useCountriesList } from "../../api/services";
 
 const initialState = {
   name: "",
@@ -29,6 +30,16 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
   const [formErrors, setFormErrors] = useState({});
   const [frontSideImage, setFrontSideImage] = useState(null);
   const [backSideImage, setBackSideImage] = useState(null);
+  const [countries, setCountries] = useState([]);
+
+  const { isLoading: countriesLoading } = useCountriesList(
+    (res) => {
+      setCountries(res);
+    },
+    (res) => {
+      console.log(res, "countries list error");
+    }
+  );
 
   const { handleMutation, isLoading: isEventCreating } = usePostApi();
   const queryClient = useQueryClient();
@@ -259,30 +270,29 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
               onBlur={handleOnBlur}
             >
               <option value="">Choose country</option>
-              <option value="vip">USA</option>
-              <option value="vvip">UK</option>
-              <option value="economy">Slovakia</option>
+              {!countriesLoading &&
+                countries?.length > 0 &&
+                countries?.map((el) => (
+                  <option value={el?.countryName}>{el?.countryName}</option>
+                ))}
             </select>
             {formErrors.country && (
               <p className="select-error-message">{formErrors.country}</p>
             )}
           </div>
           <div className={`single-form-item ${formErrors.city ? "error" : ""}`}>
-            <label htmlFor="city">City/State</label>
-            <select
-              onChange={handleInputChange}
-              name="city"
+            <label htmlFor="city">City</label>
+            <input
               id="city"
-              value={formValues.city}
+              type="text"
+              name="city"
+              value={formData.city}
+              placeholder="City"
+              onChange={handleInputChange}
               onBlur={handleOnBlur}
-            >
-              <option value="">Choose city</option>
-              <option value="vip">New York</option>
-              <option value="vvip">Washington DC</option>
-              <option value="economy">London</option>
-            </select>
+            />
             {formErrors.city && (
-              <p className="select-error-message">{formErrors.city}</p>
+              <p className="error-message">{formErrors.city}</p>
             )}
           </div>
           <div

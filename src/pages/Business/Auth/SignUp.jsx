@@ -7,6 +7,7 @@ import validateSignUpForm from "../../../validation/SignUp";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
+import { useCountriesList } from "../../../api/services";
 
 const initalState = {
   email: "",
@@ -25,6 +26,16 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
+  const [countries, setCountries] = useState([]);
+
+  const { isLoading: countriesLoading } = useCountriesList(
+    (res) => {
+      setCountries(res);
+    },
+    (res) => {
+      console.log(res, "countries list error");
+    }
+  );
 
   const { handleMutation, isLoading } = usePostApi();
 
@@ -239,10 +250,11 @@ const SignUp = () => {
               onBlur={handleOnBlur}
             >
               <option>Choose one</option>
-              <option value={"usa"}>United States</option>
-              <option value={"si"}>Slovakia</option>
-              <option value={"uk"}>United Kingdom</option>
-              <option value={"Russia"}>Russia</option>
+              {!countriesLoading &&
+                countries?.length > 0 &&
+                countries?.map((el) => (
+                  <option value={el?.countryName}>{el?.countryName}</option>
+                ))}
             </select>
             {formErrors.country && (
               <p className="error-message select-error-message">

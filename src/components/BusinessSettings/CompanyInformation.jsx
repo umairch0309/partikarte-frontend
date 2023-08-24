@@ -6,6 +6,7 @@ import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { usePutApi } from "../../hooks/api-hooks/usePutApi";
 import { useProfileDetails } from "../../api/profile";
 import { useQueryClient } from "@tanstack/react-query";
+import { useCountriesList } from "../../api/services";
 
 const initialState = {
   companyName: "",
@@ -21,6 +22,16 @@ const CompanyInformation = () => {
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
   const [data, setData] = useState(null);
+  const [countries, setCountries] = useState([]);
+
+  const { isLoading: countriesLoading } = useCountriesList(
+    (res) => {
+      setCountries(res);
+    },
+    (res) => {
+      console.log(res, "countries list error");
+    }
+  );
 
   const { response, isLoading: profileLoading } = useProfileDetails((res) => {
     setData(res?.data);
@@ -164,30 +175,29 @@ const CompanyInformation = () => {
             onBlur={handleOnBlur}
           >
             <option value="">Choose country</option>
-            <option value="usa">United States</option>
-            <option value="uk">United Kingdom</option>
-            <option value="slovakia">Slovakia</option>
+            {!countriesLoading &&
+              countries?.length > 0 &&
+              countries?.map((el) => (
+                <option value={el?.countryName}>{el?.countryName}</option>
+              ))}
           </select>
           {formErrors.country && (
             <p className="select-error-message">{formErrors.country}</p>
           )}
         </div>
         <div className={`single-form-item ${formErrors.city ? "error" : ""}`}>
-          <label htmlFor="city">City/State</label>
-          <select
-            onChange={handleInputChange}
-            name="city"
+          <label htmlFor="city">City</label>
+          <input
             id="city"
-            value={formValues.city}
+            type="text"
+            name="city"
+            value={formData.city}
+            placeholder="City"
+            onChange={handleInputChange}
             onBlur={handleOnBlur}
-          >
-            <option value="">Choose city/state</option>
-            <option value="new-york">New York</option>
-            <option value="london">London</option>
-            <option value="moscow">Moscow</option>
-          </select>
+          />
           {formErrors.city && (
-            <p className="select-error-message">{formErrors.city}</p>
+            <p className="error-message">{formErrors.city}</p>
           )}
         </div>
         <div

@@ -8,6 +8,7 @@ import PrimaryButton from "../UI/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import StatusModal from "../UI/StatusModal";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
+import { useCountriesList } from "../../api/services";
 
 const initialState = {
   termsAndConditions: false,
@@ -40,6 +41,17 @@ const Checkout = ({ totalPrice }) => {
   );
   const [paymentData, setPaymentData] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
+
+  const [countries, setCountries] = useState([]);
+
+  const { isLoading: countriesLoading } = useCountriesList(
+    (res) => {
+      setCountries(res);
+    },
+    (res) => {
+      console.log(res, "countries list error");
+    }
+  );
 
   useEffect(() => {
     setActivePaymentType(totalPrice === 0 ? "free" : "card");
@@ -280,8 +292,11 @@ const Checkout = ({ totalPrice }) => {
                   onBlur={handleOnBlur}
                 >
                   <option>Chose one</option>
-                  <option value="slovakia">Slovakia</option>
-                  <option value="usa">United States</option>
+                  {!countriesLoading &&
+                    countries?.length > 0 &&
+                    countries?.map((el) => (
+                      <option value={el?.countryName}>{el?.countryName}</option>
+                    ))}
                 </select>
                 {formErrors.country && (
                   <p className="error-message">{formErrors.country}</p>
