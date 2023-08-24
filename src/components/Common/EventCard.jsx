@@ -2,29 +2,40 @@ import React from "react";
 import "./EventCard.scss";
 import { ReactSVG } from "react-svg";
 import { useNavigate } from "react-router-dom";
+import formatDate from "../../utilities/formatDate";
 
 const EventCard = ({ event, className }) => {
   const navigate = useNavigate();
+
+  const minPriceTicket = event?.tickets?.reduce(
+    (minTicket, currentTicket) =>
+      currentTicket?.price < minTicket?.price ? currentTicket : minTicket,
+    event?.tickets?.[0] || {}
+  );
   return (
     <div
-      onClick={() => navigate("/all-events/1")}
+      onClick={() => {
+        navigate(`/all-events/${event?._id}`);
+      }}
       className={`single-event-card ${className}`}
     >
-      {event?.image ? (
-        <img src={event?.image} alt={event?.title} />
+      {event?.eventBanner ? (
+        <img src={event?.eventBanner} alt={event?.eventName} />
       ) : (
         <div className="image-placeholder">No image</div>
       )}
       <div className="date-overlay">
         <ReactSVG src="/icons/tools/clock.svg" />
-        <span>{event?.date}</span>
+        <span>{formatDate(event?.eventStart)}</span>
       </div>
-      <h3 className="event-heading">{event?.title}</h3>
+      <h3 className="event-heading">{event?.eventName}</h3>
       <div className="event-location">
         <ReactSVG src="/icons/tools/location.svg" />
-        {event?.location}
+        {event?.eventVenue}
       </div>
-      <div className="event-price">${event?.price}</div>
+      <div className="event-price">
+        Starting from <strong>{`$${minPriceTicket?.price}`}</strong>
+      </div>
     </div>
   );
 };

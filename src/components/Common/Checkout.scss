@@ -89,6 +89,15 @@
         border-color: $errorColor !important;
         outline-color: $errorColor !important;
       }
+      select {
+        background-image: url("/icons/tools/dropdown-icon.svg");
+        background-repeat: no-repeat;
+        background-size: 15px;
+        background-position: 95% 22px;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+      }
     }
     .checkboxes-container {
       width: 100%;

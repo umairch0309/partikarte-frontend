@@ -3,18 +3,20 @@ import "./Topbar.scss";
 import { ReactSVG } from "react-svg";
 import { Drawer, Skeleton } from "antd";
 import { businessRoutes } from "../../../Routes";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../context/auth-context";
 import { useProfileDetails } from "../../../api/profile";
 
 const Topbar = ({ title, subtitle }) => {
-  const [data, setData] = useState(null);
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+  const { iisLoggedIn, setIsLoggedIn, user, setUser } = useAuthContext();
 
-  const { response, isLoading } = useProfileDetails((res) => {
-    setData(res?.data);
+  const { isLoading } = useProfileDetails((res) => {
+    if (res?.data) {
+      setUser(res?.data);
+    }
   });
 
   const handleLogout = () => {
@@ -38,7 +40,15 @@ const Topbar = ({ title, subtitle }) => {
         </div>
 
         <div className="topbar-left">
-          <h2>{title}</h2>
+          <h2>
+            {location.pathname === "/business/dashboard"
+              ? `Hey ${
+                  user?.user?.name ||
+                  user?.business?.company?.companyName?.split(" ")[0] ||
+                  "User"
+                }, Good Evening 🌃`
+              : title}
+          </h2>
           <h5>{subtitle}</h5>
         </div>
         <div className="topbar-right">
@@ -57,10 +67,10 @@ const Topbar = ({ title, subtitle }) => {
               className="notifications-icon"
               src="/icons/tools/notification.svg"
             />
-            {data?.user?.profile_image ? (
+            {user?.user?.profile_image ? (
               <img
                 onClick={() => navigate("/business/settings")}
-                src={data?.user?.profile_image}
+                src={user?.user?.profile_image}
               />
             ) : (
               <Skeleton.Avatar active={true} size={60} shape={"circle"} />

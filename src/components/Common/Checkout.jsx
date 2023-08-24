@@ -12,7 +12,7 @@ import { useCountriesList } from "../../api/services";
 
 const initialState = {
   termsAndConditions: false,
-  recomendations: false,
+  recommendations: false,
   expiry: new Date().toISOString().slice(0, 7),
 };
 const paymentFormInputStyle = {
@@ -52,6 +52,8 @@ const Checkout = ({ totalPrice }) => {
       console.log(res, "countries list error");
     }
   );
+
+  console.log(paymentData);
 
   useEffect(() => {
     setActivePaymentType(totalPrice === 0 ? "free" : "card");
@@ -341,18 +343,20 @@ const Checkout = ({ totalPrice }) => {
               type="checkbox"
               id="termsAndConditions"
               name="termsAndConditions"
-              onChange={() =>
-                cardInputsChangeHandler({
+              onChange={() => {
+                const e = {
                   target: {
                     value: !paymentData.termsAndConditions,
                     name: "termsAndConditions",
                   },
-                })
-              }
+                };
+                useHandleOnBlur(e, validateCheckoutForm, setFormErrors);
+                cardInputsChangeHandler(e);
+              }}
               onBlur={() =>
                 handleOnBlur({
                   target: {
-                    value: !paymentData.termsAndConditions,
+                    value: paymentData.termsAndConditions,
                     name: "termsAndConditions",
                   },
                 })
@@ -372,7 +376,7 @@ const Checkout = ({ totalPrice }) => {
               onChange={() =>
                 cardInputsChangeHandler({
                   target: {
-                    value: !paymentData.recomendations,
+                    value: !paymentData.recommendations,
                     name: "recommendations",
                   },
                 })
@@ -380,12 +384,12 @@ const Checkout = ({ totalPrice }) => {
               onBlur={() =>
                 handleOnBlur({
                   target: {
-                    value: !paymentData.recomendations,
-                    name: "recomendations",
+                    value: paymentData.recommendations,
+                    name: "recommendations",
                   },
                 })
               }
-              checked={paymentData.recomendations}
+              checked={paymentData.recommendations}
             />
             <label htmlFor="recommendations">
               I want to receive event recommendations via

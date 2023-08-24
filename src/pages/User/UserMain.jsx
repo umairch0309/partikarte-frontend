@@ -10,25 +10,28 @@ import PoliciesPage from "./PoliciesPage";
 import ContactUs from "./ContactUs";
 import BusinessProfile from "./BusinessProfile";
 import JoinBusiness from "./JoinBusiness";
+import { BookingProvider } from "../../context/booking-context";
 
 const UserMain = () => {
   return (
-    <UserLayout>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/all-events" element={<AllEventsPage />} />
-        <Route path="/all-events/:eventId" element={<ViewEvent />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/policies" element={<PoliciesPage />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/join-business" element={<JoinBusiness />} />
-        <Route
-          path="/business-profile/:businessId"
-          element={<BusinessProfile />}
-        />
-        <Route path="*" element={<Page404 />} />
-      </Routes>
-    </UserLayout>
+    <BookingProvider>
+      <UserLayout>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/all-events" element={<AllEventsPage />} />
+          <Route path="/all-events/:eventId" element={<ViewEvent />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/policies" element={<PoliciesPage />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/join-business" element={<JoinBusiness />} />
+          <Route
+            path="/business-profile/:businessId"
+            element={<BusinessProfile />}
+          />
+          <Route path="*" element={<Page404 />} />
+        </Routes>
+      </UserLayout>
+    </BookingProvider>
   );
 };
 

@@ -1,7 +1,6 @@
 import React from "react";
 import HeaderPlaceHolder from "../../components/Layouts/UserLayout/HeaderPlaceHolder";
 import TopSearch from "../../components/UserLandingPagesSections/TopSearch";
-import FeaturedEvents from "../../components/UserLandingPagesSections/FeaturedEvents";
 import "./AllEventsPage.scss";
 import AllEvents from "../../components/UserLandingPagesSections/AllEvents";
 import ExploreByOrganizer from "../../components/UserLandingPagesSections/ExploreByOrganizer";

@@ -286,7 +286,7 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
               id="city"
               type="text"
               name="city"
-              value={formData.city}
+              value={formValues.city}
               placeholder="City"
               onChange={handleInputChange}
               onBlur={handleOnBlur}

@@ -9,16 +9,19 @@ import { Dropdown, Skeleton } from "antd";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { user, setUser } = useAuthContext();
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
-  const [data, setData] = useState(null);
 
-  const { response, isLoading } = useProfileDetails((res) => {
-    setData(res?.data);
+  const { isLoading } = useProfileDetails((res) => {
+    if (res?.data) {
+      setUser(res?.data);
+    }
   });
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    navigate("/business/login");
   };
 
   const items = [
@@ -69,8 +72,8 @@ const Header = () => {
               placement="bottomRight"
               className="dropdown-table-actions"
             >
-              {data?.user?.profile_image && !isLoading ? (
-                <img src={data?.user?.profile_image} />
+              {user?.user?.profile_image && !isLoading ? (
+                <img src={user?.user?.profile_image} />
               ) : (
                 <Skeleton.Avatar active={true} size={60} shape={"circle"} />
               )}
