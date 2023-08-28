@@ -66,6 +66,10 @@
   }
 }
 
+.white-space-nowrap {
+  white-space: nowrap;
+}
+
 .ant-dropdown .ant-dropdown-menu {
   @include flex(column, "", "", 7px);
   padding: 10px;

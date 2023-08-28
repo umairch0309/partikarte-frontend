@@ -10,8 +10,10 @@
   }
   @include flex(column, "", center);
   .all-events-container {
-    @include flex(row, "", center, 5.001%);
-    padding-inline: 1.65%;
+    @include flex(row, space-around, center);
+
+    // @include flex(row, "", center, 5.001%);
+    // padding-inline: 1.65%;
     width: 100%;
     @media (max-width: 767px) {
       flex-direction: column;

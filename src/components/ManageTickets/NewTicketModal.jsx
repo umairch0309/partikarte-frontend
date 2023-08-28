@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
   ticketName: "",
+  ticketType: "",
   ticketPrice: 0,
   vatPercentage: 0,
   numberOfTickets: 0,
@@ -62,6 +63,7 @@ const NewTicketModal = ({
     formData.append("paidTicket", formValues.paidTicket);
     formData.append("price", formValues.ticketPrice);
     formData.append("vatPercentage", formValues.vatPercentage);
+    formData.append("ticketType", formValues.ticketType);
     formData.append("descriptionWeb", formValues.descriptionOnWeb);
     formData.append("descriptionTicket", formValues.descriptionOnTicket);
 
@@ -285,7 +287,26 @@ const NewTicketModal = ({
             )}
           </div>
         </div>
-
+        <div
+          className={`single-form-item ${formErrors.ticketType ? "error" : ""}`}
+        >
+          <label htmlFor="ticketType">Ticket Type*</label>
+          <select
+            onChange={handleInputChange}
+            name="ticketType"
+            id="ticketType"
+            value={formValues.ticketType}
+            onBlur={handleOnBlur}
+          >
+            <option value="">Choose guest type</option>
+            <option value="vip">VIP</option>
+            <option value="vvip">VVIP</option>
+            <option value="economy">Economy</option>
+          </select>
+          {formErrors.ticketType && (
+            <p className="select-error-message">{formErrors.ticketType}</p>
+          )}
+        </div>
         <div
           className={`single-form-item ${
             formErrors.descriptionOnWeb ? "error" : ""

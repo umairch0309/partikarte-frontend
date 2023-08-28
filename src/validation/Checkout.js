@@ -12,14 +12,14 @@ const checkoutValidationSchema = Yup.object().shape({
   address: Yup.string()
     .trim()
     .when("$activePaymentType", ([activePaymentType], schema) => {
-      return activePaymentType === "bank"
+      return activePaymentType !== "free"
         ? schema.required("Something wrong!")
         : schema.notRequired();
     }),
   city: Yup.string()
     .trim()
     .when("$activePaymentType", ([activePaymentType], schema) => {
-      return activePaymentType === "bank"
+      return activePaymentType !== "free"
         ? schema.required("!")
         : schema.notRequired();
     }),
@@ -27,14 +27,14 @@ const checkoutValidationSchema = Yup.object().shape({
   postalCode: Yup.string()
     .trim()
     .when("$activePaymentType", ([activePaymentType], schema) => {
-      return activePaymentType === "bank"
+      return activePaymentType !== "free"
         ? schema.required("!").min(0, "!")
         : schema.notRequired();
     }),
   country: Yup.string()
     .trim()
     .when("$activePaymentType", ([activePaymentType], schema) => {
-      return activePaymentType === "bank"
+      return activePaymentType !== "free"
         ? schema.required(" ")
         : schema.notRequired();
     }),
@@ -45,7 +45,13 @@ const checkoutValidationSchema = Yup.object().shape({
         ? schema.required("")
         : schema.notRequired();
     }),
-
+  recaptcha: Yup.string()
+    .trim()
+    .when("$activePaymentType", ([activePaymentType], schema) => {
+      return activePaymentType === "free"
+        ? schema.required("Recaptcha is required")
+        : schema.notRequired();
+    }),
   termsAndConditions: Yup.boolean()
     .oneOf([true], "You must agree to Terms and Conditions")
     .required("You must agree to Terms and Conditions"),

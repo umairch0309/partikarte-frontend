@@ -1,7 +1,8 @@
 import { Table } from "antd";
 import React, { useEffect, useState } from "react";
+import formatDate from "../../utilities/formatDate";
 
-const OrdersTable = ({ ordersData }) => {
+const OrdersTable = ({ ordersData, isLoading }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -18,32 +19,54 @@ const OrdersTable = ({ ordersData }) => {
       title: "Customer name",
       dataIndex: "customerName",
       key: "customerName",
+      render: (text) => <span className="white-space-nowrap">{text}</span>,
     },
     {
       title: "Event name",
       dataIndex: "eventName",
       key: "eventName",
+      render: (text, record) => <span>{record?.eventId?.eventName}</span>,
     },
     {
       title: "Ticket type",
       dataIndex: "ticketType",
       key: "ticketType",
       align: "center",
+      render: (text, record) => (
+        <span>
+          {record?.tickets
+            ?.map((selectedTicket) =>
+              record?.eventId?.tickets?.find(
+                (ticket) => ticket._id === selectedTicket.ticketId
+              )
+            )
+            .filter(Boolean)
+            .map((matchingTicket) => matchingTicket?.ticketType)
+            .join(", ")}
+        </span>
+      ),
     },
     {
       title: "Price",
-      dataIndex: "price",
-      key: "price",
+      dataIndex: "orderAmount",
+      key: "orderAmount",
       align: "center",
+      sorter: (a, b) => a.orderAmount - b.orderAmount,
+
       render: (text, record) => {
         return `$${text}`;
       },
     },
     {
       title: "Purchase date",
-      dataIndex: "purchaseDate",
-      key: "purchaseDate",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
       align: "center",
+      sorter: (a, b) =>
+        new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+      render: (text) => (
+        <span className="white-space-nowrap">{formatDate(text)}</span>
+      ),
     },
   ];
 
@@ -52,6 +75,7 @@ const OrdersTable = ({ ordersData }) => {
       scroll={{ scrollToFirstRowOnChange: true, x: window.innerWidth <= 768 }}
       columns={columns}
       dataSource={data}
+      loading={isLoading}
     />
   );
 };

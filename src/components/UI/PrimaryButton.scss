@@ -16,4 +16,7 @@
     color: $primaryColor;
     @include customBorder(1px, solid, $primaryColor, 10px);
   }
+  &:disabled {
+    cursor: not-allowed;
+  }
 }

@@ -6,7 +6,7 @@ export function ShowMessageLoading(url) {
     key,
     type: "loading",
     content: "Loading...",
-    duration: 20,
+    duration: 30,
   });
 }
 

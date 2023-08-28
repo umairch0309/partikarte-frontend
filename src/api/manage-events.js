@@ -9,6 +9,19 @@ export function useAllEvents(onSuccess, onError) {
   return { response, isLoading };
 }
 
+export function useActiveEvents(onSuccess, onError) {
+  const { response, isLoading } = useFetch(
+    ["get-active-events"],
+    "events/active",
+    {
+      cacheTime: Infinity,
+      onSuccess,
+      onError,
+    }
+  );
+  return { response, isLoading };
+}
+
 export function useAllEventsForCustomer(onSuccess, onError) {
   const { response, isLoading } = useFetch(
     ["all-events-for-customer"],

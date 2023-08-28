@@ -12,9 +12,11 @@ const BookingContext = createContext();
 
 function bookingReducer(state, action) {
   switch (action.type) {
+    case "RESET_STATE":
+      return { ...initialState, eventId: state.eventId };
     case "CHECK_EVENT":
       return {
-        ...(action.eventId === state.eventId ? initialState : state),
+        ...(action.eventId !== state.eventId ? initialState : state),
         eventId: action.eventId,
       };
     case "UPDATE_FIELD":
@@ -36,13 +38,29 @@ function bookingReducer(state, action) {
       return {
         ...state,
         tickets: updatedTickets,
+        orderAmount: updatedTickets.reduce(
+          (total, obj) => total + obj.noOfTickets * obj.price,
+          0
+        ),
       };
-
-    case "REMOVE_TICKET":
+    case "DELETE_TICKET":
+      const ticketExists = state.tickets.findIndex(
+        (t) => t.ticketId === action.ticket.ticketId
+      );
+      const tickets =
+        ticketExists !== -1
+          ? [
+              ...state.tickets.slice(0, ticketExists),
+              action.ticket,
+              ...state.tickets.slice(ticketExists + 1),
+            ]
+          : [...state.tickets, action.ticket];
       return {
         ...state,
-        tickets: state.tickets.filter(
-          (ticket) => ticket._id !== action.ticket._id
+        tickets: tickets,
+        orderAmount: tickets.reduce(
+          (total, obj) => total + obj.noOfTickets * obj.price,
+          0
         ),
       };
     default:

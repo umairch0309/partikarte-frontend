@@ -1,0 +1,42 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.payment-status-page {
+  width: 30vw !important;
+  margin-block: 70px;
+  margin-inline: auto;
+  @include flex(column, center, center, 20px);
+  @media (max-width: 767px) {
+    width: 95vw !important;
+  }
+
+  svg {
+    margin-inline: auto;
+  }
+  .status-icon {
+    @include flex(row, center, center);
+  }
+  .status-text-container {
+    h4 {
+      text-align: center;
+      font-size: 18px;
+    }
+    p {
+      text-align: center;
+      margin-top: 5px;
+      color: opacityColor($textColor, 0.8);
+    }
+  }
+
+  .action-button {
+    width: 100%;
+  }
+  .link-under-button {
+    color: $secondaryColor;
+    text-decoration: underline;
+    text-align: center;
+    &:hover {
+      color: $primaryColor;
+    }
+  }
+}

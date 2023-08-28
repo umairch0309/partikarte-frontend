@@ -8,12 +8,14 @@ import PrimaryButton from "../../components/UI/PrimaryButton";
 import GoogleMapComponent from "../../components/service-components/GoogleMapComponent";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import { useSingleEventForCustomer } from "../../api/manage-events";
-import { Skeleton } from "antd";
+import { Skeleton, message } from "antd";
 import formatDate from "../../utilities/formatDate";
+import { useBookingContext } from "../../context/booking-context";
 
 const ViewEvent = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobileWidth();
+  const { state, dispatch } = useBookingContext();
   const [showMap, setShowMap] = useState(false);
   const [data, setData] = useState(null);
   const { eventId } = useParams();
@@ -21,25 +23,6 @@ const ViewEvent = () => {
     setData(res?.event);
     console.log(res?.event);
   });
-
-  const tickets = [
-    {
-      title: "Vstopnica, MAJA ZALOŽNIK z zasedbo",
-      startDate: "2023-07-13T20:00:00.000Z",
-      endDate: "2023-07-13T22:20:00.000Z",
-      comment: "DDV ni obračunan v skladu s 43.členom ZDDV-1.",
-      price: "10",
-      _id: "ticket-1",
-    },
-    {
-      title: "Vstopnica, MAJA ZALOŽNIK z zasedbo",
-      startDate: "2023-07-13T20:00:00.000Z",
-      endDate: "2023-07-13T22:20:00.000Z",
-      comment: "DDV ni obračunan v skladu s 43.členom ZDDV-1.",
-      price: "10",
-      _id: "ticket-2",
-    },
-  ];
 
   const handleGetDirections = () => {
     const lat = data?.eventCoordinatesY; // Example latitude
@@ -49,8 +32,12 @@ const ViewEvent = () => {
     window.open(url, "_blank");
   };
 
-  const butTicketsHandler = () => {
-    navigate("/checkout");
+  const buyTicketsHandler = () => {
+    if (state?.eventId && state?.eventId?.trim() !== "") {
+      navigate("/checkout");
+    } else {
+      message.error("Please add ticket to your wishlist first.");
+    }
   };
 
   const renderTickets = () => {
@@ -70,11 +57,12 @@ const ViewEvent = () => {
             <p>No tickets yet</p>
           )}
         </div>
-        {tickets.length > 0 && (
+        {data?.tickets?.length > 0 && (
           <>
             <PrimaryButton
-              onClick={butTicketsHandler}
+              onClick={buyTicketsHandler}
               className="buy-tickets-button"
+              disabled={!(data?.tickets?.length > 0)}
             >
               Buy Tickets
             </PrimaryButton>

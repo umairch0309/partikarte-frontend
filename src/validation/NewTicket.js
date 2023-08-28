@@ -2,6 +2,7 @@ import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
   ticketName: Yup.string().required("Required"),
+  ticketType: Yup.string().required("Required"),
   paidTicket: Yup.boolean(),
   limitedTickets: Yup.boolean(),
   //   ticketPrice: Yup.string().when("paidTicket", {

@@ -9,23 +9,31 @@ import {
   Area,
 } from "recharts";
 
-const data = [];
+// const data = [];
 
-for (let day = 1; day <= 30; day++) {
-  const month = "April";
-  const year = 2023;
-  const dateString = `${day} ${month} ${year}`;
-  const users = Math.floor(Math.random() * 3000) + 200; // Generate random user data
+// for (let updatedAt = 1; updatedAt <= 30; updatedAt++) {
+//   const month = "April";
+//   const year = 2023;
+//   const dateString = `${updatedAt} ${month} ${year}`;
+//   const orderAmount = Math.floor(Math.random() * 3000) + 200; // Generate random user data
 
-  data.push({ day: dateString, users: users });
-}
+//   data.push({ updatedAt: dateString, orderAmount: orderAmount });
+// }
 
-const Chart = ({ height }) => {
-  const formatUsers = (users) => {
-    if (users >= 1000) {
-      return `$${(users / 1000).toFixed(1)}k`;
+const Chart = ({ height, data: chartData }) => {
+  const data = chartData.map((order) => ({
+    ...order,
+    updatedAt: new Date(order.updatedAt).toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
+  }));
+  const formatUsers = (orderAmount) => {
+    if (orderAmount >= 1000) {
+      return `$${(orderAmount / 1000).toFixed(1)}k`;
     }
-    return `$${users}`;
+    return `$${orderAmount}`;
   };
 
   const axisStyle = {
@@ -40,10 +48,10 @@ const Chart = ({ height }) => {
   };
 
   const customTickFormatter = (tick) => {
-    const [day, month] = tick.split(" ");
-    const monthAbbreviation = month.substring(0, 3); // Get the first 3 letters of the month
+    const [updatedAt, day] = tick.split(" ");
+    const monthAbbreviation = updatedAt.substring(0, 3); // Get the first 3 letters of the month
 
-    return `${day}\n${monthAbbreviation}`;
+    return `${day.split(",")[0]}\n${monthAbbreviation}`;
   };
 
   return (
@@ -51,7 +59,7 @@ const Chart = ({ height }) => {
       <AreaChart data={data} margin={{ bottom: 10 }}>
         <CartesianGrid stroke="#3d8bff0c" />
         <XAxis
-          dataKey="day"
+          dataKey="updatedAt"
           axisLine={{ stroke: "transparent" }}
           tickMargin={10}
           tick={{ ...axisStyle }}
@@ -80,7 +88,7 @@ const Chart = ({ height }) => {
         </defs>
         <Area
           //   type="monotone"
-          dataKey="users"
+          dataKey="orderAmount"
           stroke="#338AF3"
           type="linear"
           strokeWidth={2}

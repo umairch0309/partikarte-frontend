@@ -11,6 +11,8 @@ import ContactUs from "./ContactUs";
 import BusinessProfile from "./BusinessProfile";
 import JoinBusiness from "./JoinBusiness";
 import { BookingProvider } from "../../context/booking-context";
+import PaymentSuccessPage from "../common/PaymentSuccessPage";
+import PaymentErrorPage from "../common/PaymentErrorPage";
 
 const UserMain = () => {
   return (
@@ -21,6 +23,14 @@ const UserMain = () => {
           <Route path="/all-events" element={<AllEventsPage />} />
           <Route path="/all-events/:eventId" element={<ViewEvent />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route
+            path="/checkout/payment-success"
+            element={<PaymentSuccessPage />}
+          />
+          <Route
+            path="/checkout/payment-error"
+            element={<PaymentErrorPage />}
+          />
           <Route path="/policies" element={<PoliciesPage />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/join-business" element={<JoinBusiness />} />

@@ -3,60 +3,30 @@ import Topbar from "../../components/Layouts/BusinessLayout/Topbar";
 import "./Dashboard.scss";
 import Chart from "../../components/Common/Chart";
 import OrdersTable from "../../components/Tables/OrdersTable";
+import { useLatestOrders, useOrdersByTimeInterval } from "../../api/orders";
+import { useActiveEvents } from "../../api/manage-events";
+import formatDate from "../../utilities/formatDate";
+import { Skeleton } from "antd";
 
 const Dashboard = () => {
-  const [data, setData] = useState([]);
+  const [ordersData, setOrdersData] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
+  const [ordersDataForChart, setOrdersDataForChart] = useState([]);
 
-  useEffect(() => {
-    const array = [];
-    for (let i = 0; i < 100; i++) {
-      array.push({
-        key: i,
-        _id: i + 88347,
-        customerName: "John Smith",
-        eventName: "Get to know yourself!",
-        ticketType: "VVIP",
-        price: "100",
-        purchaseDate: "24 Jan, 2023",
-      });
+  const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
+    "monthly",
+    (res) => {
+      console.log(res);
+      setOrdersDataForChart(res?.orders);
     }
-    setData(array);
-  }, []);
+  );
+  const { isLoading } = useLatestOrders((res) => {
+    setOrdersData(res?.orders);
+  });
 
-  const dummyEvents = [
-    {
-      eventName: "Event 1",
-      description:
-        "Some description about the ticket will be there which will be in around 2 lines note more than that...",
-      date: "24 March, 2023",
-      revenue: "$675",
-      ticketCount: "413 Tickets",
-    },
-    {
-      eventName: "Event 1",
-      description:
-        "Some description about the ticket will be there which will be in around 2 lines note more than that...",
-      date: "24 March, 2023",
-      revenue: "$675",
-      ticketCount: "413 Tickets",
-    },
-    {
-      eventName: "Event 1",
-      description:
-        "Some description about the ticket will be there which will be in around 2 lines note more than that...",
-      date: "24 March, 2023",
-      revenue: "$675",
-      ticketCount: "413 Tickets",
-    },
-    {
-      eventName: "Event 1",
-      description:
-        "Some description about the ticket will be there which will be in around 2 lines note more than that...",
-      date: "24 March, 2023",
-      revenue: "$675",
-      ticketCount: "413 Tickets",
-    },
-  ];
+  const { isLoading: isEventsLoading } = useActiveEvents((res) => {
+    setEventsData(res?.events);
+  });
 
   return (
     <>
@@ -93,7 +63,7 @@ const Dashboard = () => {
                 </select>
               </div>
             </div>
-            <Chart height={290} />
+            <Chart data={ordersDataForChart} height={290} />
           </div>
           <div className="latest-orders-container">
             <div className="latest-orders-container-header">
@@ -108,30 +78,38 @@ const Dashboard = () => {
                 </select>
               </div>
             </div>
-            <OrdersTable ordersData={data} />
+            <OrdersTable isLoading={isLoading} ordersData={ordersData} />
           </div>
         </div>
         <div className="dashboard-page-right">
           <div className="active-events-container">
             <h3>Active Events</h3>
             <div className="all-active-events-container">
-              {dummyEvents.map((event, index) => (
-                <div className="single-active-event" key={index}>
-                  <h5>{event.eventName}</h5>
-                  <h6>{event.description}</h6>
-                  <div className="more-button-container">
-                    <button>More</button>
-                    <p>{event.date}</p>
-                  </div>
-                  <hr />
-                  <div className="revenue-details-container">
-                    <p>Total Revenue Generated:</p>
-                    <h3>
-                      {event.revenue} <span>({event.ticketCount})</span>
-                    </h3>
-                  </div>
-                </div>
-              ))}
+              {!isEventsLoading ? (
+                eventsData?.length > 0 ? (
+                  eventsData?.map((event, index) => (
+                    <div className="single-active-event" key={index}>
+                      <h5>{event?.eventName}</h5>
+                      <h6>{event?.eventDescription}</h6>
+                      <div className="more-button-container">
+                        <button>More</button>
+                        <p>{formatDate(event.eventStart)}</p>
+                      </div>
+                      <hr />
+                      <div className="revenue-details-container">
+                        <p>Total Revenue Generated:</p>
+                        <h3>
+                          {event?.revenue} <span>({event?.ticketsSold})</span>
+                        </h3>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>No active events</p>
+                )
+              ) : (
+                <Skeleton active={true} size={"small"} />
+              )}
             </div>
           </div>
           <div className="balance-sheet-container">

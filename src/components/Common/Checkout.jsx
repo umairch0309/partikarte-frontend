@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import StatusModal from "../UI/StatusModal";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { useCountriesList } from "../../api/services";
+import { useBookingContext } from "../../context/booking-context";
+import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 
 const initialState = {
   termsAndConditions: false,
@@ -31,33 +33,35 @@ const errorPaymentFormInputStyle = {
 };
 const payment = new PaymentJs();
 
-const Checkout = ({ totalPrice }) => {
+const Checkout = () => {
+  const { state, dispatch } = useBookingContext();
   const navigate = useNavigate();
   const [showSuccessStatus, setShowSuccessStatus] = useState(false);
   const [showErrorStatus, setShowErrorStatus] = useState(false);
 
   const [activePaymentType, setActivePaymentType] = useState(
-    totalPrice === 0 ? "free" : "card"
+    state.orderAmount === 0 ? "free" : "card"
   );
   const [paymentData, setPaymentData] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
-
   const [countries, setCountries] = useState([]);
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
       setCountries(res);
+      console.log(res, " countries list");
     },
     (res) => {
       console.log(res, "countries list error");
     }
   );
 
-  console.log(paymentData);
+  const { handleMutation, isLoading: isEventCreating } = usePostApi();
+  // console.log(paymentData);
 
   useEffect(() => {
-    setActivePaymentType(totalPrice === 0 ? "free" : "card");
-  }, [totalPrice]);
+    setActivePaymentType(state.orderAmount === 0 ? "free" : "card");
+  }, [state.orderAmount]);
 
   useEffect(() => {
     if (activePaymentType === "card") {
@@ -79,7 +83,7 @@ const Checkout = ({ totalPrice }) => {
         }
       );
     }
-  }, [activePaymentType, totalPrice, showErrorStatus]);
+  }, [activePaymentType, state.orderAmount, showErrorStatus]);
 
   const cardInputsChangeHandler = async (event) => {
     const { name, value } = event.target;
@@ -95,7 +99,7 @@ const Checkout = ({ totalPrice }) => {
 
   const handleRecaptchaChange = (value) => {
     console.log("reCAPTCHA value:", value);
-    // Handle reCAPTCHA validation logic
+    setPaymentData({ ...paymentData, recaptcha: value });
   };
 
   const submitFormHandler = async (e) => {
@@ -106,9 +110,19 @@ const Checkout = ({ totalPrice }) => {
       console.log("error existed", errors);
       return;
     }
-
+    setFormErrors({});
     const [year, month] = paymentData.expiry.split("-");
     console.log(paymentData);
+
+    const formData = new FormData();
+    formData.append("eventId", state?.eventId);
+    formData.append("recommendations", paymentData?.recommendations);
+    formData.append("tickets", JSON.stringify(state?.tickets));
+    formData.append("noOfTickets", state?.totalTickets);
+    formData.append("orderAmount", state?.orderAmount);
+    formData.append("customerEmail", paymentData?.email);
+    formData.append("customerName", paymentData?.name);
+
     try {
       if (activePaymentType === "card") {
         payment.tokenize(
@@ -119,10 +133,47 @@ const Checkout = ({ totalPrice }) => {
             month,
           },
           function (token, cardData) {
-            e.target.reset();
-            setPaymentData(initialState);
-            setFormErrors({});
-            setShowSuccessStatus(true);
+            console.log(cardData, " card data");
+            formData.append("paymentRequestToken", token);
+            formData.append("country", paymentData?.country);
+            formData.append("city", paymentData?.city);
+            formData.append("postalCode", paymentData?.postalCode);
+            formData.append("addressDescription", paymentData?.address);
+            formData.append(
+              "countryCode",
+              countries.find(
+                (country) => country.countryName === paymentData?.country
+              )?.countryCode
+            );
+
+            handleMutation(
+              {
+                path: "create-card-payment-order",
+                data: formData,
+              },
+              (res) => {
+                console.log("card payment done", res);
+                if (
+                  res?.data?.redirectType === "iframe" &&
+                  res?.data?.returnType === "REDIRECT" &&
+                  res?.data?.redirectUrl
+                ) {
+                  window.open(res?.data?.redirectUrl, "_blank");
+                  navigate("/");
+                } else {
+                  setShowSuccessStatus(true);
+                }
+                e.target.reset();
+                setPaymentData(initialState);
+                setFormErrors({});
+                dispatch({ type: "RESET_STATE" });
+              },
+              (res) => {
+                console.log(res, " couldnt do card payment");
+                setShowErrorStatus(true);
+              }
+            );
+
             console.log("card_token", token);
           },
           function (errors) {
@@ -138,8 +189,43 @@ const Checkout = ({ totalPrice }) => {
           }
         );
       } else if (activePaymentType === "bank") {
-        console.log("Bank Payment Done");
-        setShowSuccessStatus(true);
+        console.log(first);
+        formData.append("country", paymentData?.country);
+        formData.append("city", paymentData?.city);
+        formData.append("postalCode", paymentData?.postalCode);
+        formData.append("addressDescription", paymentData?.address);
+
+        handleMutation(
+          {
+            path: "create-bank-payment-order",
+            data: formData,
+          },
+          (res) => {
+            console.log("Bank Payment Done");
+            setShowSuccessStatus(true);
+            dispatch({ type: "RESET_STATE" });
+          },
+          (res) => {
+            console.log(res, " couldnt do bank payment");
+            setShowErrorStatus(true);
+          }
+        );
+      } else if (activePaymentType === "free") {
+        handleMutation(
+          {
+            path: "create-free-order",
+            data: formData,
+          },
+          (res) => {
+            console.log("Free payment done");
+            dispatch({ type: "RESET_STATE" });
+            setShowSuccessStatus(true);
+          },
+          (res) => {
+            console.log(res, " couldnt do free payment");
+            setShowErrorStatus(true);
+          }
+        );
       }
     } catch (error) {
       console.log(error);
@@ -147,6 +233,7 @@ const Checkout = ({ totalPrice }) => {
       navigate(-1);
     }
   };
+
   return (
     <div className="checkout-component">
       <h2 className="checkout-title">
@@ -161,7 +248,7 @@ const Checkout = ({ totalPrice }) => {
           className={`top-payment-button ${
             activePaymentType !== "card" && "in-active-button"
           }`}
-          disabled={totalPrice === 0}
+          disabled={state.orderAmount === 0}
         >
           <ReactSVG src="/icons/tools/card-payment.svg" />
           Credit Card
@@ -174,7 +261,7 @@ const Checkout = ({ totalPrice }) => {
           className={`top-payment-button ${
             activePaymentType !== "bank" && "in-active-button"
           }`}
-          disabled={totalPrice === 0}
+          disabled={state.orderAmount === 0}
         >
           <ReactSVG src="/icons/tools/bank-payment.svg" />
           Bank Transfer
@@ -224,14 +311,12 @@ const Checkout = ({ totalPrice }) => {
               <div className={`form-item ${formErrors.cvv ? "error" : ""}`}>
                 <label htmlFor="cvv">CVV*</label>
                 <div id="cvv"></div>
-                {formErrors.number && (
-                  <p className="error-message">Something wrong!</p>
-                )}
+                {formErrors.number && <p className="error-message">Error!</p>}
               </div>
             </div>{" "}
           </>
         )}
-        {activePaymentType === "bank" && (
+        {activePaymentType !== "free" && (
           <>
             <div className={`form-item ${formErrors?.address ? "error" : ""}`}>
               <label htmlFor="address">Address*</label>
@@ -309,7 +394,7 @@ const Checkout = ({ totalPrice }) => {
         )}
         <div className={`form-item ${formErrors.name ? "error" : ""}`}>
           <label htmlFor="name">
-            {activePaymentType === "card" ? "Account Holder Name" : "Surname"}
+            {activePaymentType === "card" ? "Account Holder Name" : "Full Name"}
           </label>
           <input
             type="name"
@@ -317,7 +402,9 @@ const Checkout = ({ totalPrice }) => {
             id="name"
             className="name-input"
             placeholder={
-              activePaymentType === "card" ? "Account Holder Name" : "Surname"
+              activePaymentType === "card"
+                ? "Account Holder Name"
+                : "Your full name"
             }
             minLength={6}
             onChange={cardInputsChangeHandler}
@@ -400,8 +487,15 @@ const Checkout = ({ totalPrice }) => {
         {formErrors.termsAndConditions && (
           <p className="error-message-form">{formErrors.termsAndConditions}</p>
         )}
-        <PrimaryButton type="submit" className="submit-payment-form">
-          Pay ${totalPrice}
+        {formErrors.recaptcha && (
+          <p className="error-message-form">{formErrors.recaptcha}</p>
+        )}
+        <PrimaryButton
+          disabled={state.totalTickets === 0}
+          type={state.totalTickets === 0 ? "button" : "submit"}
+          className="submit-payment-form"
+        >
+          Pay ${state.orderAmount?.toFixed(2)}
         </PrimaryButton>
       </form>
       {activePaymentType === "card" && (
@@ -431,7 +525,7 @@ const Checkout = ({ totalPrice }) => {
         open={showSuccessStatus}
         onCancel={setShowSuccessStatus}
         headline="Congratulations!"
-        description="You have successfully buy the tickets. Please enjoy your event."
+        description="You successfully have bought the ticket(s). Please enjoy your event."
         button={{ text: "Continue Shopping", link: "/all-events" }}
         link={{ text: "Back to Home", url: "/" }}
         icon="/icons/tools/claps-success-status.svg"

@@ -40,16 +40,16 @@ const Topbar = ({ title, subtitle }) => {
         </div>
 
         <div className="topbar-left">
-          <h2>
-            {location.pathname === "/business/dashboard"
+          <h2>{title}</h2>
+          <h5>
+            {location?.pathname === "/business/dashboard"
               ? `Hey ${
                   user?.user?.name ||
                   user?.business?.company?.companyName?.split(" ")[0] ||
                   "User"
                 }, Good Evening 🌃`
-              : title}
-          </h2>
-          <h5>{subtitle}</h5>
+              : subtitle}
+          </h5>
         </div>
         <div className="topbar-right">
           <div className="search-input-container">

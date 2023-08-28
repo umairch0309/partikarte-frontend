@@ -3,6 +3,7 @@ import PrimaryButton from "../UI/PrimaryButton";
 import "./TicketCard.scss";
 import { useBookingContext } from "../../context/booking-context";
 import formatDate from "../../utilities/formatDate";
+import { message } from "antd";
 
 const TicketCard = ({ ticket, eventId }) => {
   const { state, dispatch } = useBookingContext();
@@ -23,10 +24,50 @@ const TicketCard = ({ ticket, eventId }) => {
           ticketId: ticket?._id,
           noOfTickets: ticketCount,
           price: ticket?.price,
+          ticketName: ticket?.ticketName,
+          show: true,
         },
       });
     }
   }, [state.eventId]);
+
+  const onAddToWishlist = () => {
+    if (state.eventId === eventId) {
+      dispatch({
+        type: "ADD_TICKET",
+        ticket: {
+          ticketId: ticket?._id,
+          noOfTickets: ticketCount,
+          price: ticket?.price,
+          ticketName: ticket?.ticketName,
+          show: true,
+        },
+      });
+      if (
+        state.tickets?.find((t) => t.ticketId === ticket._id)?.noOfTickets !==
+        ticketCount
+      ) {
+        if (
+          state.tickets?.find((t) => t.ticketId === ticket._id)?.noOfTickets <
+          ticketCount
+        ) {
+          message.success("Ticket added to wishlist.");
+        } else {
+          message.info("Selected ticket count adjusted in wishlist.");
+        }
+      } else {
+        message.warning(
+          "Please add more or remove tickets to change wishlist."
+        );
+      }
+    } else {
+      dispatch({
+        type: "CHECK_EVENT",
+        eventId,
+      });
+      message.success("Ticket added to wishlist.");
+    }
+  };
 
   return (
     <div className="ticket-card-container">
@@ -66,26 +107,7 @@ const TicketCard = ({ ticket, eventId }) => {
             </PrimaryButton>
           </div>
         </div>
-        <div
-          className="add-to-wishlist-button"
-          onClick={() => {
-            if (state.eventId === eventId) {
-              dispatch({
-                type: "ADD_TICKET",
-                ticket: {
-                  ticketId: ticket?._id,
-                  noOfTickets: ticketCount,
-                  price: ticket?.price,
-                },
-              });
-            } else {
-              dispatch({
-                type: "CHECK_EVENT",
-                eventId,
-              });
-            }
-          }}
-        >
+        <div className="add-to-wishlist-button" onClick={onAddToWishlist}>
           <img src="/icons/tools/wand.png" height={22} width={20} /> Add to
           wishlist
         </div>

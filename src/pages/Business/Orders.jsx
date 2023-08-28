@@ -8,10 +8,20 @@ import StatCard from "../../components/Common/StatCard";
 import Chart from "../../components/Common/Chart";
 import { useState, useEffect } from "react";
 import CustomersTable from "../../components/Tables/CustomersTable";
+import { useOrdersByTimeInterval } from "../../api/orders";
 
 const Orders = () => {
   const [data, setData] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [ordersDataForChart, setOrdersDataForChart] = useState([]);
+
+  const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
+    "monthly",
+    (res) => {
+      console.log(res);
+      setOrdersDataForChart(res?.orders);
+    }
+  );
 
   useEffect(() => {
     const array = [];
@@ -82,7 +92,7 @@ const Orders = () => {
               <option value={"yearly"}>Yearly</option>
             </select>
           </div>
-          <Chart height={290} />
+          <Chart data={ordersDataForChart} height={290} />
         </div>
 
         <div className="table-container">
