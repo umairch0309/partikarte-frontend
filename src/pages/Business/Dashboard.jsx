@@ -4,7 +4,7 @@ import "./Dashboard.scss";
 import Chart from "../../components/Common/Chart";
 import OrdersTable from "../../components/Tables/OrdersTable";
 import { useLatestOrders, useOrdersByTimeInterval } from "../../api/orders";
-import { useActiveEvents } from "../../api/manage-events";
+import { useActiveEvents, useAllEvents } from "../../api/manage-events";
 import formatDate from "../../utilities/formatDate";
 import { Skeleton } from "antd";
 
@@ -12,14 +12,23 @@ const Dashboard = () => {
   const [ordersData, setOrdersData] = useState([]);
   const [eventsData, setEventsData] = useState([]);
   const [ordersDataForChart, setOrdersDataForChart] = useState([]);
+  const [allEventsData, setAllEventsData] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedInterval, setSelectedInterval] = useState("weekly");
+
+  const { isLoading: isAllEventsLoading } = useAllEvents((res) => {
+    setAllEventsData(res?.events);
+  });
 
   const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
-    "monthly",
+    [selectedInterval, selectedEvent],
+    `${selectedInterval}${selectedEvent ? `?eventId=${selectedEvent}` : ""}`,
     (res) => {
       console.log(res);
       setOrdersDataForChart(res?.orders);
     }
   );
+
   const { isLoading } = useLatestOrders((res) => {
     setOrdersData(res?.orders);
   });
@@ -42,28 +51,31 @@ const Dashboard = () => {
                 <h3>Ticket sales graph</h3>
               </div>
               <div className="header-right">
-                <select>
-                  <option>Event</option>
-                  <option value={"event1"}>Event 1</option>
-                  <option value={"event1"}>Event 2</option>
-                  <option value={"event1"}>Event 3</option>
-                  <option value={"event1"}>Event 4</option>
-                  <option value={"event1"}>Event 5</option>
+                <select onChange={(e) => setSelectedEvent(e.target.value)}>
+                  <option value={""}>Choose event</option>
+                  {allEventsData?.length > 0 &&
+                    allEventsData?.map((el) => (
+                      <option value={el?._id}>{el?.eventName}</option>
+                    ))}
                 </select>
-                <select>
+                {/* <select>
                   <option>Ticket type</option>
                   <option value={"VIP"}>VIP</option>
                   <option value={"VIP"}>VVIP</option>
                   <option value={"VIP"}>Economy</option>
-                </select>
-                <select>
+                </select> */}
+                <select onChange={(e) => setSelectedInterval(e.target.value)}>
                   <option value={"monthly"}>Monthly</option>
                   <option value={"yearly"}>Yearly</option>
                   <option value={"weekly"}>Weekly</option>
                 </select>
               </div>
             </div>
-            <Chart data={ordersDataForChart} height={290} />
+            <Chart
+              selectedInterval={selectedInterval}
+              data={ordersDataForChart}
+              height={290}
+            />
           </div>
           <div className="latest-orders-container">
             <div className="latest-orders-container-header">

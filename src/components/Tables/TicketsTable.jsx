@@ -1,6 +1,7 @@
 import { Dropdown, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
+import formatDate from "../../utilities/formatDate";
 
 const TicketsTable = ({ ticketsData }) => {
   const [data, setData] = useState([]);
@@ -35,8 +36,9 @@ const TicketsTable = ({ ticketsData }) => {
   const columns = [
     {
       title: "#",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "index",
+      key: "index",
+      render: (text, record, index) => `${index + 1}`,
     },
     {
       title: "Ticket Name",
@@ -46,29 +48,38 @@ const TicketsTable = ({ ticketsData }) => {
     {
       title: "Ticket Type",
       dataIndex: "ticketType",
+      align: "center",
       key: "ticketType",
+      render: (text) => text?.toUpperCase(),
     },
+
     {
       title: "Availability",
       dataIndex: "availability",
       key: "availability",
+      render: (text, record) => (
+        <span className="white-space-nowrap">
+          {formatDate(record?.validFrom)} to {formatDate(record?.validTo)}
+        </span>
+      ),
     },
     {
       title: "Tickets Ordered",
-      dataIndex: "numberOfTicketsOrdered",
-      key: "numberOfTicketsOrdered",
+      dataIndex: "ticketOrders",
+      key: "ticketOrders",
       align: "center",
     },
     {
       title: "Remaining Tickets",
-      dataIndex: "remainingTickets",
-      key: "remainingTickets",
+      dataIndex: "remainingCapacity",
+      key: "remainingCapacity",
     },
     {
       title: "Revenue",
-      dataIndex: "revenueGenerated",
-      key: "revenueGenerated",
+      dataIndex: "revenue",
+      key: "revenue",
       align: "center",
+      render: (text) => "$" + text,
     },
     {
       title: "Actions",

@@ -9,26 +9,19 @@ import {
   Area,
 } from "recharts";
 
-// const data = [];
+const Chart = ({ height, data: chartData, selectedInterval }) => {
+  const data =
+    chartData?.map((order) => ({
+      ...order,
+      ...(selectedInterval !== "yearly" && {
+        updatedAt: new Date(order.updatedAt).toLocaleDateString("en-US", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+      }),
+    })) || [];
 
-// for (let updatedAt = 1; updatedAt <= 30; updatedAt++) {
-//   const month = "April";
-//   const year = 2023;
-//   const dateString = `${updatedAt} ${month} ${year}`;
-//   const orderAmount = Math.floor(Math.random() * 3000) + 200; // Generate random user data
-
-//   data.push({ updatedAt: dateString, orderAmount: orderAmount });
-// }
-
-const Chart = ({ height, data: chartData }) => {
-  const data = chartData.map((order) => ({
-    ...order,
-    updatedAt: new Date(order.updatedAt).toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }),
-  }));
   const formatUsers = (orderAmount) => {
     if (orderAmount >= 1000) {
       return `$${(orderAmount / 1000).toFixed(1)}k`;
@@ -50,8 +43,10 @@ const Chart = ({ height, data: chartData }) => {
   const customTickFormatter = (tick) => {
     const [updatedAt, day] = tick.split(" ");
     const monthAbbreviation = updatedAt.substring(0, 3); // Get the first 3 letters of the month
-
-    return `${day.split(",")[0]}\n${monthAbbreviation}`;
+    if (selectedInterval !== "yearly") {
+      return `${day.split(",")[0]}\n${monthAbbreviation}`;
+    }
+    return `${monthAbbreviation}\n${day}`;
   };
 
   return (

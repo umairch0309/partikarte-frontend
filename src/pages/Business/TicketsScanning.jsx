@@ -11,14 +11,31 @@ import AddNewEventModal from "../../components/ManageEvents/AddNewEventModal";
 import TicketsTableInScanning from "../../components/Tables/TicketsTableInScanning";
 import GuestsTableInScanning from "../../components/Tables/GuestsTableInScanning";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
+import { useOrdersByTimeInterval } from "../../api/orders";
+import { useNavigate } from "react-router-dom";
 
 const TicketsScanning = () => {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [guests, setGuests] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedTable, setSelectedTable] = useState(0);
   const isMobile = useIsMobileWidth();
+
+  const [ordersDataForChart, setOrdersDataForChart] = useState([]);
+  const [selectedInterval, setSelectedInterval] = useState("monthly");
+
+  const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
+    [selectedInterval, selectedEvent?._id],
+    `${selectedInterval}${
+      selectedEvent?._id ? `?eventId=${selectedEvent?._id}` : ""
+    }`,
+    (res) => {
+      console.log(res);
+      setOrdersDataForChart(res?.orders);
+    }
+  );
 
   useEffect(() => {
     const array = [];
@@ -67,13 +84,21 @@ const TicketsScanning = () => {
               <ReactSVG src="/icons/tools/scan-ticket.svg" />
               <span>Scan ticket & Admit guests</span>
             </SecondaryButton>
-            <SecondaryButton onClick={() => {}}>
+            <SecondaryButton
+              onClick={() => {
+                navigate("/business/guestlists");
+              }}
+            >
               <ReactSVG src="/icons/tools/plus-person.svg" />
-              <span>Add new Guestlist</span>
+              <span>Manage Guestlists</span>
             </SecondaryButton>
-            <SecondaryButton onClick={() => {}}>
+            <SecondaryButton
+              onClick={() => {
+                navigate("/business/manage-tickets");
+              }}
+            >
               <ReactSVG src="/icons/tools/ticket-outlined.svg" />
-              <span>Add new Ticket</span>
+              <span>Manage Tickets</span>
             </SecondaryButton>
           </div>
         </div>
@@ -97,7 +122,7 @@ const TicketsScanning = () => {
             variant={"blue-stat-card"}
           />
           <StatCard
-            title={"Total Guests"}
+            title={"Guests Permitted"}
             number={1102}
             icon={<ReactSVG src="/icons/tools/tick-person-colored.svg" />}
             variant={"orange-stat-card"}
@@ -106,8 +131,17 @@ const TicketsScanning = () => {
         <div className="order-analytics-chart-container">
           <div className="container-header">
             <h3>Tickets Analytics</h3>
+            <select onChange={(e) => setSelectedInterval(e.target.value)}>
+              <option value={"monthly"}>Monthly</option>
+              <option value={"weekly"}>Weekly</option>
+              <option value={"yearly"}>Yearly</option>
+            </select>
           </div>
-          <Chart height={290} />
+          <Chart
+            selectedInterval={selectedInterval}
+            data={ordersDataForChart}
+            height={290}
+          />
         </div>
         {isMobile && (
           <div className="tables-selection-buttons-container">

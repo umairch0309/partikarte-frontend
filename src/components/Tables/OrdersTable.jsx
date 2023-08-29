@@ -25,7 +25,12 @@ const OrdersTable = ({ ordersData, isLoading }) => {
       title: "Event name",
       dataIndex: "eventName",
       key: "eventName",
-      render: (text, record) => <span>{record?.eventId?.eventName}</span>,
+      render: (text, record) => (
+        <span className="white-space-nowrap" title={record?.eventId?.eventName}>
+          {record?.eventId?.eventName?.slice(0, 25) +
+            (record?.eventId?.eventName?.length > 25 ? "..." : "")}
+        </span>
+      ),
     },
     {
       title: "Ticket type",
@@ -42,7 +47,8 @@ const OrdersTable = ({ ordersData, isLoading }) => {
             )
             .filter(Boolean)
             .map((matchingTicket) => matchingTicket?.ticketType)
-            .join(", ")}
+            .join(", ")
+            ?.toUpperCase()}
         </span>
       ),
     },

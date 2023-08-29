@@ -36,6 +36,7 @@
   }
   .stats-cards-container {
     @include flex(row, space-between, center, 20px);
+
     @media (max-width: 767px) {
       flex-direction: column;
       align-items: stretch;
@@ -73,6 +74,13 @@
       padding: 0px 20px 20px 20px;
       .filter-search {
         @include flex(row, "", center, 5px);
+      }
+      select {
+        max-width: 120px;
+        padding-inline: 10px;
+        height: 40px;
+        border-color: transparent;
+        background-color: opacityColor($primaryColor, 0.08);
       }
       h3 {
         font-size: 18px;

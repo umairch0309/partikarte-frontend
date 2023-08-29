@@ -13,14 +13,34 @@ export function useLatestOrders(onSuccess, onError) {
   return { response, isLoading };
 }
 
-export function useOrdersByTimeInterval(interval, onSuccess, onError) {
+export function useOrdersByTimeInterval(
+  selectedEvent,
+  interval,
+  onSuccess,
+  onError
+) {
   const { response, isLoading } = useFetch(
-    ["ge-orders-by-time"],
+    ["ge-orders-by-time", selectedEvent],
     `orders/by-time/${interval}`,
     {
-      cacheTime: Infinity,
+      cacheTime: 1,
       onSuccess,
       onError,
+      enabled: true,
+    }
+  );
+  return { response, isLoading };
+}
+
+export function useOrdersByEventId(selectedEvent, onSuccess, onError) {
+  const { response, isLoading } = useFetch(
+    ["ge-orders-by-eventId", selectedEvent],
+    `orders/${selectedEvent}`,
+    {
+      cacheTime: 1,
+      onSuccess,
+      onError,
+      enabled: true,
     }
   );
   return { response, isLoading };

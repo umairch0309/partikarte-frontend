@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import DeleteAlert from "../UserManagement/DeleteAlert";
 
-const MemebersTable = ({ membersData }) => {
+const MemebersTable = ({ membersData, isLoading }) => {
   const [data, setData] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
@@ -41,18 +41,21 @@ const MemebersTable = ({ membersData }) => {
   const columns = [
     {
       title: "#",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "index",
+      key: "index",
+      render: (text, record, index) => `${index + 1}`,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      render: (text) => <span className="white-space-nowrap">{text}</span>,
     },
     {
       title: "Surname",
       dataIndex: "surname",
       key: "surname",
+      render: (text) => <span className="white-space-nowrap">{text}</span>,
     },
     {
       title: "Email",
@@ -61,20 +64,25 @@ const MemebersTable = ({ membersData }) => {
     },
     {
       title: "Date of Birth",
-      dataIndex: "datOfBirth",
-      key: "datOfBirth",
+      dataIndex: "dob",
+      key: "dob",
       align: "center",
+      render: (text) => new Date(text)?.toLocaleDateString(),
     },
     {
       title: "Member Type",
-      dataIndex: "memberType",
-      key: "memberType",
+      dataIndex: "role",
+      key: "role",
+      align: "center",
+      render: (text) => text?.toUpperCase(),
     },
     {
       title: "Address",
       dataIndex: "address",
       key: "address",
       width: "100",
+      render: (text) =>
+        text?.addressDescription + " " + text?.city + " " + text?.country,
     },
     {
       title: "Actions",
@@ -114,6 +122,7 @@ const MemebersTable = ({ membersData }) => {
         scroll={{ scrollToFirstRowOnChange: true, x: window.innerWidth <= 768 }}
         columns={columns}
         dataSource={data}
+        loading={isLoading}
       />
       <DeleteAlert
         selectedRecord={selectedRecord}

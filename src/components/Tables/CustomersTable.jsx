@@ -4,8 +4,9 @@ import { ReactSVG } from "react-svg";
 import RefundOrderAlert from "../Orders/RefundOrderAlert";
 import SendTickets from "../Orders/SendTickets";
 import OrderInvoice from "../Orders/OrderInvoice";
+import formatDate from "../../utilities/formatDate";
 
-const CustomersTable = ({ customersData }) => {
+const CustomersTable = ({ customersData, isLoading }) => {
   const [data, setData] = useState([]);
   const [showRefundAlert, setShowRefundAlert] = useState(false);
   const [showSendTicketModal, setShowSendTicketModal] = useState(false);
@@ -75,40 +76,33 @@ const CustomersTable = ({ customersData }) => {
   const columns = [
     {
       title: "#",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "index",
+      key: "index",
+      render: (text, record, index) => `${index + 1}`,
     },
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Surnname",
-      dataIndex: "surname",
-      key: "surname",
+      dataIndex: "customerName",
+      key: "customerName",
     },
     {
       title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Phone number",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
+      dataIndex: "customerEmail",
+      key: "customerEmail",
     },
     {
       title: "Order Amount",
       dataIndex: "orderAmount",
       key: "orderAmount",
       align: "center",
+      render: (text) => "$" + text,
     },
     {
       title: "Date/Time",
-      dataIndex: "dateTime",
-      key: "dateTime",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
       align: "center",
+      render: (text) => formatDate(text),
     },
     {
       title: "No. of Tickets",
@@ -154,6 +148,7 @@ const CustomersTable = ({ customersData }) => {
         scroll={{ scrollToFirstRowOnChange: true, x: window.innerWidth <= 768 }}
         columns={columns}
         dataSource={data}
+        loading={isLoading}
       />
       <RefundOrderAlert
         showRefundAlert={showRefundAlert}

@@ -5,6 +5,8 @@ import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import PrimaryButton from "../UI/PrimaryButton";
 import validateAddPeopleToGuest from "../../validation/AddPeopleToGuest";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
+import { useQueryClient } from "@tanstack/react-query";
+import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 
 const initialState = {
   name: "",
@@ -12,17 +14,21 @@ const initialState = {
   guestType: "",
   email: "",
   phoneNumber: "",
-  notifyPeople: false,
+  notifyPeople: "false",
 };
 
 const AddPeopleToGuestlistModal = ({
   showAddPeopleModal,
   setShowAddPeopleModal,
   setShowMultiplePeopleModal,
+  selectedEvent,
 }) => {
   const isMobile = useIsMobileWidth();
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
+
+  const { handleMutation, isLoading: isEventCreating } = usePostApi();
+  const queryClient = useQueryClient();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -32,6 +38,8 @@ const AddPeopleToGuestlistModal = ({
   const handleOnBlur = async (e) => {
     useHandleOnBlur(e, validateAddPeopleToGuest, setFormErrors);
   };
+
+  console.log(formValues);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +55,26 @@ const AddPeopleToGuestlistModal = ({
     formData.append("guestType", formValues.guestType);
     formData.append("email", formValues.email);
     formData.append("phoneNumber", formValues.phoneNumber);
-    formData.append("notifyPeople", formValues.notifyPeople);
+    formData.append(
+      "isNotified",
+      formValues.notifyPeople === "true" ? true : false
+    );
+    formData.append("eventId", selectedEvent?._id);
+
+    setFormErrors({});
+
+    handleMutation(
+      {
+        path: "guests/new-guest",
+        data: formData,
+      },
+      (res) => {
+        queryClient.invalidateQueries(selectedEvent?._id);
+        setShowAddPeopleModal(false);
+        setFormValues(initialState);
+      },
+      (res) => {}
+    );
   };
 
   return (
@@ -170,7 +197,7 @@ const AddPeopleToGuestlistModal = ({
             <label htmlFor="notifyPeople">Notify people</label>
           </div>
           <div className="side-by-side-guest-input">
-            <button
+            {/* <button
               onClick={() => {
                 setShowAddPeopleModal(false);
                 setShowMultiplePeopleModal(true);
@@ -179,7 +206,7 @@ const AddPeopleToGuestlistModal = ({
               className="add-multiple-button"
             >
               Add multiple guests
-            </button>
+            </button> */}
             <PrimaryButton>Confirm</PrimaryButton>
           </div>
         </div>

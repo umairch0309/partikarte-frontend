@@ -230,9 +230,9 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
             onBlur={handleOnBlur}
           >
             <option value="">Choose member type</option>
-            <option value="vip">Admin</option>
-            <option value="vvip">Owner</option>
-            <option value="economy">Business Manager</option>
+            <option value="admin">Admin</option>
+            <option value="owner">Owner</option>
+            <option value="business manager">Business Manager</option>
           </select>
           {formErrors.memberType && (
             <p className="select-error-message">{formErrors.memberType}</p>

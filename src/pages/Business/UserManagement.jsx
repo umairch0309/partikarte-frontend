@@ -5,27 +5,17 @@ import { ReactSVG } from "react-svg";
 import SecondaryButton from "../../components/UI/SecondaryButton";
 import MemebersTable from "../../components/Tables/MembersTable";
 import AddNewMember from "../../components/UserManagement/AddNewMember";
+import { useBusinessManagers } from "../../api/business";
 
 const UserManagement = () => {
   const [data, setData] = useState([]);
   const [showAddNewMember, setShowAddNewMember] = useState(false);
 
-  useEffect(() => {
-    const array = [];
-    for (let i = 0; i < 100; i++) {
-      const row = {
-        key: i,
-        name: "John",
-        surname: "Smith",
-        email: "john.smith@example.com",
-        address: " House No. 73, Street No.3, London, United Kingdom (PB76781)",
-        datOfBirth: "24 Jan, 2023",
-        memberType: "Admin",
-      };
-      array.push(row);
-    }
-    setData(array);
-  }, []);
+  const { isLoading } = useBusinessManagers((res) => {
+    setData(res?.data);
+  });
+
+  console.log(data);
 
   return (
     <>
@@ -56,7 +46,7 @@ const UserManagement = () => {
               </SecondaryButton>
             </div>
           </div>
-          <MemebersTable membersData={data} />
+          <MemebersTable isLoading={isLoading} membersData={data} />
         </div>
       </div>
       <AddNewMember

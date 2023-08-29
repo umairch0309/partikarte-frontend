@@ -12,15 +12,29 @@ import EventAnalyticsTable from "../../components/Tables/EventAnalyticsTable";
 import AddNewEventModal from "../../components/ManageEvents/AddNewEventModal";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import { useNavigate } from "react-router-dom";
+import { useOrdersByTimeInterval } from "../../api/orders";
 
 const ManageEvents = () => {
   const navigate = useNavigate();
   const [countriesRevenues, setCountriesRevenues] = useState([]);
   const [analytics, setAnalytics] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
+  const [selectedInterval, setSelectedInterval] = useState("weekly");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedTable, setSelectedTable] = useState(0);
   const isMobile = useIsMobileWidth();
+
+  const [ordersDataForChart, setOrdersDataForChart] = useState([]);
+  const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
+    [selectedInterval, selectedEvent?._id],
+    `${selectedInterval}${
+      selectedEvent?._id ? `?eventId=${selectedEvent?._id}` : ""
+    }`,
+    (res) => {
+      console.log(res);
+      setOrdersDataForChart(res?.orders);
+    }
+  );
 
   useEffect(() => {
     const array = [];
@@ -63,7 +77,11 @@ const ManageEvents = () => {
           setSelectedEvent={setSelectedEvent}
         />
         <div className="event-page-actions">
-          <SecondaryButton onClick={() => {}}>
+          <SecondaryButton
+            onClick={() => {
+              navigate("/business/guestlists");
+            }}
+          >
             <ReactSVG src="/icons/tools/people-list.svg" />
             <span>Manage Guest Lists</span>
           </SecondaryButton>
@@ -75,7 +93,10 @@ const ManageEvents = () => {
             <ReactSVG src="/icons/tools/ticket-outlined.svg" />
             <span>Manage tickets</span>
           </SecondaryButton>
-          <select name="timeframe">
+          <select
+            name="timeframe"
+            onChange={(e) => setSelectedInterval(e.target.value)}
+          >
             <option value={"monthly"}>Monthly</option>
             <option value={"weekly"}>Weekly</option>
             <option value={"yearly"}>Yearly</option>
@@ -84,21 +105,21 @@ const ManageEvents = () => {
         <div className="stats-cards-container">
           <StatCard
             title={"Tickets sold"}
-            number={186}
+            number={selectedEvent?.ticketsSold || 0}
             icon={<ReactSVG src="/icons/tools/ticket-filled-colored.svg" />}
             variant={"yellow-stat-card"}
             showCalendar={true}
           />
           <StatCard
             title={"Number of guests"}
-            number={345}
+            number={selectedEvent?.ticketsSold || 0}
             icon={<ReactSVG src="/icons/tools/people-list-colored.svg" />}
             variant={"blue-stat-card"}
             showCalendar={true}
           />
           <StatCard
             title={"Revenue generated"}
-            number={"$" + 8186}
+            number={"$" + (selectedEvent?.revenue || 0)}
             icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
             variant={"green-stat-card"}
             showCalendar={true}
@@ -108,7 +129,11 @@ const ManageEvents = () => {
           <div className="container-header">
             <h3>Tickets Analytics</h3>
           </div>
-          <Chart height={290} />
+          <Chart
+            data={ordersDataForChart}
+            selectedInterval={selectedInterval}
+            height={290}
+          />
         </div>
         {isMobile && (
           <div className="tables-selection-buttons-container">

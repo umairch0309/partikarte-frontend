@@ -7,25 +7,22 @@ import StatCard from "../../components/Common/StatCard";
 import SecondaryButton from "../../components/UI/SecondaryButton";
 import TicketsTable from "../../components/Tables/TicketsTable";
 import NewTicketModal from "../../components/ManageTickets/NewTicketModal";
-import { useAllTickets } from "../../api/manage-tickets";
 
 const ManageTickets = () => {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const {
-    data: ticketsData,
-    isLoading,
-    isError,
-  } = useAllTickets(selectedEvent?._id);
-
   useEffect(() => {
-    if (ticketsData) {
-      console.log(ticketsData);
-      setData(ticketsData.tickets);
+    if (selectedEvent) {
+      setData(selectedEvent?.tickets);
+      setFilteredData(selectedEvent?.tickets);
     }
-  }, [ticketsData, selectedEvent]);
+  }, [selectedEvent]);
+
+  console.log(data);
 
   return (
     <>

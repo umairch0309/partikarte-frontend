@@ -1,8 +1,9 @@
 import { Dropdown, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
+import formatDate from "../../utilities/formatDate";
 
-const GuestTable = ({ guestsData }) => {
+const GuestTable = ({ guestsData, isLoading }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -35,24 +36,32 @@ const GuestTable = ({ guestsData }) => {
   const columns = [
     {
       title: "#",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "index",
+      key: "index",
+      render: (text, record, index) => `${index + 1}`,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      render: (text, record) => (
+        <span className="white-space-nowrap">{text}</span>
+      ),
     },
     {
       title: "Surnname",
       dataIndex: "surname",
       key: "surname",
+      render: (text, record) => (
+        <span className="white-space-nowrap">{text}</span>
+      ),
     },
     {
       title: "Guest type",
       dataIndex: "guestType",
       key: "guestType",
       align: "center",
+      render: (text, record) => text?.toUpperCase(),
     },
     {
       title: "Email",
@@ -69,18 +78,20 @@ const GuestTable = ({ guestsData }) => {
       dataIndex: "notified",
       key: "notified",
       align: "center",
-      render: (text, record) => (text == true ? "Yes, " : "No"),
+      render: (text, record) => (record?.isNotified ? "Yes" : "No"),
     },
     {
       title: "Date added",
-      dataIndex: "dateAdded",
-      key: "dateAdded",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
       align: "center",
+      render: (text, record) => formatDate(text),
     },
     {
       title: "Added by",
       dataIndex: "addedBy",
       key: "addedBy",
+      render: (text, record) => record?.addedBy?.role?.toUpperCase(),
     },
     {
       title: "Actions",
@@ -116,6 +127,7 @@ const GuestTable = ({ guestsData }) => {
       scroll={{ scrollToFirstRowOnChange: true, x: window.innerWidth <= 768 }}
       columns={columns}
       dataSource={data}
+      loading={isLoading}
     />
   );
 };

@@ -209,6 +209,8 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
+        height: 46px;
+        max-height: 46px;
       }
     }
     .selected-event {
