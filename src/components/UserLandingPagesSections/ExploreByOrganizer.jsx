@@ -1,16 +1,15 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "./ExploreByOrganizer.scss";
 import { ReactSVG } from "react-svg";
 import EventCard from "../Common/EventCard";
 import Slider from "react-slick";
 import PrimaryButton from "../UI/PrimaryButton";
 import { Link } from "react-router-dom";
+import { useAllBusinessesForCustomer } from "../../api/business";
 
 const settings = {
   infinite: true,
   speed: 500,
-  slidesToShow: 3,
-  slidesToScroll: 1,
   initialSlide: 0,
   adaptiveHeight: true,
   autoplay: true,
@@ -18,10 +17,42 @@ const settings = {
   dots: false,
   responsive: [
     {
-      breakpoint: 1300,
+      breakpoint: 2440,
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        infinite: true,
+      },
+    },
+    {
+      breakpoint: 1840,
       settings: {
         slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToScroll: 1,
+        infinite: true,
+      },
+    },
+    {
+      breakpoint: 1440,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        infinite: true,
+      },
+    },
+    {
+      breakpoint: 1100,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        infinite: true,
+      },
+    },
+    {
+      breakpoint: 700,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
         infinite: true,
       },
     },
@@ -42,46 +73,15 @@ const settings = {
   ],
 };
 
-const DUMMY_EVENTS = [
-  {
-    date: "July 11, 2023",
-    image: "/images/event-1.jpg",
-    title: "Introduction to Web Development",
-    location: "Club Cirrus",
-    price: "10",
-  },
-  {
-    date: "August 5, 2023",
-    image: "/images/event-2.jpg",
-    title: "Advanced JavaScript Workshop",
-    location: "Tech Hub",
-    price: "25",
-  },
-  {
-    date: "September 17, 2023",
-    image: "/images/event-3.jpg",
-    title: "Mobile App Development Bootcamp",
-    location: "City Center",
-    price: "15",
-  },
-  {
-    date: "October 21, 2023",
-    image: "/images/event-1.jpg",
-    title: "Data Science Conference",
-    location: "Convention Center",
-    price: "50",
-  },
-  {
-    date: "November 8, 2023",
-    image: "/images/event-2.jpg",
-    title: "UX/UI Design Workshop",
-    location: "Design Studio",
-    price: "20",
-  },
-];
-
 const ExploreByOrganizer = () => {
   const sliderRef = useRef();
+  const [data, setData] = useState([]);
+
+  useAllBusinessesForCustomer((res) => {
+    setData(res?.businesses);
+  });
+
+  console.log(data);
 
   return (
     <div className="explore-by-organizer-events-section">
@@ -110,17 +110,23 @@ const ExploreByOrganizer = () => {
       </div>
       <div className="explore-by-organizer-events-main">
         <Slider {...settings} ref={sliderRef}>
-          {DUMMY_EVENTS.map((event, index) => {
+          {data.map((event, index) => {
             return (
               <div key={index} className="single-slider-item">
                 <div className="gallery-item-container">
-                  <img src={event.image} alt={event.title} />
-                  <Link to={`/business-profile/${index}`}>
-                    <div className="organizer-tag">
-                      <img src={event.image} alt={event.title} />
-                      <h5>Dummy Event llc.</h5>
-                    </div>
-                  </Link>
+                  <img
+                    src={event?.organizerImageBanner || "/images/event-1.jpg"}
+                    alt={event?.company?.companyName}
+                  />
+                  {/* <Link to={`/business-profile/${index}`}> */}
+                  <div className="organizer-tag">
+                    <img
+                      src={event?.organizerImage || "/images/event-1.jpg"}
+                      alt={event?.company?.companyName}
+                    />
+                    <h5>{event?.company?.companyName}</h5>
+                  </div>
+                  {/* </Link> */}
                 </div>
               </div>
             );

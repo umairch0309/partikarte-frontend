@@ -67,10 +67,10 @@ const Topbar = ({ title, subtitle }) => {
               className="notifications-icon"
               src="/icons/tools/notification.svg"
             />
-            {user?.user?.profile_image ? (
+            {!isLoading ? (
               <img
                 onClick={() => navigate("/business/settings")}
-                src={user?.user?.profile_image}
+                src={user?.user?.profile_image || "/images/event-1.jpg"}
               />
             ) : (
               <Skeleton.Avatar active={true} size={60} shape={"circle"} />

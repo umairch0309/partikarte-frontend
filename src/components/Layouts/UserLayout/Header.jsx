@@ -72,8 +72,8 @@ const Header = () => {
               placement="bottomRight"
               className="dropdown-table-actions"
             >
-              {user?.user?.profile_image && !isLoading ? (
-                <img src={user?.user?.profile_image} />
+              {!isLoading ? (
+                <img src={user?.user?.profile_image || "/images/event-1.jpg"} />
               ) : (
                 <Skeleton.Avatar active={true} size={60} shape={"circle"} />
               )}

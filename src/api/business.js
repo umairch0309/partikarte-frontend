@@ -12,3 +12,16 @@ export function useBusinessManagers(onSuccess, onError) {
   );
   return { response, isLoading };
 }
+
+export function useAllBusinessesForCustomer(onSuccess, onError) {
+  const { response, isLoading } = useFetch(
+    ["get-all-business-for-customer"],
+    "business/businesses-for-customer",
+    {
+      cacheTime: Infinity,
+      onSuccess,
+      onError,
+    }
+  );
+  return { response, isLoading };
+}

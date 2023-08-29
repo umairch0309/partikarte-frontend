@@ -3,7 +3,7 @@
 
 .business-layout-container {
   @include flex(row, "", flex-start);
-  max-width: 1440px;
+  // max-width: 1440px;
   main {
     padding-inline: 30px;
     background-color: #fcfcfc;

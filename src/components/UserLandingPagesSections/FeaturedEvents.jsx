@@ -9,7 +9,6 @@ import { Skeleton } from "antd";
 const settings = {
   infinite: true,
   speed: 500,
-  slidesToShow: 3,
   slidesToScroll: 1,
   initialSlide: 0,
   adaptiveHeight: true,
@@ -18,10 +17,42 @@ const settings = {
   dots: false,
   responsive: [
     {
-      breakpoint: 1300,
+      breakpoint: 2440,
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        infinite: true,
+      },
+    },
+    {
+      breakpoint: 1840,
       settings: {
         slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToScroll: 1,
+        infinite: true,
+      },
+    },
+    {
+      breakpoint: 1440,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        infinite: true,
+      },
+    },
+    {
+      breakpoint: 1100,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        infinite: true,
+      },
+    },
+    {
+      breakpoint: 700,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
         infinite: true,
       },
     },
@@ -41,49 +72,6 @@ const settings = {
     },
   ],
 };
-
-const DUMMY_EVENTS = [
-  {
-    date: "July 11, 2023",
-    image: "/images/event-1.jpg",
-    title: "Introduction to Web Development",
-    location: "Club Cirrus",
-    price: "10",
-    _id: "event-1",
-  },
-  {
-    date: "August 5, 2023",
-    image: "/images/event-2.jpg",
-    title: "Advanced JavaScript Workshop",
-    location: "Tech Hub",
-    price: "25",
-    _id: "event-2",
-  },
-  {
-    date: "September 17, 2023",
-    image: "/images/event-3.jpg",
-    title: "Mobile App Development Bootcamp",
-    location: "City Center",
-    price: "15",
-    _id: "event-3",
-  },
-  {
-    date: "October 21, 2023",
-    image: "/images/event-1.jpg",
-    title: "Data Science Conference",
-    location: "Convention Center",
-    price: "50",
-    _id: "event-4",
-  },
-  {
-    date: "November 8, 2023",
-    image: "/images/event-2.jpg",
-    title: "UX/UI Design Workshop",
-    location: "Design Studio",
-    price: "20",
-    _id: "event-5",
-  },
-];
 
 const FeaturedEvents = ({ titleStart, titleEnd, status }) => {
   const sliderRef = useRef();

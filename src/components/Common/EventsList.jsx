@@ -128,9 +128,7 @@ const EventsList = ({
       <div className="event-list-container" ref={scrollContainerRef}>
         {isLoading ? (
           <Skeleton active={true} paragraph={{ rows: 5 }} size={"small"} />
-        ) : (
-          eventsData &&
-          eventsData?.length > 0 &&
+        ) : eventsData && eventsData?.length > 0 ? (
           eventsData.map((event) => (
             <div
               onClick={() => setSelectedEvent(event)}
@@ -161,6 +159,8 @@ const EventsList = ({
               </p>
             </div>
           ))
+        ) : (
+          <p className="black">You haven't added any events for now.</p>
         )}
       </div>
     </div>
