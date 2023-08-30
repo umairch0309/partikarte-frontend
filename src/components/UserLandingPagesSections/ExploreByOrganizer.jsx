@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import "./ExploreByOrganizer.scss";
 import { ReactSVG } from "react-svg";
-import EventCard from "../Common/EventCard";
 import Slider from "react-slick";
 import PrimaryButton from "../UI/PrimaryButton";
 import { Link } from "react-router-dom";
@@ -81,8 +80,6 @@ const ExploreByOrganizer = () => {
     setData(res?.businesses);
   });
 
-  console.log(data);
-
   return (
     <div className="explore-by-organizer-events-section">
       <div className="explore-by-organizer-events-header">
@@ -118,15 +115,15 @@ const ExploreByOrganizer = () => {
                     src={event?.organizerImageBanner || "/images/event-1.jpg"}
                     alt={event?.company?.companyName}
                   />
-                  {/* <Link to={`/business-profile/${index}`}> */}
-                  <div className="organizer-tag">
-                    <img
-                      src={event?.organizerImage || "/images/event-1.jpg"}
-                      alt={event?.company?.companyName}
-                    />
-                    <h5>{event?.company?.companyName}</h5>
-                  </div>
-                  {/* </Link> */}
+                  <Link to={`/business-profile/${event?._id}`}>
+                    <div className="organizer-tag">
+                      <img
+                        src={event?.organizerImage || "/images/event-1.jpg"}
+                        alt={event?.company?.companyName}
+                      />
+                      <h5>{event?.company?.companyName}</h5>
+                    </div>
+                  </Link>
                 </div>
               </div>
             );

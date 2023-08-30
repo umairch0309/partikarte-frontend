@@ -2,7 +2,7 @@ import { useFetch } from "../hooks/api-hooks/useFetch";
 
 export function useGetAllNews(onSuccess, onError) {
   const { response, isLoading } = useFetch(["get-all-news"], "news", {
-    cacheTime: Infinity,
+    cacheTime: 60000 * 2,
     onSuccess,
     onError,
   });
@@ -14,7 +14,7 @@ export function useGetAllGalleries(onSuccess, onError) {
     ["get-all-galleries"],
     "business/gallery",
     {
-      cacheTime: Infinity,
+      cacheTime: 60000 * 2,
       onSuccess,
       onError,
     }
@@ -27,7 +27,7 @@ export function useGetSingleGallery(id, onSuccess, onError) {
     ["get-single-gallery", id],
     `business/gallery/${id}`,
     {
-      cacheTime: Infinity,
+      cacheTime: 60000 * 2,
       onSuccess,
       onError,
     }

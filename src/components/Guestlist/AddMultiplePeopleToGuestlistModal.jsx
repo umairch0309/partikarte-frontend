@@ -9,7 +9,7 @@ import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 const initialState = {
   guestInfo: "",
   guestType: "",
-  notifyPeople: false,
+  notifyPeople: true,
 };
 
 const AddMultiplePeopleToGuestlistModal = ({
@@ -97,7 +97,7 @@ const AddMultiplePeopleToGuestlistModal = ({
           )}
         </div>
         <div className="side-by-side-guest-input">
-          <div className="single-form-item radio-input-container">
+          {/* <div className="single-form-item radio-input-container">
             <input
               className="radio-input"
               name="notifyPeople"
@@ -108,7 +108,7 @@ const AddMultiplePeopleToGuestlistModal = ({
               onBlur={handleOnBlur}
             />
             <label htmlFor="notifyPeople">Notify people</label>
-          </div>
+          </div> */}
           <div className="side-by-side-guest-input">
             <button
               onClick={() => {

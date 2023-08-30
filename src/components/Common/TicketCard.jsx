@@ -69,6 +69,10 @@ const TicketCard = ({ ticket, eventId }) => {
     }
   };
 
+  const now = new Date();
+  const validFrom = new Date(ticket?.validFrom);
+  const validTo = new Date(ticket?.validTo);
+
   return (
     <div className="ticket-card-container">
       <div className="ticket-card-top">
@@ -80,38 +84,56 @@ const TicketCard = ({ ticket, eventId }) => {
         <p>{ticket?.descriptionWeb}</p>
       </div>
       <hr />
-      <div className="ticket-card-bottom">
-        <div className="ticket-card-bottom-controls-container">
-          <h4 className="price">${ticket?.price}</h4>
-          <div className="buttons-container">
-            <PrimaryButton
-              onClick={() =>
-                setTicketCount(
-                  ticketCount - 1 >= 0 ? ticketCount - 1 : ticketCount
-                )
-              }
-              className="quantity-button"
-            >
-              -
-            </PrimaryButton>
-            <h4>{ticketCount.toString().padStart(2, "0")}</h4>
-            <PrimaryButton
-              onClick={() =>
-                setTicketCount(
-                  ticketCount + 1 <= 10 ? ticketCount + 1 : ticketCount
-                )
-              }
-              className="quantity-button"
-            >
-              +
-            </PrimaryButton>
+      {ticket?.remainingCapacity >= ticket?.maxCapacity ? (
+        now >= validFrom && now <= validTo ? (
+          <div className="ticket-card-bottom">
+            <div className="ticket-card-bottom-controls-container">
+              <h4 className="price">${ticket?.price}</h4>
+              <div className="buttons-container">
+                <PrimaryButton
+                  onClick={() =>
+                    setTicketCount(
+                      ticketCount - 1 >= 0 ? ticketCount - 1 : ticketCount
+                    )
+                  }
+                  className="quantity-button"
+                >
+                  -
+                </PrimaryButton>
+                <h4>{ticketCount.toString().padStart(2, "0")}</h4>
+                <PrimaryButton
+                  onClick={() => {
+                    if (
+                      !(parseInt(ticket?.remainingCapacity) - ticketCount <= 0)
+                    ) {
+                      setTicketCount(
+                        ticketCount + 1 <= 10 ? ticketCount + 1 : ticketCount
+                      );
+                    }
+                  }}
+                  className="quantity-button"
+                  disabled={
+                    parseInt(ticket?.remainingCapacity) - ticketCount <= 0
+                  }
+                >
+                  +
+                </PrimaryButton>
+              </div>
+            </div>
+            {parseInt(ticket?.remainingCapacity) - ticketCount <= 0 && (
+              <p className="red margin-top-10">Ticket limit reached.</p>
+            )}
+            <div className="add-to-wishlist-button" onClick={onAddToWishlist}>
+              <img src="/icons/tools/wand.png" height={22} width={20} /> Add to
+              wishlist
+            </div>
           </div>
-        </div>
-        <div className="add-to-wishlist-button" onClick={onAddToWishlist}>
-          <img src="/icons/tools/wand.png" height={22} width={20} /> Add to
-          wishlist
-        </div>
-      </div>
+        ) : (
+          <p className="yellow">Currently, you can't buy this ticket.</p>
+        )
+      ) : (
+        <p className="red">Sorry, the tickets ended.</p>
+      )}
     </div>
   );
 };

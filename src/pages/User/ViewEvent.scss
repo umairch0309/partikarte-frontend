@@ -76,7 +76,7 @@
 
       .maps-container {
         box-shadow: 0px 0px 10px 0px #0000000d;
-        margin-block: 20px;
+        margin-top: 20px;
         padding: 10px;
         background-color: white;
         border-radius: 10px;
@@ -96,6 +96,7 @@
         }
       }
       .event-info-container {
+        margin-top: 20px;
         box-shadow: 0px 0px 10px 0px #0000000d;
         padding: 30px 20px;
         background-color: white;
@@ -125,7 +126,6 @@
         }
         .location-container {
           @include flex(row, "", flex-start, 10px);
-          margin-bottom: 20px;
 
           svg {
             path {

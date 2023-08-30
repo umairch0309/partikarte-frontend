@@ -71,8 +71,6 @@ function bookingReducer(state, action) {
 export function BookingProvider({ children }) {
   const [state, dispatch] = useReducer(bookingReducer, initialState);
 
-  console.log(state);
-
   useEffect(() => {
     let totalTickets = 0;
     state.tickets.forEach((ticket) => {

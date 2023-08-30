@@ -5,7 +5,7 @@ export function useBusinessManagers(onSuccess, onError) {
     ["get-all-business-managers"],
     "business/business-managers",
     {
-      cacheTime: Infinity,
+      cacheTime: 60000 * 2,
       onSuccess,
       onError,
     }
@@ -18,7 +18,20 @@ export function useAllBusinessesForCustomer(onSuccess, onError) {
     ["get-all-business-for-customer"],
     "business/businesses-for-customer",
     {
-      cacheTime: Infinity,
+      cacheTime: 60000 * 2,
+      onSuccess,
+      onError,
+    }
+  );
+  return { response, isLoading };
+}
+
+export function useSingleBusinessForCustomer(id, onSuccess, onError) {
+  const { response, isLoading } = useFetch(
+    ["get-single-business-for-customer"],
+    `business/business-for-customer/${id}`,
+    {
+      cacheTime: 10,
       onSuccess,
       onError,
     }

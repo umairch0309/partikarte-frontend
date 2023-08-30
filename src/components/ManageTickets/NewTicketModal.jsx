@@ -75,7 +75,9 @@ const NewTicketModal = ({
         data: formData,
       },
       (res) => {
-        queryClient.invalidateQueries("get-all-tickets");
+        queryClient.invalidateQueries({
+          queryKey: ["get-all-tickets", selectedEvent?._id],
+        });
         setShowNewTicketModal(false);
         setFormValues(initialState);
       },

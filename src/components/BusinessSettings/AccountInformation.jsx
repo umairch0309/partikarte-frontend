@@ -227,7 +227,7 @@ const AccountInformation = () => {
         disabled={isProfileUpdating || profileLoading}
         className={"settings-form-submit-button"}
       >
-        Save changes
+        Save password
       </PrimaryButton>
     </form>
   );

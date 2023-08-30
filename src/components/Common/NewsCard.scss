@@ -29,12 +29,14 @@
     font-size: 14px;
     margin-top: 10px;
     color: opacityColor($textColor, 0.7);
-
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .news-description.expanded {
+    -webkit-line-clamp: initial; /* Show all lines when expanded */
   }
   .read-more-link-container {
     width: 100%;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EventCard from "../Common/EventCard";
 import PrimaryButton from "../UI/PrimaryButton";
 import "./AllEvents.scss";
@@ -6,98 +6,70 @@ import { useNavigate } from "react-router-dom";
 import { useAllEventsForCustomer } from "../../api/manage-events";
 import { Skeleton } from "antd";
 
-const DUMMY_EVENTS = [
-  {
-    date: "July 11, 2023",
-    image: "/images/event-1.jpg",
-    title: "Introduction to Web Development",
-    location: "Club Cirrus",
-    price: "10",
-    _id: "event-1",
-  },
-  {
-    date: "August 5, 2023",
-    image: "/images/event-2.jpg",
-    title: "Advanced JavaScript Workshop",
-    location: "Tech Hub",
-    price: "25",
-    _id: "event-2",
-  },
-  {
-    date: "September 17, 2023",
-    image: "/images/event-3.jpg",
-    title: "Mobile App Development Bootcamp",
-    location: "City Center",
-    price: "15",
-    _id: "event-3",
-  },
-  {
-    date: "October 21, 2023",
-    image: "/images/event-1.jpg",
-    title: "Data Science Conference",
-    location: "Convention Center",
-    price: "50",
-    _id: "event-4",
-  },
-  {
-    date: "November 8, 2023",
-    image: "/images/event-2.jpg",
-    title: "UX/UI Design Workshop",
-    location: "Design Studio",
-    price: "20",
-    _id: "event-5",
-  },
-  {
-    date: "September 17, 2023",
-    image: "/images/event-3.jpg",
-    title: "Mobile App Development Bootcamp",
-    location: "City Center",
-    price: "15",
-    _id: "event-6",
-  },
-  {
-    date: "October 21, 2023",
-    image: "/images/event-1.jpg",
-    title: "Data Science Conference",
-    location: "Convention Center",
-    price: "50",
-    _id: "event-7",
-  },
-  {
-    date: "November 8, 2023",
-    image: "/images/event-2.jpg",
-    title: "UX/UI Design Workshop",
-    location: "Design Studio",
-    price: "20",
-    _id: "event-8",
-  },
-  {
-    date: "September 17, 2023",
-    image: "/images/event-3.jpg",
-    title: "Mobile App Development Bootcamp",
-    location: "City Center",
-    price: "15",
-    _id: "event-9",
-  },
-];
-
-const AllEvents = ({ link }) => {
+const AllEvents = ({ link, searchText, interval }) => {
   const [eventsCount, setEventsCount] = useState(6);
   const [allEvents, setAllEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const navigate = useNavigate();
   const { isLoading } = useAllEventsForCustomer((res) => {
     setAllEvents(res?.events);
   });
+
+  useEffect(() => {
+    const filtered = allEvents.filter((event) => {
+      const isMatch =
+        event.eventName?.toLowerCase().includes(searchText?.toLowerCase()) ||
+        event.eventDescription
+          ?.toLowerCase()
+          .includes(searchText?.toLowerCase());
+
+      // Filter based on interval
+      if (interval === "All") {
+        return isMatch;
+      } else if (interval === "Today") {
+        const today = new Date();
+        return (
+          isMatch &&
+          today >= new Date(event.eventStart) &&
+          today <= new Date(event.eventEnd)
+        );
+      } else if (interval === "Tomorrow") {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return (
+          isMatch &&
+          tomorrow >= new Date(event.eventStart) &&
+          tomorrow <= new Date(event.eventEnd)
+        );
+      } else if (interval === "Weekend") {
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        const daysUntilWeekend = 6 - dayOfWeek; // 6 represents Saturday
+        const weekendStart = new Date();
+        weekendStart.setDate(today.getDate() + daysUntilWeekend);
+        const weekendEnd = new Date(weekendStart);
+        weekendEnd.setDate(weekendEnd.getDate() + 1); // Sunday
+        return (
+          isMatch &&
+          weekendStart >= new Date(event.eventStart) &&
+          weekendEnd <= new Date(event.eventEnd)
+        );
+      }
+    });
+
+    setFilteredEvents(filtered);
+  }, [allEvents, searchText, interval]);
+
   return (
     <div className="all-events-user-landing-page">
       <div className="all-events-container">
-        {!(allEvents.length > 0) && isLoading ? (
+        {isLoading ? (
           <>
             <Skeleton active={true} paragraph={{ rows: 5 }} size={"small"} />
             <Skeleton active={true} paragraph={{ rows: 5 }} size={"small"} />
           </>
-        ) : (
-          allEvents.slice(0, eventsCount).map((event, index) => {
+        ) : filteredEvents.length > 0 ? (
+          filteredEvents.slice(0, eventsCount).map((event, index) => {
             return (
               <EventCard
                 key={event?._id}
@@ -106,6 +78,8 @@ const AllEvents = ({ link }) => {
               />
             );
           })
+        ) : (
+          <p className="yellow">No events found.</p>
         )}
       </div>
       {allEvents.length > eventsCount && (

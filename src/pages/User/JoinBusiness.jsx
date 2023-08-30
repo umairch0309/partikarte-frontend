@@ -52,7 +52,10 @@ const JoinBusiness = () => {
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever.
           </p>
-          <PrimaryButton className={"become-our-partner"}>
+          <PrimaryButton
+            onClick={navigate("/business/signup")}
+            className={"become-our-partner"}
+          >
             Become our Partner
           </PrimaryButton>
         </div>

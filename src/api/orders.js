@@ -5,7 +5,7 @@ export function useLatestOrders(onSuccess, onError) {
     ["get-latest-orders"],
     "orders/latest-orders",
     {
-      cacheTime: Infinity,
+      cacheTime: 60000 * 2,
       onSuccess,
       onError,
     }

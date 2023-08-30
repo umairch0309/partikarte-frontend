@@ -5,6 +5,9 @@ import EventCard from "../../components/Common/EventCard";
 import FeaturedEvents from "../../components/UserLandingPagesSections/FeaturedEvents";
 import NewsCard from "../../components/Common/NewsCard";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
+import { useSingleBusinessForCustomer } from "../../api/business";
+import { useParams } from "react-router-dom";
+import { message } from "antd";
 
 const BusinessProfile = () => {
   const DUMMY_EVENTS = [
@@ -47,6 +50,23 @@ const BusinessProfile = () => {
     },
   ];
   const isMobile = useIsMobileWidth();
+  const { businessId } = useParams();
+  const [data, setData] = useState(null);
+  const { isLoading } = useSingleBusinessForCustomer(businessId, (res) => {
+    setData(res?.data);
+  });
+
+  const copyToClipboard = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard.");
+      })
+      .catch((error) => {
+        message.error("Couldn't copy to clipboard.");
+      });
+  };
+
   const latestEvents = () => {
     return (
       <div className="events-container">
@@ -55,8 +75,8 @@ const BusinessProfile = () => {
           <h3>Latest Events</h3>
         </div>
         <div className="events-wrapper">
-          {DUMMY_EVENTS.length > 0 ? (
-            DUMMY_EVENTS.slice(0, 2).map((event, index) => {
+          {data?.events.length > 0 ? (
+            data?.events.slice(0, 2).map((event, index) => {
               return (
                 <EventCard
                   key={index}
@@ -77,63 +97,18 @@ const BusinessProfile = () => {
     <div className="business-profile">
       <img
         className="event-header-image"
-        src="/images/business-profile.jpg"
+        src={
+          data?.business?.organizerImageBanner || "/images/business-profile.jpg"
+        }
         alt="event-1"
       />
       <div className="business-profile">
         <div className="business-profile-left">
           <div className="main-left-header">
-            <h1>Jorge Party Maker</h1>
+            <h1>{data?.business?.company?.companyName}</h1>
             {isMobile && latestEvents()}
             <div className="business-profile-description">
-              <p>
-                Maja Založnik - vokal <br /> Tadej Gruškovnjak - klavir
-                <br /> Leon Žunec - kitara/sax
-                <br /> Boštjan Videc - Bass Vid Žgajner - boben
-                <br />
-                <br /> Maja Založnik je v slovenskem prostoru s svojim
-                neverjetnim vokalom prisotna že mnoga leta. Spremljali smo jo
-                tako na različnih glasbenih izborih in oddajah, kot tudi na
-                evrovizijskih tekmovanjih in koncertih v živo, kjer je izbranemu
-                občinstvu predstavljala svoj bogat repertoar od popa, soula,
-                rocka in funka. Velike uspehe je požela z visoko uvrstitvijo na
-                THE VOICE OF GERMANY, kjer je opozorila nase kot talentirana
-                pevka s super karizmatično prezenco.
-                <br /> Na repertoarju bodo tako izbrane svetovne uspešnice kot
-                avtorske skladbe, ki bodo večer lepo glasbeno zaokrožile.
-                <br />
-                <br /> INFO: www.slamic.siMaja Založnik - vokal
-                <br /> Tadej Gruškovnjak - klavir
-                <br /> Leon Žunec - kitara/sax
-                <br /> Boštjan Videc - Bass
-                <br /> Vid Žgajner - boben
-                <br />
-                <br /> Maja Založnik je v slovenskem prostoru s svojim
-                neverjetnim vokalom prisotna že mnoga leta. Spremljali smo jo
-                tako na različnih glasbenih izborih in oddajah, kot tudi na
-                evrovizijskih tekmovanjih in koncertih v živo, kjer je izbranemu
-                občinstvu predstavljala svoj bogat repertoar od popa, soula,
-                rocka in funka. Velike uspehe je požela z visoko uvrstitvijo na
-                THE VOICE OF GERMANY, kjer je opozorila nase kot talentirana
-                pevka s super karizmatično prezenco .<br />
-                <br /> Na repertoarju bodo tako izbrane svetovne uspešnice kot
-                avtorske skladbe, ki bodo večer lepo glasbeno zaokrožile.
-                <br />
-                <br /> INFO: www.slamic.siMaja Založnik - vokal
-                <br /> Tadej Gruškovnjak - klavir
-                <br /> Leon Žunec - kitara/sax
-                <br /> Boštjan Videc - Bass
-                <br /> Vid Žgajner - boben
-                <br />
-                <br /> Maja Založnik je v slovenskem prostoru s svojim
-                neverjetnim vokalom prisotna že mnoga leta. Spremljali smo jo
-                tako na različnih glasbenih izborih in oddajah, kot tudi na
-                evrovizijskih tekmovanjih in koncertih v živo, kjer je izbranemu
-                občinstvu predstavljala svoj bogat repertoar od popa, soula,
-                rocka in funka. Velike uspehe je požela z visoko uvrstitvijo na
-                THE VOICE OF GERMANY, kjer je opozorila nase kot talentirana
-                pevka s super karizmatično prezenco .
-              </p>
+              <p>{data?.business?.description}</p>
             </div>
           </div>
         </div>
@@ -144,8 +119,8 @@ const BusinessProfile = () => {
               <ReactSVG src="/icons/tools/news-tag.svg" /> <h3>News</h3>
             </div>
             <div className="news-wrapper">
-              {DUMMY_NEWS.length > 0 ? (
-                DUMMY_NEWS.slice(0, 2).map((news, index) => {
+              {data?.news.length > 0 ? (
+                data?.news.slice(0, 2).map((news, index) => {
                   return (
                     <NewsCard
                       key={index}
@@ -155,7 +130,7 @@ const BusinessProfile = () => {
                   );
                 })
               ) : (
-                <p>No events yet</p>
+                <p>No news yet</p>
               )}
             </div>
           </div>
@@ -167,28 +142,28 @@ const BusinessProfile = () => {
                   <ReactSVG src="/icons/tools/building-icon.svg" />
                   <p>Company Name:</p>
                 </div>
-                <h5>Events Company</h5>
+                <h5>{data?.business?.company?.companyName}</h5>
               </div>{" "}
               <div className="info-item">
                 <div className="info-item-header">
                   <ReactSVG src="/icons/tools/percentage-icon.svg" />
                   <p>VAT number:</p>
                 </div>
-                <h5>59342875984375</h5>
+                <h5>{data?.business?.company?.companyVAT}</h5>
               </div>{" "}
               <div className="info-item">
                 <div className="info-item-header">
                   <ReactSVG src="/icons/tools/at-sign.svg" />
                   <p>Email:</p>
                 </div>
-                <h5>eventscompany@gmail.com</h5>
+                <h5>{data?.business?.contactInformation?.email}</h5>
               </div>{" "}
               <div className="info-item">
                 <div className="info-item-header">
                   <ReactSVG src="/icons/tools/phone-icon.svg" />
                   <p>Phone:</p>
                 </div>
-                <h5>1 2343 23423 23432</h5>
+                <h5>{data?.business?.contactInformation?.phoneNumber}</h5>
               </div>
             </div>
             <hr />
@@ -201,6 +176,9 @@ const BusinessProfile = () => {
                     <h5>Facebook</h5>
                   </div>
                   <ReactSVG
+                    onClick={() =>
+                      copyToClipboard(data?.business?.socialLinks?.facebook)
+                    }
                     className="copy-button"
                     src="/icons/tools/copy.svg"
                   />
@@ -211,6 +189,9 @@ const BusinessProfile = () => {
                     <h5>Instagram</h5>
                   </div>
                   <ReactSVG
+                    onClick={() =>
+                      copyToClipboard(data?.business?.socialLinks?.instagram)
+                    }
                     className="copy-button"
                     src="/icons/tools/copy.svg"
                   />
@@ -221,6 +202,9 @@ const BusinessProfile = () => {
                     <h5>Linkedin</h5>
                   </div>
                   <ReactSVG
+                    onClick={() =>
+                      copyToClipboard(data?.business?.socialLinks?.linkedin)
+                    }
                     className="copy-button"
                     src="/icons/tools/copy.svg"
                   />

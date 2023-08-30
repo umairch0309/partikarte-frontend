@@ -82,7 +82,7 @@ const AddNewEventModal = ({
         data: formData,
       },
       (res) => {
-        queryClient.invalidateQueries("get-all-events");
+        queryClient.invalidateQueries({ queryKey: ["get-all-events"] });
         setShowAddNewEventModal(false);
         resetForm();
       },
