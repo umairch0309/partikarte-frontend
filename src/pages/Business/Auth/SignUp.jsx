@@ -8,6 +8,7 @@ import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
 import { useCountriesList } from "../../../api/services";
+import { useAuthContext } from "../../../context/auth-context";
 
 const initalState = {
   email: "",
@@ -27,6 +28,8 @@ const SignUp = () => {
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
   const [countries, setCountries] = useState([]);
+
+  const { forgotEmail, setForgotEmail } = useAuthContext();
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
@@ -65,7 +68,8 @@ const SignUp = () => {
         data: formData,
       },
       (res) => {
-        navigate("/business/login");
+        setForgotEmail(formData?.email);
+        navigate("/business/verify-otp");
         setFormData(initalState);
       },
       (res) => {

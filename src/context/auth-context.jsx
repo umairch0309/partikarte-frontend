@@ -7,6 +7,7 @@ const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(token !== null);
   const [role, setRole] = useState(localStorage.getItem("role"));
   const [user, setUser] = useState(null);
+  const [forgotEmail, setForgotEmail] = useState(null);
 
   useEffect(() => {
     setToken(localStorage.getItem("token"));
@@ -23,6 +24,8 @@ const AuthProvider = ({ children }) => {
         isLoggedIn,
         setUser,
         user,
+        setForgotEmail,
+        forgotEmail,
       }}
     >
       {children}

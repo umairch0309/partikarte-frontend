@@ -16,7 +16,7 @@ const initalState = {
 };
 
 const SignIn = () => {
-  const { setIsLoggedIn, setRole } = useAuthContext();
+  const { setIsLoggedIn, setRole, setForgotEmail } = useAuthContext();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
@@ -58,6 +58,10 @@ const SignIn = () => {
         setToken();
       },
       (res) => {
+        if (res?.data?.verifyEmailRequested) {
+          setForgotEmail(formData?.email);
+          navigate("/business/verify-otp");
+        }
         setFormErrors({
           email: "Incorrect",
           password: "Incorrect",

@@ -19,7 +19,7 @@ import OrganizerSettings from "./OrganizerSettings";
 import { useAuthContext } from "../../context/auth-context";
 
 const BusinessMain = () => {
-  const { isLoggedIn } = useAuthContext();
+  const { isLoggedIn, forgotEmail } = useAuthContext();
 
   // If not logged in, show authentication-related routes
   if (!isLoggedIn) {
@@ -28,8 +28,10 @@ const BusinessMain = () => {
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        {forgotEmail && <Route path="/verify-otp" element={<VerifyOTP />} />}
+        {forgotEmail && (
+          <Route path="/reset-password" element={<ResetPassword />} />
+        )}
 
         {/* Show 404 for any other routes */}
         <Route path="*" element={<Navigate to="/business/login" />} />

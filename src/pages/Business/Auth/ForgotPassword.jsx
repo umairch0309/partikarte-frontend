@@ -5,14 +5,19 @@ import PrimaryButton from "../../../components/UI/PrimaryButton";
 import validateForgotPasswordForm from "../../../validation/ForgotPassword";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
+import { useAuthContext } from "../../../context/auth-context";
+import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
 
 const initalState = {
   email: "",
 };
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const { setForgotEmail } = useAuthContext();
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
+
+  const { handleMutation, isLoading } = usePostApi();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -20,7 +25,13 @@ const ForgotPassword = () => {
   };
 
   const handleOnBlur = async (e) => {
-    useHandleOnBlur(e, validateForgotPasswordForm, setFormErrors);
+    const errors = await validateForgotPasswordForm(formData);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    } else {
+      setFormErrors({});
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -31,11 +42,21 @@ const ForgotPassword = () => {
       return;
     }
 
-    // use api here
-    navigate("/business/verify-otp");
-    //   after submitting form
     setFormErrors({});
-    setFormData(initalState);
+
+    handleMutation(
+      {
+        path: "auth/forgot-password",
+        data: formData,
+      },
+      (res) => {
+        setForgotEmail(formData?.email);
+        setFormErrors({});
+        setFormData(initalState);
+        navigate("/business/verify-otp");
+      },
+      (res) => {}
+    );
   };
 
   return (
@@ -67,7 +88,12 @@ const ForgotPassword = () => {
             )}
           </div>
 
-          <PrimaryButton type="submit">Submit Request</PrimaryButton>
+          <PrimaryButton
+            disabled={isLoading || formErrors?.email}
+            type="submit"
+          >
+            Submit Request
+          </PrimaryButton>
         </form>
         <p className="note-line">
           Protected by reCAPTCHA and subject to the{" "}

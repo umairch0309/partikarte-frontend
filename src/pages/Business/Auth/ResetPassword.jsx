@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ResetPassword.scss";
 import { ReactSVG } from "react-svg";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,10 +6,13 @@ import PrimaryButton from "../../../components/UI/PrimaryButton";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import validateConfirmPasswordForm from "../../../validation/ResetPassword";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
+import { useAuthContext } from "../../../context/auth-context";
+import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
 
 const initalState = {
   password: "",
   confirmPassword: "",
+  email: "",
 };
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -17,6 +20,16 @@ const ResetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
+
+  const { forgotEmail, setForgotEmail } = useAuthContext();
+
+  useEffect(() => {
+    if (forgotEmail) {
+      setFormData({ ...formData, email: forgotEmail });
+    }
+  });
+
+  const { handleMutation, isLoading } = usePostApi();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -34,12 +47,26 @@ const ResetPassword = () => {
       setFormErrors(errors);
       return;
     }
-
+    if (formData?.confirmPassword !== formData?.password) {
+      setFormErrors({ ...formErrors, match: "Passwords do not match." });
+      return;
+    }
     // use api here
-    navigate("/business/login");
-    //   after submitting form
     setFormErrors({});
-    setFormData(initalState);
+
+    handleMutation(
+      {
+        path: "auth/reset-password",
+        data: formData,
+      },
+      (res) => {
+        setFormErrors({});
+        setFormData(initalState);
+        setForgotEmail(null);
+        navigate("/business/login");
+      },
+      (res) => {}
+    );
   };
 
   return (
@@ -93,7 +120,13 @@ const ResetPassword = () => {
             )}
           </div>
 
-          <PrimaryButton type="submit">Submit New Password</PrimaryButton>
+          {formErrors.match && (
+            <p className="error-message">{formErrors.match}</p>
+          )}
+
+          <PrimaryButton disabled={isLoading} type="submit">
+            Submit New Password
+          </PrimaryButton>
         </form>
 
         <p className="note-line">

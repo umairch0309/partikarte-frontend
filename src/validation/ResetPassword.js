@@ -1,12 +1,8 @@
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
-  confirmPassword: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+  password: Yup.string().min(6, "At least 6 chars").required("Required"),
+  confirmPassword: Yup.string().min(6, "At least 6 chars").required("Required"),
 });
 
 const validateConfirmPasswordForm = async (formValues) => {

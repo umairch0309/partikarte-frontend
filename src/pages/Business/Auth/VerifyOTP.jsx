@@ -1,18 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./VerifyOTP.scss";
 import { Link, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../components/UI/PrimaryButton";
 import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import validateVerifyOTPForm from "../../../validation/VerifyOTP";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
+import { useAuthContext } from "../../../context/auth-context";
+import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
 
 const initalState = {
   otp: "",
+  email: "",
 };
 const VerifyOTP = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(initalState);
   const [formErrors, setFormErrors] = useState({});
+  const { forgotEmail } = useAuthContext();
+
+  const { handleMutation, isLoading } = usePostApi();
+
+  useEffect(() => {
+    if (forgotEmail) {
+      setFormData({ ...formData, email: forgotEmail });
+    }
+  });
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -20,7 +32,13 @@ const VerifyOTP = () => {
   };
 
   const handleOnBlur = async (e) => {
-    useHandleOnBlur(e, validateVerifyOTPForm, setFormErrors);
+    const errors = await validateVerifyOTPForm(formData);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    } else {
+      setFormErrors({});
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -32,10 +50,24 @@ const VerifyOTP = () => {
     }
 
     // use api here
-    navigate("/business/reset-password");
-    //   after submitting form
     setFormErrors({});
-    setFormData(initalState);
+
+    handleMutation(
+      {
+        path: "auth/verify-otp",
+        data: formData,
+      },
+      (res) => {
+        setFormErrors({});
+        setFormData(initalState);
+        if (res?.data?.verifyEmailRequested) {
+          navigate("/business/login");
+        } else {
+          navigate("/business/reset-password");
+        }
+      },
+      (res) => {}
+    );
   };
 
   return (
@@ -64,7 +96,9 @@ const VerifyOTP = () => {
             )}
           </div>
 
-          <PrimaryButton type="submit">Submit OTP</PrimaryButton>
+          <PrimaryButton disabled={isLoading} type="submit">
+            Submit OTP
+          </PrimaryButton>
         </form>
         <p className="note-line">
           Protected by reCAPTCHA and subject to the{" "}
