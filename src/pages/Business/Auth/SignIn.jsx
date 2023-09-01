@@ -16,7 +16,7 @@ const initalState = {
 };
 
 const SignIn = () => {
-  const { setIsLoggedIn, setRole, setForgotEmail } = useAuthContext();
+  const { setIsLoggedIn, setRole, setForgotEmail, setToken } = useAuthContext();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
@@ -53,9 +53,9 @@ const SignIn = () => {
         localStorage.setItem("token", res?.data?.token);
         localStorage.setItem("role", res?.data?.role);
         setRole(res?.data?.role);
-        navigate(res?.data?.token);
+        navigate("/business/dashboard");
         setIsLoggedIn(true);
-        setToken();
+        setToken(res?.data?.token);
       },
       (res) => {
         if (res?.data?.verifyEmailRequested) {

@@ -124,7 +124,7 @@ const Orders = () => {
           />
           <StatCard
             title={"Partikarte Fees"}
-            number={"$" + (selectedEvent?.revenue || 0) * 0.35}
+            number={"$" + (selectedEvent?.revenue || 0) * 0.08}
             icon={<ReactSVG src="/icons/tools/percentage-colored.svg" />}
             variant={"blue-stat-card"}
             showCalendar={true}

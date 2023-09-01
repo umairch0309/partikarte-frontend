@@ -17,6 +17,7 @@ import TicketsScanning from "./TicketsScanning";
 import UserManagement from "./UserManagement";
 import OrganizerSettings from "./OrganizerSettings";
 import { useAuthContext } from "../../context/auth-context";
+import ViewEventBusiness from "./ViewEventBusiness";
 
 const BusinessMain = () => {
   const { isLoggedIn, forgotEmail } = useAuthContext();
@@ -47,6 +48,7 @@ const BusinessMain = () => {
         <Route path="/guestlists" element={<Guestlist />} />
         <Route path="/settings/*" element={<Settings />} />
         <Route path="/manage-events" element={<ManageEvents />} />
+        <Route path="/view-event/:eventId" element={<ViewEventBusiness />} />
         <Route path="/manage-tickets" element={<ManageTickets />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/ticket-scanning" element={<TicketsScanning />} />

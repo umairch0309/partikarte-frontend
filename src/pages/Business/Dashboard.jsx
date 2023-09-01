@@ -3,18 +3,27 @@ import Topbar from "../../components/Layouts/BusinessLayout/Topbar";
 import "./Dashboard.scss";
 import Chart from "../../components/Common/Chart";
 import OrdersTable from "../../components/Tables/OrdersTable";
-import { useLatestOrders, useOrdersByTimeInterval } from "../../api/orders";
+import {
+  useBusinessRevenueByMonth,
+  useLatestOrders,
+  useOrdersByTimeInterval,
+} from "../../api/orders";
 import { useActiveEvents, useAllEvents } from "../../api/manage-events";
 import formatDate from "../../utilities/formatDate";
 import { Skeleton } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [ordersData, setOrdersData] = useState([]);
   const [eventsData, setEventsData] = useState([]);
   const [ordersDataForChart, setOrdersDataForChart] = useState([]);
   const [allEventsData, setAllEventsData] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedInterval, setSelectedInterval] = useState("weekly");
+  const [orderFilter, setOrderFilter] = useState("latest");
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState("January");
 
   const { isLoading: isAllEventsLoading } = useAllEvents((res) => {
     setAllEventsData(res?.events);
@@ -29,6 +38,9 @@ const Dashboard = () => {
     }
   );
 
+  const { isLoading: isRevenueDataLoading, response: revenueData } =
+    useBusinessRevenueByMonth(selectedMonth);
+
   const { isLoading } = useLatestOrders((res) => {
     setOrdersData(res?.orders);
   });
@@ -36,6 +48,33 @@ const Dashboard = () => {
   const { isLoading: isEventsLoading } = useActiveEvents((res) => {
     setEventsData(res?.events);
   });
+
+  useEffect(() => {
+    // Filter and sort ordersData based on the selected orderFilter
+    let filteredAndSortedOrders = [...ordersData];
+
+    if (orderFilter === "last-month") {
+      const lastMonth = new Date();
+      lastMonth.setMonth(lastMonth.getMonth() - 1);
+      filteredAndSortedOrders = filteredAndSortedOrders.filter(
+        (order) => new Date(order.updatedAt) >= lastMonth
+      );
+    } else if (orderFilter === "last-week") {
+      const lastWeek = new Date();
+      lastWeek.setDate(lastWeek.getDate() - 7);
+      filteredAndSortedOrders = filteredAndSortedOrders.filter(
+        (order) => new Date(order.updatedAt) >= lastWeek
+      );
+    }
+
+    // Sort orders by updatedAt in descending order
+    filteredAndSortedOrders.sort(
+      (a, b) =>
+        new Date(b.updatedAt)?.getTime() - new Date(a.updatedAt)?.getTime()
+    );
+
+    setFilteredOrders(filteredAndSortedOrders);
+  }, [ordersData, orderFilter]);
 
   return (
     <>
@@ -51,20 +90,20 @@ const Dashboard = () => {
                 <h3>Ticket sales graph</h3>
               </div>
               <div className="header-right">
-                <select onChange={(e) => setSelectedEvent(e.target.value)}>
+                <select
+                  value={selectedEvent}
+                  onChange={(e) => setSelectedEvent(e.target.value)}
+                >
                   <option value={""}>Choose event</option>
                   {allEventsData?.length > 0 &&
                     allEventsData?.map((el) => (
                       <option value={el?._id}>{el?.eventName}</option>
                     ))}
                 </select>
-                {/* <select>
-                  <option>Ticket type</option>
-                  <option value={"VIP"}>VIP</option>
-                  <option value={"VIP"}>VVIP</option>
-                  <option value={"VIP"}>Economy</option>
-                </select> */}
-                <select onChange={(e) => setSelectedInterval(e.target.value)}>
+                <select
+                  value={selectedInterval}
+                  onChange={(e) => setSelectedInterval(e.target.value)}
+                >
                   <option value={"monthly"}>Monthly</option>
                   <option value={"yearly"}>Yearly</option>
                   <option value={"weekly"}>Weekly</option>
@@ -83,14 +122,17 @@ const Dashboard = () => {
                 <h3>Latest orders</h3>
               </div>
               <div className="header-right">
-                <select>
+                <select
+                  value={orderFilter}
+                  onChange={(e) => setOrderFilter(e.target.value)}
+                >
                   <option value={"latest"}>Latest</option>
                   <option value={"last-month"}>Last month</option>
                   <option value={"last-week"}>Last week</option>
                 </select>
               </div>
             </div>
-            <OrdersTable isLoading={isLoading} ordersData={ordersData} />
+            <OrdersTable isLoading={isLoading} ordersData={filteredOrders} />
           </div>
         </div>
         <div className="dashboard-page-right">
@@ -104,14 +146,21 @@ const Dashboard = () => {
                       <h5>{event?.eventName}</h5>
                       <h6>{event?.eventDescription}</h6>
                       <div className="more-button-container">
-                        <button>More</button>
+                        <button
+                          onClick={() =>
+                            navigate(`/business/view-event/${event?._id}`)
+                          }
+                        >
+                          More
+                        </button>
                         <p>{formatDate(event.eventStart)}</p>
                       </div>
                       <hr />
                       <div className="revenue-details-container">
-                        <p>Total Revenue Generated:</p>
+                        <p>Total Revenue:</p>
                         <h3>
-                          {event?.revenue} <span>({event?.ticketsSold})</span>
+                          ${event?.revenue}{" "}
+                          <span>({event?.ticketsSold} tickets )</span>
                         </h3>
                       </div>
                     </div>
@@ -127,33 +176,38 @@ const Dashboard = () => {
           <div className="balance-sheet-container">
             <div className="balance-sheet-header">
               <h3>Balance Sheet</h3>
-              <select defaultValue={"january"}>
-                <option value="january">January</option>
-                <option value="february">February</option>
-                <option value="march">March</option>
-                <option value="april">April</option>
-                <option value="may">May</option>
-                <option value="june">June</option>
-                <option value="july">July</option>
-                <option value="august">August</option>
-                <option value="september">September</option>
-                <option value="october">October</option>
-                <option value="november">November</option>
-                <option value="december">December</option>
+              <select
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                defaultValue={"January"}
+              >
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
               </select>
             </div>
             <div className="all-balance-sheets-container">
               <div className="single-balance-sheet">
                 <h4>Total Orders</h4>
-                <h3>293</h3>
+                <h3>{revenueData?.[0]?.totalOrders || 0}</h3>
               </div>
               <div className="single-balance-sheet">
-                <h4>Payout to Bank</h4>
-                <h3>$234,961.67</h3>
+                <h4>Balance</h4>
+                <h3>${revenueData?.[0]?.totalRevenue || 0}</h3>
               </div>
               <div className="single-balance-sheet">
                 <h4>Fee’s</h4>
-                <h3>$1140 (0.5%)</h3>
+                <h3>
+                  ${parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
+                </h3>
               </div>
             </div>
           </div>

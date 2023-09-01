@@ -10,6 +10,7 @@ import StatusModal from "../../components/UI/StatusModal";
 import PrimaryButton from "../../components/UI/PrimaryButton";
 import HeaderPlaceHolder from "../../components/Layouts/UserLayout/HeaderPlaceHolder";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
+import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 
 const Qualities = [
   {
@@ -49,6 +50,8 @@ const ContactUs = () => {
   const [showSuccessStatus, setShowSuccessStatus] = useState(false);
   const [fileList, setFileList] = useState([]);
 
+  const { handleMutation, isLoading: isEventCreating } = usePostApi();
+
   const props = {
     onRemove: (file) => {
       const index = fileList.indexOf(file);
@@ -87,17 +90,26 @@ const ContactUs = () => {
     formData.append("email", formValues.email);
     formData.append("object", formValues.object);
     formData.append("description", formValues.description);
+    formData.append("phoneNumber", formValues.phoneNumber);
     fileList.forEach((file, index) => {
-      formData.append(`file${index + 1}`, file);
+      formData.append(`attachments${index + 1}`, file);
     });
 
-    // make api call here
-    console.log(formValues);
-    // showing success message
-    setShowSuccessStatus(true);
+    setFormErrors({});
 
-    // resetting state
-    setFormValues(initalState);
+    console.log(formValues);
+    handleMutation(
+      {
+        path: "contact-us",
+        data: formData,
+      },
+      (res) => {
+        setShowSuccessStatus(true);
+        setFormValues(initalState);
+        setFileList([]);
+      },
+      (res) => {}
+    );
   };
   return (
     <div className="contact-us-page-container">

@@ -10,7 +10,7 @@ const Calculate = () => {
   // Calculate total earnings and Partikarte's fee
   const calculateEarnings = () => {
     const totalEarnings = price * tickets;
-    const partikarteFee = totalEarnings * 0.035;
+    const partikarteFee = totalEarnings * 0.08;
     return {
       totalEarnings: totalEarnings.toFixed(2),
       partikarteFee: partikarteFee.toFixed(2),

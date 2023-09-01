@@ -45,3 +45,17 @@ export function useOrdersByEventId(selectedEvent, onSuccess, onError) {
   );
   return { response, isLoading };
 }
+
+export function useBusinessRevenueByMonth(month, onSuccess, onError) {
+  const { response, isLoading } = useFetch(
+    ["get-business-revenue-by-month", month],
+    `orders/get-business-revenue-by-month/${month}`,
+    {
+      cacheTime: 1,
+      onSuccess,
+      onError,
+      enabled: true,
+    }
+  );
+  return { response, isLoading };
+}

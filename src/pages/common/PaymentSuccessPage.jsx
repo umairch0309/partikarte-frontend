@@ -25,7 +25,10 @@ const PaymentSuccessPage = () => {
         </div>
         <PrimaryButton
           onClick={() => {
-            navigate(button?.link);
+            {
+              window.close();
+              navigate(button?.link);
+            }
           }}
           className="action-button"
         >
