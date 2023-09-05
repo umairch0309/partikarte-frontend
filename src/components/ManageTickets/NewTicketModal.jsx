@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomModal from "../UI/CustomModal";
 import "./ModalForm.scss";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import PrimaryButton from "../UI/PrimaryButton";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
-import { Switch } from "antd";
+import { Switch, message } from "antd";
 import validateNewTicket from "../../validation/NewTicket";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import { useQueryClient } from "@tanstack/react-query";
+import DateTimeLocalConverter from "../../utilities/DateTimeLocalConverter";
+import { usePutApi } from "../../hooks/api-hooks/usePutApi";
 
 const initialState = {
   ticketName: "",
@@ -27,13 +29,38 @@ const NewTicketModal = ({
   selectedEvent,
   setShowNewTicketModal,
   showNewTicketModal,
+  setTicketEditStatus,
+  selectedTicket,
+  ticketEditStatus,
 }) => {
   const isMobile = useIsMobileWidth();
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
 
   const { handleMutation, isLoading: isEventCreating } = usePostApi();
+  const { handleMutation: handleUpdateTicket, isLoading: isEventUpdating } =
+    usePutApi();
+
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (selectedTicket && ticketEditStatus) {
+      setFormValues((prevState) => ({
+        ...prevState,
+        ticketName: selectedTicket?.ticketName,
+        ticketType: selectedTicket?.ticketType,
+        ticketPrice: selectedTicket?.price,
+        vatPercentage: selectedTicket?.vatPercentage,
+        numberOfTickets: selectedTicket?.maxCapacity,
+        descriptionOnWeb: selectedTicket?.descriptionWeb,
+        descriptionOnTicket: selectedTicket?.descriptionTicket,
+        startingDate: DateTimeLocalConverter(selectedTicket?.validFrom),
+        endingDate: DateTimeLocalConverter(selectedTicket?.validTo),
+        paidTicket: selectedTicket?.paymentType === "paid",
+        limitedTickets: selectedTicket?.capacityLimitation === "limited",
+      }));
+    }
+  }, [selectedEvent, ticketEditStatus]);
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -54,6 +81,17 @@ const NewTicketModal = ({
       setFormErrors({});
     }
 
+    if (
+      selectedTicket?._id &&
+      ticketEditStatus &&
+      selectedTicket?.ticketOrders > formValues.numberOfTickets
+    ) {
+      message.warning(
+        `Ticket has already been order ${selectedTicket?.ticketOrders} many times.`
+      );
+      return;
+    }
+
     const formData = new FormData();
     formData.append("ticketName", formValues.ticketName);
     formData.append("validFrom", formValues.startingDate);
@@ -69,20 +107,38 @@ const NewTicketModal = ({
 
     setFormErrors({});
 
-    handleMutation(
-      {
-        path: `/event/${selectedEvent?._id}/tickets/new-ticket`,
-        data: formData,
-      },
-      (res) => {
-        queryClient.invalidateQueries({
-          queryKey: ["get-all-tickets", selectedEvent?._id],
-        });
-        setShowNewTicketModal(false);
-        setFormValues(initialState);
-      },
-      (res) => {}
-    );
+    if (selectedTicket?._id && ticketEditStatus) {
+      handleUpdateTicket(
+        {
+          path: `/event/${selectedEvent?._id}/tickets/update/${selectedTicket?._id}`,
+          data: formData,
+        },
+        (res) => {
+          queryClient.invalidateQueries({
+            queryKey: ["get-all-events", selectedEvent?._id],
+          });
+          setShowNewTicketModal(false);
+          setTicketEditStatus(false);
+          setFormValues(initialState);
+        },
+        (res) => {}
+      );
+    } else {
+      handleMutation(
+        {
+          path: `/event/${selectedEvent?._id}/tickets/new-ticket`,
+          data: formData,
+        },
+        (res) => {
+          queryClient.invalidateQueries({
+            queryKey: ["get-all-events", selectedEvent?._id],
+          });
+          setShowNewTicketModal(false);
+          setFormValues(initialState);
+        },
+        (res) => {}
+      );
+    }
   };
 
   return (
@@ -91,9 +147,13 @@ const NewTicketModal = ({
         setFormValues(initialState);
         setFormErrors({});
         setShowNewTicketModal(false);
+        setTicketEditStatus(false);
       }}
       open={showNewTicketModal}
-      onOk={() => setShowNewTicketModal(false)}
+      onOk={() => {
+        setShowNewTicketModal(false);
+        setTicketEditStatus(false);
+      }}
       title={"Add Tickets"}
       subtitle={"Please enter the information to add tickets in list."}
       width={!isMobile && 700}
@@ -353,7 +413,12 @@ const NewTicketModal = ({
           )}
         </div>
 
-        <PrimaryButton className={"form-submit-button"}>Confirm</PrimaryButton>
+        <PrimaryButton
+          disabled={isEventCreating || isEventUpdating}
+          className={"form-submit-button"}
+        >
+          Confirm
+        </PrimaryButton>
       </form>
     </CustomModal>
   );

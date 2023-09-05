@@ -2,18 +2,51 @@ import { Dropdown, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import formatDate from "../../utilities/formatDate";
+import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
 
-const TicketsTable = ({ ticketsData }) => {
+const TicketsTable = ({
+  ticketsData,
+  setTicketEditStatus,
+  setSelectedTicket,
+  setShowNewTicketModal,
+  selectedTicket,
+  selectedEvent,
+}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     setData(ticketsData || []);
   }, [ticketsData]);
 
+  const { isDeleting, handleMutation } = useDeleteApi();
+  const handleDelete = () => {
+    if (selectedTicket?.ticketOrders > 0) {
+      message.warning(
+        "Selected tickets has sold tickets. Refund tickets to delete."
+      );
+      return;
+    }
+
+    handleMutation(
+      {
+        path: `event/${selectedEvent?._id}/tickets/${selectedTicket?._id}`,
+      },
+      (res) => {
+        queryClient.invalidateQueries(["get-all-events"]);
+      }
+    );
+  };
+
   const items = [
     {
       label: (
-        <div className="button-in-dropdown">
+        <div
+          onClick={() => {
+            setTicketEditStatus(true);
+            setShowNewTicketModal(true);
+          }}
+          className="button-in-dropdown"
+        >
           <ReactSVG src="/icons/tools/edit.svg" />
           <span>Edit</span>
         </div>
@@ -23,7 +56,7 @@ const TicketsTable = ({ ticketsData }) => {
     },
     {
       label: (
-        <div className="button-in-dropdown">
+        <div onClick={handleDelete} className="button-in-dropdown">
           <ReactSVG className="button-svg" src="/icons/tools/delete.svg" />
           <span>Delete</span>
         </div>
@@ -97,7 +130,10 @@ const TicketsTable = ({ ticketsData }) => {
               placement="bottom"
               className="dropdown-table-actions"
             >
-              <button className="dots-action-button">
+              <button
+                onClick={() => setSelectedTicket(record)}
+                className="dots-action-button"
+              >
                 <ReactSVG
                   className="dots-action-svg"
                   src="/icons/tools/dots-action.svg"

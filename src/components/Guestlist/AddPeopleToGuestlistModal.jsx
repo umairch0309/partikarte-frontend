@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomModal from "../UI/CustomModal";
 import "./ModalForm.scss";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
@@ -7,6 +7,7 @@ import validateAddPeopleToGuest from "../../validation/AddPeopleToGuest";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
+import { usePutApi } from "../../hooks/api-hooks/usePutApi";
 
 const initialState = {
   name: "",
@@ -14,7 +15,7 @@ const initialState = {
   guestType: "",
   email: "",
   phoneNumber: "",
-  notifyPeople: "false",
+  notifyPeople: true,
 };
 
 const AddPeopleToGuestlistModal = ({
@@ -22,12 +23,27 @@ const AddPeopleToGuestlistModal = ({
   setShowAddPeopleModal,
   setShowMultiplePeopleModal,
   selectedEvent,
+  selectedGuest,
+  setEditSelected,
+  editSelected,
 }) => {
   const isMobile = useIsMobileWidth();
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
 
-  const { handleMutation, isLoading: isEventCreating } = usePostApi();
+  useEffect(() => {
+    if (selectedGuest?._id && editSelected) {
+      setFormValues((prevState) => ({
+        ...prevState,
+        ...selectedGuest,
+        notifyPeople: selectedGuest.isNotified,
+      }));
+    }
+  }, [selectedGuest, editSelected]);
+
+  const { handleMutation, isLoading: isCreating } = usePostApi();
+  const { handleMutation: handleUpdate, isLoading: isUpdating } = usePutApi();
+
   const queryClient = useQueryClient();
 
   const handleInputChange = async (e) => {
@@ -55,26 +71,39 @@ const AddPeopleToGuestlistModal = ({
     formData.append("guestType", formValues.guestType);
     formData.append("email", formValues.email);
     formData.append("phoneNumber", formValues.phoneNumber);
-    formData.append(
-      "isNotified",
-      formValues.notifyPeople === "true" ? true : false
-    );
+    formData.append("isNotified", formValues.notifyPeople);
     formData.append("eventId", selectedEvent?._id);
 
     setFormErrors({});
-
-    handleMutation(
-      {
-        path: "guests/new-guest",
-        data: formData,
-      },
-      (res) => {
-        queryClient.invalidateQueries(selectedEvent?._id);
-        setShowAddPeopleModal(false);
-        setFormValues(initialState);
-      },
-      (res) => {}
-    );
+    if (selectedGuest?._id && editSelected) {
+      handleUpdate(
+        {
+          path: `guests/${selectedGuest?._id}`,
+          data: formData,
+        },
+        (res) => {
+          queryClient.invalidateQueries(["get-all-guests", selectedEvent?._id]);
+          setShowAddPeopleModal(false);
+          setFormValues(initialState);
+          setEditSelected(false);
+        },
+        (res) => {}
+      );
+    } else {
+      handleMutation(
+        {
+          path: "guests/new-guest",
+          data: formData,
+        },
+        (res) => {
+          queryClient.invalidateQueries(["get-all-guests", selectedEvent?._id]);
+          setShowAddPeopleModal(false);
+          setFormValues(initialState);
+          setEditSelected(false);
+        },
+        (res) => {}
+      );
+    }
   };
 
   return (
@@ -83,6 +112,7 @@ const AddPeopleToGuestlistModal = ({
         setFormValues(initialState);
         setFormErrors({});
         setShowAddPeopleModal(false);
+        setEditSelected(false);
       }}
       open={showAddPeopleModal}
       onOk={() => setShowAddPeopleModal(false)}
@@ -184,7 +214,7 @@ const AddPeopleToGuestlistModal = ({
           </div>
         </div>
         <div className="side-by-side-guest-input">
-          <div className="single-form-item radio-input-container">
+          {/* <div className="single-form-item radio-input-container">
             <input
               className="radio-input"
               name="notifyPeople"
@@ -195,9 +225,9 @@ const AddPeopleToGuestlistModal = ({
               onBlur={handleOnBlur}
             />
             <label htmlFor="notifyPeople">Notify people</label>
-          </div>
-          <div className="side-by-side-guest-input">
-            {/* <button
+          </div> */}
+          {/* <div className="side-by-side-guest-input"> */}
+          {/* <button
               onClick={() => {
                 setShowAddPeopleModal(false);
                 setShowMultiplePeopleModal(true);
@@ -207,8 +237,10 @@ const AddPeopleToGuestlistModal = ({
             >
               Add multiple guests
             </button> */}
-            <PrimaryButton>Confirm</PrimaryButton>
-          </div>
+          <PrimaryButton disabled={isCreating || isUpdating}>
+            Confirm
+          </PrimaryButton>
+          {/* </div> */}
         </div>
       </form>
     </CustomModal>

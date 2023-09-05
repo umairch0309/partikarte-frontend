@@ -20,6 +20,8 @@ const Guestlist = () => {
   const [interval, setInterval] = useState("monthly");
 
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedGuest, setSelectedGuest] = useState(null);
+  const [editSelected, setEditSelected] = useState(null);
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
   const [showMultiplePeopleModal, setShowMultiplePeopleModal] = useState(false);
 
@@ -129,6 +131,7 @@ const Guestlist = () => {
               <select
                 name="guestType"
                 onChange={(e) => handleGuestTypeFilter(e.target.value)}
+                value={guestType}
               >
                 <option value={"allGuestTypes"}>All guest types</option>
                 <option value={"vip"}>VIP</option>
@@ -137,6 +140,7 @@ const Guestlist = () => {
               </select>
               <select
                 name="notified"
+                value={notified}
                 onChange={(e) => handleNotifiedFilter(e.target.value)}
               >
                 <option value={"allNotified"}>All notified</option>
@@ -146,6 +150,7 @@ const Guestlist = () => {
               <select
                 name="timeframe"
                 onChange={(e) => handleIntervalChange(e.target.value)}
+                value={interval}
               >
                 <option value={"monthly"}>Monthly</option>
                 <option value={"weekly"}>Weekly</option>
@@ -173,7 +178,14 @@ const Guestlist = () => {
               </SecondaryButton> */}
             </div>
           </div>
-          <GuestTable isLoading={isLoading} guestsData={filteredData} />
+          <GuestTable
+            setSelectedGuest={setSelectedGuest}
+            setShowAddPeopleModal={setShowAddPeopleModal}
+            isLoading={isLoading}
+            guestsData={filteredData}
+            setEditSelected={setEditSelected}
+            selectedGuest={selectedGuest}
+          />
         </div>
       </div>
       <AddPeopleToGuestlistModal
@@ -181,6 +193,10 @@ const Guestlist = () => {
         setShowAddPeopleModal={setShowAddPeopleModal}
         setShowMultiplePeopleModal={setShowMultiplePeopleModal}
         selectedEvent={selectedEvent}
+        selectedGuest={selectedGuest}
+        setSelectedGuest={setSelectedGuest}
+        setEditSelected={setEditSelected}
+        editSelected={editSelected}
       />
       <AddMultiplePeopleToGuestlistModal
         showMultiplePeopleModal={showMultiplePeopleModal}

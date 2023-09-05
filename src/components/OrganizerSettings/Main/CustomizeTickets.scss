@@ -1,0 +1,39 @@
+@import "../../../styles/mixins.scss";
+@import "../../../styles/variables";
+
+.manage-customize-tickets-page {
+  .selected-event-ticket-cards {
+    @include flex(row, "", center, 50px);
+    flex-wrap: wrap;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    .single-ticket-card {
+      width: 280px;
+      min-width: 280px;
+      padding: 20px 15px;
+      background-color: white;
+      border-radius: $primaryBorderRadius;
+      cursor: pointer;
+      border: 1px solid transparent;
+      box-shadow: 0 0 5px 2px rgba($color: #000000, $alpha: 0.03);
+      @include flex(column, "", flex-start, 15px);
+      &:hover {
+        background-color: opacityColor($primaryColor, 0.02);
+      }
+      @media (max-width: 767px) {
+        width: 100%;
+      }
+      .ticket-header {
+        width: 100%;
+        @include flex(row, space-between, center);
+        h5 {
+          color: $primaryColor;
+        }
+      }
+      .cutomize-ticket-button {
+        margin-top: 10px;
+        width: 100%;
+      }
+    }
+  }
+}

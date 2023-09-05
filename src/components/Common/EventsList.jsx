@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
 import "./EventsList.scss";
 import { ReactSVG } from "react-svg";
-import { Dropdown } from "antd";
+import { Dropdown, message } from "antd";
 import PrimaryButton from "../UI/PrimaryButton";
 import { useState } from "react";
 import { useRef } from "react";
 import { useAllEvents } from "../../api/manage-events";
 import { Skeleton } from "antd";
+import { useNavigate } from "react-router-dom";
+import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const EventsList = ({
   showHeader,
@@ -14,17 +17,32 @@ const EventsList = ({
   setShowAddNewEventModal,
   setSelectedEvent,
   selectedEvent,
+  setShoweditEventModal,
 }) => {
-  const items = [
-    {
-      label: "action 1",
-      key: "0",
-    },
-    {
-      label: "action 2",
-      key: "1",
-    },
-  ];
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  console.log(selectedEvent);
+
+  const { isDeleting, handleMutation } = useDeleteApi();
+  const handleDelete = () => {
+    if (selectedEvent?.ticketsSold > 0) {
+      message.warning(
+        "Selected event has sold tickets. Refund tickets to delete."
+      );
+      return;
+    }
+
+    handleMutation(
+      {
+        path: `events/delete/${selectedEvent?._id}`,
+      },
+      (res) => {
+        queryClient.invalidateQueries(["get-all-events"]);
+      }
+    );
+  };
+
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
 
@@ -61,6 +79,47 @@ const EventsList = ({
       behavior: "smooth",
     });
   };
+
+  const items = [
+    {
+      label: (
+        <div
+          onClick={() => {
+            navigate(`/business/view-event/${selectedEvent?._id}`);
+          }}
+          className="button-in-dropdown"
+        >
+          <ReactSVG src="/icons/tools/eye.svg" />
+          <span>View</span>
+        </div>
+      ),
+      key: "0",
+      className: "royal-blue-button-dropdown",
+    },
+    {
+      label: (
+        <div
+          onClick={() => setShoweditEventModal(true)}
+          className="button-in-dropdown"
+        >
+          <ReactSVG className="button-svg" src="/icons/tools/edit.svg" />
+          <span>Update</span>
+        </div>
+      ),
+      key: "1",
+      className: "blue-button-dropdown",
+    },
+    {
+      label: (
+        <div onClick={handleDelete} className="button-in-dropdown">
+          <ReactSVG className="button-svg" src="/icons/tools/delete.svg" />
+          <span>Delete</span>
+        </div>
+      ),
+      key: "2",
+      className: "red-button-dropdown",
+    },
+  ];
 
   return (
     <div className="event-list-main-container">

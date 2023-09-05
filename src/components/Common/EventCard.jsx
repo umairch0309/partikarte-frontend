@@ -33,9 +33,13 @@ const EventCard = ({ event, className }) => {
         <ReactSVG src="/icons/tools/location.svg" />
         {event?.eventVenue}
       </div>
-      <div className="event-price">
-        Starting from <strong>{`$${minPriceTicket?.price}`}</strong>
-      </div>
+      {minPriceTicket?.price === undefined ? (
+        <div className="event-price"> No tickets available</div>
+      ) : (
+        <div className="event-price">
+          Starting from <strong>{`$${minPriceTicket?.price}`}</strong>
+        </div>
+      )}
     </div>
   );
 };

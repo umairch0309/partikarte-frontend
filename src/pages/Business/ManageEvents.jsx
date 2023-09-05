@@ -13,12 +13,14 @@ import AddNewEventModal from "../../components/ManageEvents/AddNewEventModal";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import { useNavigate } from "react-router-dom";
 import { useOrdersByTimeInterval } from "../../api/orders";
+import EditEvent from "../../components/ManageEvents/EditEvent";
 
 const ManageEvents = () => {
   const navigate = useNavigate();
   const [countriesRevenues, setCountriesRevenues] = useState([]);
   const [analytics, setAnalytics] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
+  const [showEditEventModal, setShoweditEventModal] = useState(false);
   const [selectedInterval, setSelectedInterval] = useState("weekly");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedTable, setSelectedTable] = useState(0);
@@ -75,6 +77,7 @@ const ManageEvents = () => {
           showInputs={true}
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
+          setShoweditEventModal={setShoweditEventModal}
         />
         <div className="event-page-actions">
           <SecondaryButton
@@ -189,6 +192,11 @@ const ManageEvents = () => {
       <AddNewEventModal
         showAddNewEventModal={showAddNewEventModal}
         setShowAddNewEventModal={setShowAddNewEventModal}
+      />
+      <EditEvent
+        showEditEventModal={showEditEventModal}
+        setShoweditEventModal={setShoweditEventModal}
+        selectedEvent={selectedEvent}
       />
     </>
   );

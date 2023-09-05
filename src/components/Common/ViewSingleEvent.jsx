@@ -6,6 +6,7 @@ import PrimaryButton from "../UI/PrimaryButton";
 import GoogleMapComponent from "../service-components/GoogleMapComponent";
 import { useSingleEventForCustomer } from "../../api/manage-events";
 import formatDate from "../../utilities/formatDate";
+import { Skeleton } from "antd";
 
 const ViewSingleEvent = () => {
   const [showMap, setShowMap] = useState(false);
@@ -25,7 +26,7 @@ const ViewSingleEvent = () => {
     window.open(url, "_blank");
   };
 
-  return (
+  return !isLoading && data?._id ? (
     <div className="view-event-user-component">
       <img
         className="event-header-image"
@@ -122,6 +123,18 @@ const ViewSingleEvent = () => {
         </div>
       </div>
     </div>
+  ) : (
+    <>
+      <Skeleton.Image
+        style={{
+          width: "calc(100vw - 310px)",
+          height: "370px",
+          marginBottom: "40px",
+        }}
+        active={true}
+      />
+      <Skeleton active={true} paragraph={{ rows: 5 }} size={"small"} />
+    </>
   );
 };
 

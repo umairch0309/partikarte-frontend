@@ -140,7 +140,10 @@ const Orders = () => {
         <div className="order-analytics-chart-container">
           <div className="container-header">
             <h3>Orders Analytics</h3>
-            <select onChange={(e) => setSelectedInterval(e.target.value)}>
+            <select
+              value={selectedInterval}
+              onChange={(e) => setSelectedInterval(e.target.value)}
+            >
               <option value={"monthly"}>Monthly</option>
               <option value={"weekly"}>Weekly</option>
               <option value={"yearly"}>Yearly</option>
@@ -179,6 +182,7 @@ const Orders = () => {
               <select
                 name="timeframe"
                 onChange={(e) => handleIntervalChange(e.target.value)}
+                value={interval}
               >
                 <option value={"monthly"}>Monthly</option>
                 <option value={"weekly"}>Weekly</option>

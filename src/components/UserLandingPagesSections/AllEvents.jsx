@@ -86,10 +86,10 @@ const AllEvents = ({ link, searchText, interval }) => {
         <PrimaryButton
           className="events-load-more-button"
           onClick={() =>
-            link ? navigate(link) : setEventsCount(eventsCount + 3)
+            link ? navigate(link) : setEventsCount(eventsCount + 6)
           }
         >
-          Explore all
+          {link ? "Explore all" : "See more"}
         </PrimaryButton>
       )}
     </div>

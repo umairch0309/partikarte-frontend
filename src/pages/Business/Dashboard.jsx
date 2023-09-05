@@ -13,6 +13,21 @@ import formatDate from "../../utilities/formatDate";
 import { Skeleton } from "antd";
 import { useNavigate } from "react-router-dom";
 
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [ordersData, setOrdersData] = useState([]);
@@ -23,7 +38,9 @@ const Dashboard = () => {
   const [selectedInterval, setSelectedInterval] = useState("weekly");
   const [orderFilter, setOrderFilter] = useState("latest");
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState("January");
+  const [selectedMonth, setSelectedMonth] = useState(
+    monthNames[new Date().getMonth()]
+  );
 
   const { isLoading: isAllEventsLoading } = useAllEvents((res) => {
     setAllEventsData(res?.events);
@@ -178,20 +195,11 @@ const Dashboard = () => {
               <h3>Balance Sheet</h3>
               <select
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                defaultValue={"January"}
+                value={selectedMonth}
               >
-                <option value="January">January</option>
-                <option value="February">February</option>
-                <option value="March">March</option>
-                <option value="April">April</option>
-                <option value="May">May</option>
-                <option value="June">June</option>
-                <option value="July">July</option>
-                <option value="August">August</option>
-                <option value="September">September</option>
-                <option value="October">October</option>
-                <option value="November">November</option>
-                <option value="December">December</option>
+                {monthNames.map((m) => (
+                  <option value={m}>{m}</option>
+                ))}
               </select>
             </div>
             <div className="all-balance-sheets-container">

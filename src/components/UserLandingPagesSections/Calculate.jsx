@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import "./Calculate.scss";
 import { Switch } from "antd";
+import { useCountriesList } from "../../api/services";
 
 const Calculate = () => {
   const [price, setPrice] = useState(0);
   const [tickets, setTickets] = useState(0);
   const [reservedSeating, setReservedSeating] = useState(false);
+  const [countries, setCountries] = useState([]);
+
+  const { isLoading: countriesLoading } = useCountriesList(
+    (res) => {
+      setCountries(res);
+    },
+    (res) => {
+      console.log(res, "countries list error");
+    }
+  );
 
   // Calculate total earnings and Partikarte's fee
   const calculateEarnings = () => {
@@ -40,9 +51,12 @@ const Calculate = () => {
         <div className="calculate-left">
           <h1>Calculate</h1>
           <select>
-            <option>United States</option>
-            <option>Slovakia</option>
-            <option>United Kingdom</option>
+            <option>Choose country</option>
+            {!countriesLoading &&
+              countries?.length > 0 &&
+              countries?.map((el) => (
+                <option value={el?.countryName}>{el?.countryName}</option>
+              ))}
           </select>
           <div className="left-main">
             <div className="left-main-input">

@@ -2,9 +2,30 @@ import { Dropdown, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import formatDate from "../../utilities/formatDate";
+import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
 
-const GuestTable = ({ guestsData, isLoading }) => {
+const GuestTable = ({
+  guestsData,
+  isLoading,
+  setSelectedGuest,
+  setShowAddPeopleModal,
+  setEditSelected,
+  selectedGuest,
+}) => {
   const [data, setData] = useState([]);
+
+  const { isDeleting, handleMutation } = useDeleteApi();
+
+  const handleDelete = () => {
+    handleMutation(
+      {
+        path: `guests/${selectedGuest?._id}`,
+      },
+      (res) => {
+        queryClient.invalidateQueries(["get-all-guests", selectedEvent?._id]);
+      }
+    );
+  };
 
   useEffect(() => {
     setData(guestsData || []);
@@ -13,7 +34,13 @@ const GuestTable = ({ guestsData, isLoading }) => {
   const items = [
     {
       label: (
-        <div className="button-in-dropdown">
+        <div
+          onClick={() => {
+            setShowAddPeopleModal(true);
+            setEditSelected(true);
+          }}
+          className="button-in-dropdown"
+        >
           <ReactSVG src="/icons/tools/edit.svg" />
           <span>Edit</span>
         </div>
@@ -23,7 +50,7 @@ const GuestTable = ({ guestsData, isLoading }) => {
     },
     {
       label: (
-        <div className="button-in-dropdown">
+        <div onClick={handleDelete} className="button-in-dropdown">
           <ReactSVG className="button-svg" src="/icons/tools/delete.svg" />
           <span>Delete</span>
         </div>
@@ -109,7 +136,10 @@ const GuestTable = ({ guestsData, isLoading }) => {
               placement="bottom"
               className="dropdown-table-actions"
             >
-              <button className="dots-action-button">
+              <button
+                onClick={() => setSelectedGuest(record)}
+                className="dots-action-button"
+              >
                 <ReactSVG
                   className="dots-action-svg"
                   src="/icons/tools/dots-action.svg"

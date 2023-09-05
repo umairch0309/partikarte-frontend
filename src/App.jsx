@@ -9,6 +9,7 @@ import configuration from "./styles/antd-configuration/configuration";
 import UserMain from "./pages/User/UserMain";
 import BusinessMain from "./pages/Business/BusinessMain";
 import { useAuthContext } from "./context/auth-context";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
   const { setIsLoggedIn } = useAuthContext();
@@ -52,6 +53,7 @@ function App() {
             <Route path="/business/*" element={<BusinessMain />} />
             <Route path="*" element={<Page404 />} />
           </Routes>
+          <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
         </div>
       </QueryClientProvider>
     </ConfigProvider>

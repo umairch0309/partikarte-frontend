@@ -9,11 +9,13 @@ import TicketsTable from "../../components/Tables/TicketsTable";
 import NewTicketModal from "../../components/ManageTickets/NewTicketModal";
 
 const ManageTickets = () => {
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedTicket, setSelectedTicket] = useState([]);
+  const [ticketEditStatus, setTicketEditStatus] = useState(false);
+  const [searchedText, setSearchedText] = useState(false);
 
   useEffect(() => {
     if (selectedEvent) {
@@ -22,7 +24,16 @@ const ManageTickets = () => {
     }
   }, [selectedEvent]);
 
-  console.log(data);
+  useEffect(() => {
+    filterData(searchedText);
+  }, [searchedText]);
+
+  const filterData = (text) => {
+    const d = data.filter((t) =>
+      JSON.stringify(t).toLowerCase().includes(text?.toLowerCase())
+    );
+    setFilteredData(d);
+  };
 
   return (
     <>
@@ -67,7 +78,12 @@ const ManageTickets = () => {
             <div className="header-right">
               <div className="search-container">
                 <ReactSVG src="/icons/tools/search.svg" />
-                <input type="text" name="search" placeholder="Search tickets" />
+                <input
+                  type="text"
+                  name="search"
+                  placeholder="Search tickets"
+                  onChange={(e) => setSearchedText(e.target.value)}
+                />
               </div>
               <SecondaryButton
                 onClick={() => {
@@ -79,13 +95,23 @@ const ManageTickets = () => {
               </SecondaryButton>
             </div>
           </div>
-          <TicketsTable ticketsData={data} />
+          <TicketsTable
+            setShowNewTicketModal={setShowNewTicketModal}
+            ticketsData={filteredData}
+            setTicketEditStatus={setTicketEditStatus}
+            setSelectedTicket={setSelectedTicket}
+            selectedTicket={selectedTicket}
+            selectedEvent={selectedEvent}
+          />
         </div>
       </div>
       <NewTicketModal
         showNewTicketModal={showNewTicketModal}
         setShowNewTicketModal={setShowNewTicketModal}
         selectedEvent={selectedEvent}
+        setTicketEditStatus={setTicketEditStatus}
+        ticketEditStatus={ticketEditStatus}
+        selectedTicket={selectedTicket}
       />
     </>
   );

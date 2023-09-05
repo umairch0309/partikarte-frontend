@@ -1,29 +1,34 @@
 import React, { useState } from "react";
 import "./CustomizeTickets.scss";
-import AutocompleteInput from "../../service-components/AutoCompleteInput";
+import EventsList from "../../Common/EventsList";
+import formatDate from "../../../utilities/formatDate";
+import PrimaryButton from "../../UI/PrimaryButton";
 
 const CustomizeTickets = () => {
-  const [selectedPlace, setSelectedPlace] = useState(null);
-
-  const handlePlaceSelect = (place) => {
-    setSelectedPlace(place);
-  };
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   return (
-    <div>
-      <h1>World Location Autocomplete</h1>
-      <AutocompleteInput onPlaceSelect={handlePlaceSelect} />
-      {selectedPlace && (
-        <div>
-          <h2>Selected Place Details</h2>
-          <p>Name: {selectedPlace.formatted_address}</p>
-          <p>Country: {selectedPlace.country}</p>
-          <p>City: {selectedPlace.city}</p>
-          <p>Postal Code: {selectedPlace.postal_code}</p>
-          <p>Latitude: {selectedPlace.lat}</p>
-          <p>Longitude: {selectedPlace.lng}</p>
-        </div>
-      )}
+    <div className="manage-customize-tickets-page">
+      <EventsList
+        selectedEvent={selectedEvent}
+        setSelectedEvent={setSelectedEvent}
+      />
+      <div className="selected-event-ticket-cards">
+        {selectedEvent?.tickets?.map((ticket) => {
+          return (
+            <div className="single-ticket-card">
+              <div className="ticket-header">
+                <p>{formatDate(ticket?.validFrom)}</p>
+                <h5>{ticket?.ticketType?.toUpperCase()}</h5>
+              </div>
+              <h3>{ticket?.ticketName}</h3>
+              <PrimaryButton className={"cutomize-ticket-button"}>
+                Customize
+              </PrimaryButton>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

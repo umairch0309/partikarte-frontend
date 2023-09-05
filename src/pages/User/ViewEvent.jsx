@@ -19,6 +19,7 @@ const ViewEvent = () => {
   const [showMap, setShowMap] = useState(false);
   const [data, setData] = useState(null);
   const { eventId } = useParams();
+
   const { isLoading } = useSingleEventForCustomer(eventId, (res) => {
     setData(res?.event);
     console.log(res?.event);
@@ -175,7 +176,11 @@ const ViewEvent = () => {
             </div>
             <div className="location-container">
               <ReactSVG src="/icons/tools/unfilled-location.svg" />
-              <h4>{data?.eventAddress?.addressDescription}</h4>
+              <h4>
+                {data?.eventType === "Venue"
+                  ? data?.eventAddress?.addressDescription
+                  : data?.eventAddress?.eventLink}
+              </h4>
             </div>
             <div className="organizer-container">
               <ReactSVG src="/icons/tools/user.svg" />

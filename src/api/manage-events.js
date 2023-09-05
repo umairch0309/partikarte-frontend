@@ -37,12 +37,13 @@ export function useAllEventsForCustomer(onSuccess, onError) {
 
 export function useSingleEventForCustomer(id, onSuccess, onError) {
   const { response, isLoading } = useFetch(
-    ["single-event-for-customer"],
+    ["single-event-for-customer", id],
     `single-event-for-customer/${id}`,
     {
-      cacheTime: 60000 * 2,
+      cacheTime: 1,
       onSuccess,
       onError,
+      enabled: true,
     }
   );
   return { response, isLoading };
