@@ -73,6 +73,8 @@ const TicketCard = ({ ticket, eventId }) => {
   const validFrom = new Date(ticket?.validFrom);
   const validTo = new Date(ticket?.validTo);
 
+  console.log(ticket);
+
   return (
     <div className="ticket-card-container">
       <div className="ticket-card-top">
@@ -84,7 +86,7 @@ const TicketCard = ({ ticket, eventId }) => {
         <p>{ticket?.descriptionWeb}</p>
       </div>
       <hr />
-      {ticket?.remainingCapacity >= ticket?.maxCapacity ? (
+      {parseInt(ticket?.maxCapacity) >= parseInt(ticket?.remainingCapacity) ? (
         now >= validFrom && now <= validTo ? (
           <div className="ticket-card-bottom">
             <div className="ticket-card-bottom-controls-container">

@@ -188,7 +188,7 @@ const Company = () => {
             </div>
           </div>
         </div>
-        <form className="add-guest-form-container">
+        <form className="company-details-form-container">
           <div className="side-by-side-guest-input">
             <div
               className={`single-form-item ${
@@ -276,84 +276,6 @@ const Company = () => {
               <span>Add Social Media</span>
             </SecondaryButton>
           </div>
-          {/* {data?.business?.socialLinks?.facebook && (
-            <div className="single-social-media-item">
-              <div className="single-item-left">
-                <ReactSVG src="/icons/tools/facebook-color.svg" />
-                <span>Facebook</span>
-                <p>{data?.business?.socialLinks?.facebook}</p>
-              </div>
-              <div className="single-item-right">
-                <ReactSVG
-                  onClick={() => {
-                    setShowAddSocialMedia(true);
-                    setInitialStateForEditSocialMedia({
-                      platform: "facebook",
-                      link: data?.business?.socialLinks?.facebook,
-                    });
-                  }}
-                  className="button-icon"
-                  src="/icons/tools/edit.svg"
-                />
-                <ReactSVG
-                  className="button-icon"
-                  src="/icons/tools/delete.svg"
-                />
-              </div>
-            </div>
-          )}
-          {data?.business?.socialLinks?.instagram && (
-            <div className="single-social-media-item">
-              <div className="single-item-left">
-                <ReactSVG src="/icons/tools/insta-color.svg" />
-                <span>Instagram</span>
-                <p>{data?.business?.socialLinks?.facebook}</p>
-              </div>
-              <div className="single-item-right">
-                <ReactSVG
-                  onClick={() => {
-                    setShowAddSocialMedia(true);
-                    setInitialStateForEditSocialMedia({
-                      platform: "instagram",
-                      link: data?.business?.socialLinks?.instagram,
-                    });
-                  }}
-                  className="button-icon"
-                  src="/icons/tools/edit.svg"
-                />
-                <ReactSVG
-                  className="button-icon"
-                  src="/icons/tools/delete.svg"
-                />
-              </div>
-            </div>
-          )}
-          {data?.business?.socialLinks?.linkedin && (
-            <div className="single-social-media-item">
-              <div className="single-item-left">
-                <ReactSVG src="/icons/tools/linkedin-color.svg" />
-                <span>Linkedin</span>
-                <p>{data?.business?.socialLinks?.linkedin}</p>
-              </div>
-              <div className="single-item-right">
-                <ReactSVG
-                  onClick={() => {
-                    setShowAddSocialMedia(true);
-                    setInitialStateForEditSocialMedia({
-                      platform: "linkedin",
-                      link: data?.business?.socialLinks?.linkedin,
-                    });
-                  }}
-                  className="button-icon"
-                  src="/icons/tools/edit.svg"
-                />
-                <ReactSVG
-                  className="button-icon"
-                  src="/icons/tools/delete.svg"
-                />
-              </div>
-            </div>
-          )} */}
           {data?.business?.socialLinks &&
             Object.keys(data?.business?.socialLinks).map((platform) => (
               <SingleSocialMediaItem

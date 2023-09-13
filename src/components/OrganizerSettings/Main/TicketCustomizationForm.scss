@@ -1,0 +1,174 @@
+@import "../../../styles/mixins.scss";
+@import "../../../styles/variables";
+
+.ticket-customization-form {
+  width: 100%;
+  background-color: white;
+  padding: 20px;
+  border-radius: $primaryBorderRadius;
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: $textColor;
+  }
+  .customization-form-header {
+    @include flex(row, space-between, center);
+    .header-left {
+      svg {
+        display: block;
+        cursor: pointer;
+        &:hover {
+          path {
+            fill: $primaryColor;
+          }
+        }
+      }
+      @include flex(row, flex-start, center, 30px);
+    }
+    .header-right {
+      button {
+        width: 100px;
+      }
+    }
+  }
+
+  .logo-image-container {
+    position: relative;
+    @include flex(row, "", center, 30px);
+    input {
+      display: none;
+    }
+    .avatar-container {
+      background-color: #ebebeb;
+      width: 150px;
+      height: 150px;
+      padding: 10px;
+      border-radius: 50%;
+      svg {
+        fill: $textColor;
+        display: block;
+      }
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .upload-icon-container {
+      position: absolute;
+      bottom: 10px;
+      left: 110px;
+      height: 35px;
+      width: 35px;
+      background-color: white;
+      border-radius: 50%;
+      box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);
+      @include flex(row, center, center);
+      cursor: pointer;
+      svg {
+        display: block;
+        margin: auto;
+      }
+    }
+    .image-upload-guides {
+      h5 {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      p {
+        font-size: 12px;
+        margin-top: 5px;
+        color: opacityColor($textColor, 0.7);
+      }
+    }
+  }
+
+  .ticket-customization-form-container {
+    margin-top: 30px;
+    // padding-inline: 7%;
+    @include flex(column, "", "", 20px);
+    .form-section-heading {
+      @include flex(row, flex-start, center, 20px);
+      margin-top: 30px;
+    }
+    .date-diff-error-message {
+      color: $errorColor;
+    }
+    .side-by-side-settings-input {
+      width: 100%;
+      @include flex(row, space-between, center, 30px);
+      @media (max-width: 767px) {
+        gap: 20px;
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+    input:disabled {
+      background-color: opacityColor($textColor, 0.04);
+    }
+    .single-form-item {
+      width: 100%;
+      label {
+        font-size: 16px;
+        font-weight: 500;
+        color: $secondaryColor;
+      }
+      select,
+      input,
+      textarea {
+        border-color: #e6e9ed;
+        font-size: 15px;
+        margin-top: 5px;
+        width: 100%;
+      }
+      select {
+        background-position: 92% 21px;
+      }
+      textarea {
+        height: 100px;
+        padding-top: 10px;
+      }
+    }
+    .error {
+      width: 100%;
+      position: relative;
+      input,
+      select,
+      textarea {
+        border-color: $errorColor !important;
+        outline-color: $errorColor !important;
+      }
+      .error-message,
+      .select-error-message {
+        color: $errorColor;
+        font-size: 12px;
+        position: absolute;
+        top: 42.6px;
+        right: 10px;
+      }
+      .select-error-message {
+        margin-right: 30px;
+      }
+    }
+    .checkbox-input-item {
+      width: 100%;
+      @include flex(row, "", center, 5px);
+      input {
+        height: 15px;
+        width: 15px;
+      }
+      label {
+        color: opacityColor($textColor, 0.7);
+        font-size: 14px;
+        span {
+          color: $textColor;
+        }
+      }
+    }
+    .form-submit-button {
+      margin-left: auto;
+      width: 100%;
+    }
+  }
+}

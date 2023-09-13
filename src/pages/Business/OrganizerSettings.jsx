@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, NavLink, useLocation, Route, Routes } from "react-router-dom";
 import { ReactSVG } from "react-svg";
 import "./OrganizerSettings.scss";
@@ -8,9 +8,11 @@ import ViewGallery from "../../components/OrganizerSettings/Main/ViewGallery";
 import News from "../../components/OrganizerSettings/Main/News";
 import Company from "../../components/OrganizerSettings/Main/Company";
 import CustomizeTickets from "../../components/OrganizerSettings/Main/CustomizeTickets";
+import TicketCustomizationForm from "../../components/OrganizerSettings/Main/TicketCustomizationForm";
 
 const OrganizerSettings = () => {
   const location = useLocation();
+  const [selectedTicket, setSelectedTicket] = useState(null);
   return (
     <>
       <Topbar
@@ -55,7 +57,15 @@ const OrganizerSettings = () => {
             <Route path="/company-details" element={<Company />} />
             <Route
               path="/tickets-customization"
-              element={<CustomizeTickets />}
+              element={
+                <CustomizeTickets setSelectedTicket={setSelectedTicket} />
+              }
+            />
+            <Route
+              path="/tickets-customization/form"
+              element={
+                <TicketCustomizationForm selectedTicket={selectedTicket} />
+              }
             />
 
             {/* SUB ROUTES  */}
