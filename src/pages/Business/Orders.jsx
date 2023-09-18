@@ -117,21 +117,28 @@ const Orders = () => {
           />
           <StatCard
             title={"Revenue generated"}
-            number={"$" + (selectedEvent?.revenue || 0)}
+            number={"$" + (parseInt(selectedEvent?.revenue).toFixed(2) || 0)}
             icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
             variant={"green-stat-card"}
             showCalendar={true}
           />
           <StatCard
             title={"Partikarte Fees"}
-            number={"$" + (selectedEvent?.revenue || 0) * 0.08}
+            number={
+              "$" +
+              (
+                (parseInt(selectedEvent?.revenue).toFixed(2) || 0) * 0.08
+              ).toFixed(2)
+            }
             icon={<ReactSVG src="/icons/tools/percentage-colored.svg" />}
             variant={"blue-stat-card"}
             showCalendar={true}
           />
           <StatCard
             title={"Total Paid Out"}
-            number={"$" + (selectedEvent?.totalPaidOut || 0.0)}
+            number={
+              "$" + (parseInt(selectedEvent?.totalPaidOut).toFixed(2) || 0.0)
+            }
             icon={<ReactSVG src="/icons/tools/clipboardtick-colored.svg" />}
             variant={"orange-stat-card"}
             showCalendar={true}

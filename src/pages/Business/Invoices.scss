@@ -1,0 +1,102 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.invoices-page-container {
+  .stats-cards-container {
+    @include flex(row, space-between, center, 20px);
+    margin-top: 20px;
+    @media (max-width: 767px) {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  select {
+    max-width: 120px;
+    padding-inline: 10px;
+    height: 40px;
+    border-color: transparent;
+    background-color: opacityColor($primaryColor, 0.08);
+  }
+  .order-analytics-chart-container {
+    margin-top: 30px;
+    background-color: white;
+    border-radius: $primaryBorderRadius;
+    padding-block: 20px;
+    .container-header {
+      @include flex(row, space-between, center);
+      padding: 0px 20px 20px 20px;
+      .filter-search {
+        @include flex(row, "", center, 5px);
+      }
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: $secondaryColor;
+      }
+    }
+  }
+
+  .table-container {
+    margin-block: 30px;
+    background-color: white;
+    border-radius: $primaryBorderRadius;
+    width: 100%;
+    .table-container-header {
+      padding: 20px;
+      @include flex(row, space-between, center, 30px);
+      @media (max-width: 767px) {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: $secondaryColor;
+      }
+      .header-right {
+        @include flex(row, "", center, 20px);
+        @media (max-width: 767px) {
+          flex-wrap: wrap;
+        }
+        .search-container {
+          width: 100%;
+          min-width: 200px;
+          @include flex(row, "", center);
+          height: 40px;
+          background-color: opacityColor($primaryColor, 0.08);
+          padding-inline: 10px;
+          border-radius: 10px;
+          &:focus-within {
+            outline: 1px solid $primaryColor;
+          }
+          svg {
+            display: block;
+          }
+          input {
+            border: none;
+            outline: none;
+            height: 40px;
+            font-size: 12px;
+            font-weight: 400;
+            color: $secondaryColor;
+            &::placeholder {
+              font-weight: 400;
+              color: opacityColor($secondaryColor, 0.7);
+            }
+          }
+        }
+        button {
+          white-space: nowrap;
+          @include flex(row, "", center, 5px);
+          @media (max-width: 767px) {
+            flex-grow: 1;
+          }
+          svg {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
