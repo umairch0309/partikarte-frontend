@@ -16,6 +16,10 @@ const TicketCard = ({ ticket, eventId }) => {
       : 0
   );
 
+  const now = new Date();
+  const validFrom = new Date(ticket?.validFrom);
+  const validTo = new Date(ticket?.validTo);
+
   useEffect(() => {
     if (state.eventId === eventId) {
       dispatch({
@@ -25,36 +29,58 @@ const TicketCard = ({ ticket, eventId }) => {
           noOfTickets: ticketCount,
           price: ticket?.price,
           ticketName: ticket?.ticketName,
-          show: true,
+          show:
+            parseInt(ticket?.maxCapacity) >=
+              parseInt(ticket?.remainingCapacity) &&
+            now >= validFrom &&
+            now <= validTo,
         },
       });
     }
   }, [state.eventId]);
 
-  const onAddToWishlist = () => {
+  const onAddToWishlist = (count) => {
     if (state.eventId === eventId) {
       dispatch({
         type: "ADD_TICKET",
         ticket: {
           ticketId: ticket?._id,
-          noOfTickets: ticketCount,
+          noOfTickets: count,
           price: ticket?.price,
           ticketName: ticket?.ticketName,
           show: true,
         },
       });
+
+      console.log(
+        state.tickets?.find((t) => t.ticketId === ticket._id)?.noOfTickets,
+        count
+      );
+
       if (
         state.tickets?.find((t) => t.ticketId === ticket._id)?.noOfTickets !==
-        ticketCount
+        count
       ) {
         if (
           state.tickets?.find((t) => t.ticketId === ticket._id)?.noOfTickets <
-          ticketCount
+          count
         ) {
           message.success("Ticket added to wishlist.");
+        } else if (
+          state.tickets?.find((t) => t.ticketId === ticket._id)?.noOfTickets ==
+            10 &&
+          count == 10
+        ) {
+          message.info("You can't buy more tickets of same type.");
         } else {
           message.info("Selected ticket count adjusted in wishlist.");
         }
+      } else if (
+        state.tickets?.find((t) => t.ticketId === ticket._id)?.noOfTickets ==
+          10 &&
+        count == 10
+      ) {
+        message.info("You can't buy more tickets of same type.");
       } else {
         message.warning(
           "Please add more or remove tickets to change wishlist."
@@ -65,15 +91,11 @@ const TicketCard = ({ ticket, eventId }) => {
         type: "CHECK_EVENT",
         eventId,
       });
-      message.success("Ticket added to wishlist.");
+      if (count) {
+        message.success("Ticket added to wishlist.");
+      }
     }
   };
-
-  const now = new Date();
-  const validFrom = new Date(ticket?.validFrom);
-  const validTo = new Date(ticket?.validTo);
-
-  console.log(ticket);
 
   return (
     <div className="ticket-card-container">
@@ -93,11 +115,14 @@ const TicketCard = ({ ticket, eventId }) => {
               <h4 className="price">${ticket?.price}</h4>
               <div className="buttons-container">
                 <PrimaryButton
-                  onClick={() =>
+                  onClick={() => {
                     setTicketCount(
                       ticketCount - 1 >= 0 ? ticketCount - 1 : ticketCount
-                    )
-                  }
+                    );
+                    onAddToWishlist(
+                      ticketCount - 1 >= 0 ? ticketCount - 1 : ticketCount
+                    );
+                  }}
                   className="quantity-button"
                 >
                   -
@@ -109,6 +134,9 @@ const TicketCard = ({ ticket, eventId }) => {
                       !(parseInt(ticket?.remainingCapacity) - ticketCount <= 0)
                     ) {
                       setTicketCount(
+                        ticketCount + 1 <= 10 ? ticketCount + 1 : ticketCount
+                      );
+                      onAddToWishlist(
                         ticketCount + 1 <= 10 ? ticketCount + 1 : ticketCount
                       );
                     }
@@ -125,10 +153,10 @@ const TicketCard = ({ ticket, eventId }) => {
             {parseInt(ticket?.remainingCapacity) - ticketCount <= 0 && (
               <p className="red margin-top-10">Ticket limit reached.</p>
             )}
-            <div className="add-to-wishlist-button" onClick={onAddToWishlist}>
+            {/* <div className="add-to-wishlist-button" onClick={onAddToWishlist}>
               <img src="/icons/tools/wand.png" height={22} width={20} /> Add to
               wishlist
-            </div>
+            </div> */}
           </div>
         ) : (
           <p className="yellow">Currently, you can't buy this ticket.</p>

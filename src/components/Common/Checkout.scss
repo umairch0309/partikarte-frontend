@@ -65,12 +65,12 @@
     .postal-code {
       width: 70%;
     }
-    .name-input {
-      text-transform: uppercase;
-      &::placeholder {
-        text-transform: none;
-      }
-    }
+    // .name-input {
+    //   text-transform: uppercase;
+    //   &::placeholder {
+    //     text-transform: none;
+    //   }
+    // }
     .error-message {
       color: $errorColor;
       font-size: 12px;

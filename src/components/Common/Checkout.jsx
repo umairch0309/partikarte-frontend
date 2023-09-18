@@ -189,7 +189,7 @@ const Checkout = () => {
           }
         );
       } else if (activePaymentType === "bank") {
-        console.log(first);
+        console.log("bank");
         formData.append("country", paymentData?.country);
         formData.append("city", paymentData?.city);
         formData.append("postalCode", paymentData?.postalCode);
@@ -233,6 +233,8 @@ const Checkout = () => {
       navigate(-1);
     }
   };
+
+  console.log(countriesLoading, countries);
 
   return (
     <div className="checkout-component">

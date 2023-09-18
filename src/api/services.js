@@ -19,7 +19,6 @@ export function useCountriesList(onSuccess, onError) {
     {
       onSuccess,
       onError,
-      cacheTime: Infinity,
     }
   );
 

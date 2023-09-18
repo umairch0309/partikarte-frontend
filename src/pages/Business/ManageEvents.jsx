@@ -75,6 +75,7 @@ const ManageEvents = () => {
           setShowAddNewEventModal={setShowAddNewEventModal}
           showHeader={true}
           showInputs={true}
+          showActions={true}
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
           setShoweditEventModal={setShoweditEventModal}

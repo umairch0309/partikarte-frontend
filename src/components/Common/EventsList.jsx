@@ -14,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 const EventsList = ({
   showHeader,
   showInputs,
+  showActions,
   setShowAddNewEventModal,
   setSelectedEvent,
   selectedEvent,
@@ -201,15 +202,17 @@ const EventsList = ({
                   <ReactSVG src="/icons/tools/clock.svg" />
                   <span>{formatDate(event?.createdAt)}</span>
                 </div>
-                <Dropdown
-                  menu={{
-                    items: items,
-                  }}
-                  placement="bottom"
-                  trigger={["click"]}
-                >
-                  <ReactSVG src="/icons/tools/dots-action.svg" />
-                </Dropdown>
+                {showActions && (
+                  <Dropdown
+                    menu={{
+                      items: items,
+                    }}
+                    placement="bottom"
+                    trigger={["click"]}
+                  >
+                    <ReactSVG src="/icons/tools/dots-action.svg" />
+                  </Dropdown>
+                )}
               </div>
               <h3>{event?.eventName}</h3>
               <p className="ticket-time-date">
