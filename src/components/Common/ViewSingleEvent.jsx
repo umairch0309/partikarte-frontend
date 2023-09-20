@@ -16,6 +16,7 @@ const ViewSingleEvent = () => {
   const { isLoading } = useSingleEventForCustomer(eventId, (res) => {
     setData(res?.event);
     console.log(res?.event);
+    console.log(new Date(res?.event?.eventStart));
   });
 
   const handleGetDirections = () => {
@@ -113,7 +114,11 @@ const ViewSingleEvent = () => {
             </div>
             <div className="location-container">
               <ReactSVG src="/icons/tools/unfilled-location.svg" />
-              <h4>{data?.eventAddress?.addressDescription}</h4>
+              <h4>
+                {data?.eventType == "Venue"
+                  ? data?.eventAddress?.addressDescription
+                  : "Online"}
+              </h4>
             </div>
             <div className="organizer-container">
               <ReactSVG src="/icons/tools/user.svg" />

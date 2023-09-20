@@ -1,11 +1,11 @@
 const DateTimeLocalConverter = (string) => {
   const date = new Date(string);
-  const formattedDateTime = `${date.getFullYear()}-${(date.getMonth() + 1)
+  const formattedDateTime = `${date.getUTCFullYear()}-${(date.getUTCMonth() + 1)
     .toString()
-    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}T${date
-    .getHours()
+    .padStart(2, "0")}-${date.getUTCDate().toString().padStart(2, "0")}T${date
+    .getUTCHours()
     .toString()
-    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+    .padStart(2, "0")}:${date.getUTCMinutes().toString().padStart(2, "0")}`;
   return formattedDateTime;
 };
 
