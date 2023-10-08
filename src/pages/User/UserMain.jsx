@@ -13,6 +13,7 @@ import JoinBusiness from "./JoinBusiness";
 import { BookingProvider } from "../../context/booking-context";
 import PaymentSuccessPage from "../common/PaymentSuccessPage";
 import PaymentErrorPage from "../common/PaymentErrorPage";
+import AllBusinessesPage from "./AllBusinessesPage";
 
 const UserMain = () => {
   return (
@@ -34,6 +35,8 @@ const UserMain = () => {
           <Route path="/policies" element={<PoliciesPage />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/join-business" element={<JoinBusiness />} />
+          <Route path="/all-businesses" element={<AllBusinessesPage />} />
+
           <Route
             path="/business-profile/:businessId"
             element={<BusinessProfile />}

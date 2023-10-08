@@ -104,15 +104,19 @@ const FeaturedEvents = ({ titleStart, titleEnd, status }) => {
         </div>
       </div>
       <div className="featured-events-main">
-        <Slider {...settings} ref={sliderRef}>
-          {allEvents?.map((event, index) => {
-            return (
-              <div key={index} className="single-slider-item">
-                <EventCard className="event-in-slider-item" event={event} />
-              </div>
-            );
-          })}
-        </Slider>
+        {allEvents?.length > 0 ? (
+          <Slider {...settings} ref={sliderRef}>
+            {allEvents?.map((event, index) => {
+              return (
+                <div key={index} className="single-slider-item">
+                  <EventCard className="event-in-slider-item" event={event} />
+                </div>
+              );
+            })}
+          </Slider>
+        ) : (
+          <p className="yellow no-events-found">No featured events found.</p>
+        )}
       </div>
     </div>
   ) : (

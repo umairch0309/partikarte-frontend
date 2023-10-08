@@ -12,11 +12,23 @@ const Header = () => {
   const { user, setUser } = useAuthContext();
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
 
-  const { isLoading } = useProfileDetails((res) => {
-    if (res?.data) {
-      setUser(res?.data);
+  const { isLoading } = useProfileDetails(
+    (res) => {
+      if (res?.data) {
+        setUser(res?.data);
+      }
+    },
+    (res) => {
+      if (isLoggedIn) {
+        if (res.response.status == 401) {
+          console.log(res.response.status, "logged out");
+          setIsLoggedIn(false);
+          setUser(null);
+          localStorage.removeItem("token");
+        }
+      }
     }
-  });
+  );
 
   const handleLogout = () => {
     localStorage.removeItem("token");

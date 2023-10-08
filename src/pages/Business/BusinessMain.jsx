@@ -20,6 +20,7 @@ import { useAuthContext } from "../../context/auth-context";
 import ViewEventBusiness from "./ViewEventBusiness";
 import Customers from "./Customers";
 import Invoices from "./Invoices";
+import Finance from "./Finance";
 
 const BusinessMain = () => {
   const { isLoggedIn, forgotEmail } = useAuthContext();
@@ -53,6 +54,7 @@ const BusinessMain = () => {
         <Route path="/view-event/:eventId" element={<ViewEventBusiness />} />
         <Route path="/manage-tickets" element={<ManageTickets />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/finance" element={<Finance />} />
         <Route path="/customers" element={<Customers />} />
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/ticket-scanning" element={<TicketsScanning />} />

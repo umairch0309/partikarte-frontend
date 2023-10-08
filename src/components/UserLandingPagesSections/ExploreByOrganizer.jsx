@@ -3,7 +3,7 @@ import "./ExploreByOrganizer.scss";
 import { ReactSVG } from "react-svg";
 import Slider from "react-slick";
 import PrimaryButton from "../UI/PrimaryButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAllBusinessesForCustomer } from "../../api/business";
 
 const settings = {
@@ -74,6 +74,7 @@ const settings = {
 
 const ExploreByOrganizer = () => {
   const sliderRef = useRef();
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
 
   useAllBusinessesForCustomer((res) => {
@@ -90,7 +91,10 @@ const ExploreByOrganizer = () => {
           <p>Lorem Ipsum is simply dummy text of the printing .</p>
         </div>
         <div className="header-right">
-          <PrimaryButton className="explore-all-organizers">
+          <PrimaryButton
+            onClick={() => navigate("/all-businesses")}
+            className="explore-all-organizers"
+          >
             Explore all organizers
           </PrimaryButton>
           <ReactSVG

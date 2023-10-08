@@ -12,7 +12,7 @@ import { useAuthContext } from "./context/auth-context";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
-  const { setIsLoggedIn } = useAuthContext();
+  const { setIsLoggedIn, isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
 
   const queryClient = new QueryClient({
@@ -20,7 +20,7 @@ function App() {
       queries: {
         onError: (res) => {
           console.log("hello 401");
-          if (res?.response?.status === 401) {
+          if (res?.response?.status === 401 && isLoggedIn) {
             setIsLoggedIn(false);
             localStorage.removeItem("token");
             navigate("/business/login");
@@ -32,7 +32,7 @@ function App() {
       },
       mutations: {
         onError: (res) => {
-          if (res?.response?.status === 401) {
+          if (res?.response?.status === 401 && isLoggedIn) {
             console.log("hello 401");
             setIsLoggedIn(false);
             localStorage.removeItem("token");

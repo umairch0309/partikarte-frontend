@@ -11,13 +11,25 @@ const Topbar = ({ title, subtitle }) => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { iisLoggedIn, setIsLoggedIn, user, setUser } = useAuthContext();
+  const { isLoggedIn, setIsLoggedIn, user, setUser } = useAuthContext();
 
-  const { isLoading } = useProfileDetails((res) => {
-    if (res?.data) {
-      setUser(res?.data);
+  const { isLoading } = useProfileDetails(
+    (res) => {
+      if (res?.data) {
+        setUser(res?.data);
+      }
+    },
+    (res) => {
+      if (isLoggedIn) {
+        if (res.response.status == 401) {
+          console.log(res.response.status, "logged out");
+          setIsLoggedIn(false);
+          setUser(null);
+          localStorage.removeItem("token");
+        }
+      }
     }
-  });
+  );
 
   const handleLogout = () => {
     localStorage.removeItem("token");

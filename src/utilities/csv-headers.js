@@ -14,3 +14,26 @@ export const customers = [
   { label: "No. of tickets", key: "noOfTickets" },
   { label: "Purchase Id", key: "purchaseId" },
 ];
+
+export const transactionsHeaders = [
+  {
+    label: "TxnId",
+    key: "txnId",
+  },
+  {
+    label: "Amount",
+    key: "amount",
+  },
+  {
+    label: "Account No.",
+    key: "accountNo",
+  },
+  {
+    label: "Transferred To",
+    key: "accountName",
+  },
+  {
+    label: "Transfer date",
+    key: "createdAt",
+  },
+];
