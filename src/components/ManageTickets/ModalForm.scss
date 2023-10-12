@@ -16,6 +16,12 @@
       width: 100%;
     }
   }
+  .add-a-question-button {
+    color: $primaryColor;
+    cursor: pointer;
+    width: fit-content;
+    padding-block: 10px;
+  }
   .side-by-side-multiple-header-input {
     width: 100%;
     @include flex(row, space-between, center, 30px);

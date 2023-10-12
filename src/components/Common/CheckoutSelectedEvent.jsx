@@ -40,16 +40,17 @@ const CheckoutSelectedEvent = ({ ticket }) => {
           <h4>{ticket.ticketName}</h4>
           <div className="quantity-select">
             <p>Qty</p>{" "}
-            <select
+            <input
               value={ticket?.noOfTickets}
-              onChange={updateTicketInContext}
-            >
-              {Array.from({ length: 11 }, (_, i) => (
+              // onChange={updateTicketInContext}
+              disabled={true}
+            />
+            {/* {Array.from({ length: 11 }, (_, i) => (
                 <option key={i} value={i}>
                   {i}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
         </div>
       </div>

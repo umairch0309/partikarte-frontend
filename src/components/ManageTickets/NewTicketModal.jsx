@@ -23,6 +23,7 @@ const initialState = {
   endingDate: "",
   paidTicket: true,
   limitedTickets: true,
+  questions: [],
 };
 
 const NewTicketModal = ({
@@ -58,6 +59,7 @@ const NewTicketModal = ({
         endingDate: DateTimeLocalConverter(selectedTicket?.validTo),
         paidTicket: selectedTicket?.paymentType === "paid",
         limitedTickets: selectedTicket?.capacityLimitation === "limited",
+        questions: selectedTicket?.questions || [],
       }));
     }
   }, [selectedEvent, ticketEditStatus]);
@@ -69,6 +71,34 @@ const NewTicketModal = ({
 
   const handleOnBlur = async (e) => {
     useHandleOnBlur(e, validateNewTicket, setFormErrors);
+  };
+
+  const addQuestionHandler = () => {
+    setFormValues((prev) => ({
+      ...formValues,
+      questions: [
+        ...prev.questions,
+        {
+          label: "",
+        },
+      ],
+    }));
+  };
+
+  const handleQuestionLabelChange = (value, index) => {
+    setFormValues((prev) => ({
+      ...formValues,
+      questions: prev.questions.map((question, i) => {
+        if (i === index) {
+          return {
+            ...question,
+            label: value,
+          };
+        } else {
+          return question;
+        }
+      }),
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -92,18 +122,20 @@ const NewTicketModal = ({
       return;
     }
 
-    const formData = new FormData();
-    formData.append("ticketName", formValues.ticketName);
-    formData.append("validFrom", formValues.startingDate);
-    formData.append("validTo", formValues.endingDate);
-    formData.append("maxCapacity", formValues.numberOfTickets);
-    formData.append("capacityLimitation", formValues.limitedTickets);
-    formData.append("paidTicket", formValues.paidTicket);
-    formData.append("price", formValues.ticketPrice);
-    formData.append("vatPercentage", formValues.vatPercentage);
-    formData.append("ticketType", formValues.ticketType);
-    formData.append("descriptionWeb", formValues.descriptionOnWeb);
-    formData.append("descriptionTicket", formValues.descriptionOnTicket);
+    const formData = {
+      ticketName: formValues.ticketName,
+      validFrom: formValues.startingDate,
+      validTo: formValues.endingDate,
+      maxCapacity: formValues.numberOfTickets,
+      capacityLimitation: formValues.limitedTickets,
+      paidTicket: formValues.paidTicket,
+      price: formValues.ticketPrice,
+      vatPercentage: formValues.vatPercentage,
+      ticketType: formValues.ticketType,
+      descriptionWeb: formValues.descriptionOnWeb,
+      descriptionTicket: formValues.descriptionOnTicket,
+      questions: formValues.questions,
+    };
 
     setFormErrors({});
 
@@ -140,6 +172,8 @@ const NewTicketModal = ({
       );
     }
   };
+
+  console.log(formValues);
 
   return (
     <CustomModal
@@ -413,6 +447,30 @@ const NewTicketModal = ({
           )}
         </div>
 
+        {formValues.questions?.length > 0 &&
+          formValues.questions.map((question, index) => {
+            return (
+              <div className={`single-form-item`}>
+                <label htmlFor={`question[${index}].label`}>{`Question - ${
+                  index + 1
+                }`}</label>
+                <input
+                  name={`question[${index}].label`}
+                  type="text"
+                  id={`question[${index}].label`}
+                  placeholder="Write question"
+                  onChange={(e) =>
+                    handleQuestionLabelChange(e.target.value, index)
+                  }
+                  value={question.label}
+                />
+              </div>
+            );
+          })}
+
+        <h4 className="add-a-question-button" onClick={addQuestionHandler}>
+          + Add a Question
+        </h4>
         <PrimaryButton
           disabled={isEventCreating || isEventUpdating}
           className={"form-submit-button"}
