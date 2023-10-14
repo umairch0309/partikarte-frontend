@@ -44,6 +44,7 @@ const Dashboard = () => {
 
   const { isLoading: isAllEventsLoading } = useAllEvents((res) => {
     setAllEventsData(res?.events);
+    setSelectedEvent(res?.events[0]?._id);
   });
 
   const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(

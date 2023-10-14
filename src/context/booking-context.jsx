@@ -6,6 +6,7 @@ const initialState = {
   tickets: [],
   recommendations: false,
   eventId: null,
+  discountCode: "",
 };
 
 const BookingContext = createContext();

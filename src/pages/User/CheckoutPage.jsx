@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import "./CheckoutPage.scss";
 import HeaderPlaceHolder from "../../components/Layouts/UserLayout/HeaderPlaceHolder";
@@ -17,6 +17,12 @@ const CheckoutPage = () => {
     setData(res?.event);
     console.log(res?.event);
   });
+
+  useEffect(() => {
+    if (!(state.totalTickets > 0)) {
+      navigate("/");
+    }
+  }, [state]);
 
   return state?.eventId ? (
     <div className="checkout-payment-page">

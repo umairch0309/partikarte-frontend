@@ -118,6 +118,13 @@
         }
       }
     }
+    .discount-code-button {
+      cursor: pointer;
+      color: $primaryColor;
+      &:hover {
+        color: $textColor;
+      }
+    }
     .submit-payment-form {
       width: 100%;
     }

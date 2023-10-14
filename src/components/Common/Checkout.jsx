@@ -45,6 +45,7 @@ const Checkout = () => {
   const [paymentData, setPaymentData] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
   const [countries, setCountries] = useState([]);
+  const [showDiscountInput, setShowDiscountInput] = useState(false);
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
@@ -102,6 +103,15 @@ const Checkout = () => {
     setPaymentData({ ...paymentData, recaptcha: value });
   };
 
+  const discountCodeChangeHandler = (event) => {
+    const { name, value } = event.target;
+    dispatch({
+      type: "UPDATE_FIELD",
+      field: "discountCode",
+      value,
+    });
+  };
+
   const submitFormHandler = async (e) => {
     e.preventDefault();
     const errors = await validateCheckoutForm(paymentData, activePaymentType);
@@ -135,6 +145,7 @@ const Checkout = () => {
           function (token, cardData) {
             console.log(cardData, " card data");
             formData.append("paymentRequestToken", token);
+            formData.append("discountCode", state?.discountCode);
             formData.append("country", paymentData?.country);
             formData.append("city", paymentData?.city);
             formData.append("postalCode", paymentData?.postalCode);
@@ -194,6 +205,7 @@ const Checkout = () => {
         formData.append("city", paymentData?.city);
         formData.append("postalCode", paymentData?.postalCode);
         formData.append("addressDescription", paymentData?.address);
+        formData.append("discountCode", state?.discountCode);
 
         handleMutation(
           {
@@ -420,6 +432,32 @@ const Checkout = () => {
             sitekey="6LeuCyonAAAAAB7ZwNOWN1BMtrCfGfBcLGgU8C0z"
             onChange={handleRecaptchaChange}
           />
+        )}
+
+        {(activePaymentType === "card" || activePaymentType === "bank") && (
+          <>
+            <h4
+              className="discount-code-button"
+              onClick={() => setShowDiscountInput(true)}
+            >
+              Add Discount Coupon Code
+            </h4>
+
+            {showDiscountInput && (
+              <div className={`form-item `}>
+                <label>Discount Code</label>
+                <input
+                  type="text"
+                  name="discountCode"
+                  id="discountCode"
+                  placeholder="Discount Code"
+                  minLength={8}
+                  maxLength={12}
+                  onChange={discountCodeChangeHandler}
+                />
+              </div>
+            )}
+          </>
         )}
 
         <div className="checkboxes-container">

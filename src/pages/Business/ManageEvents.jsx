@@ -14,6 +14,15 @@ import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import { useNavigate } from "react-router-dom";
 import { useOrdersByTimeInterval } from "../../api/orders";
 import EditEvent from "../../components/ManageEvents/EditEvent";
+import PrimaryButton from "../../components/UI/PrimaryButton";
+import { message } from "antd";
+import { usePostApi } from "../../hooks/api-hooks/usePostApi";
+import { usePutApi } from "../../hooks/api-hooks/usePutApi";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCouponByEventId } from "../../api/coupons";
+import TertiaryButton from "../../components/UI/TertiaryButton";
+
+const couponInitialState = { discount: 0 };
 
 const ManageEvents = () => {
   const navigate = useNavigate();
@@ -24,6 +33,9 @@ const ManageEvents = () => {
   const [selectedInterval, setSelectedInterval] = useState("weekly");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedTable, setSelectedTable] = useState(0);
+  const [eventCoupon, setEventCoupon] = useState(null);
+  const [couponForm, setCouponForm] = useState(couponInitialState);
+
   const isMobile = useIsMobileWidth();
 
   const [ordersDataForChart, setOrdersDataForChart] = useState([]);
@@ -33,10 +45,34 @@ const ManageEvents = () => {
       selectedEvent?._id ? `?eventId=${selectedEvent?._id}` : ""
     }`,
     (res) => {
-      console.log(res);
+      // console.log(res);
       setOrdersDataForChart(res?.orders);
     }
   );
+
+  const { isLoading: isCouponLoading } = useCouponByEventId(
+    selectedEvent?._id,
+    (res) => {
+      setEventCoupon(res?.coupon);
+      setCouponForm({ discount: res?.coupon?.discount });
+    },
+    (res) => {
+      setCouponForm(couponInitialState);
+      setEventCoupon(null);
+    }
+  );
+
+  const { handleMutation, isLoading: isCreating } = usePostApi();
+  const { handleMutation: handleUpdate, isLoading: isUpdating } = usePutApi();
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (selectedEvent?._id !== eventCoupon?.eventId) {
+      setCouponForm(couponInitialState);
+      setEventCoupon(null);
+    }
+  }, [selectedEvent?._id]);
 
   useEffect(() => {
     const array = [];
@@ -63,6 +99,95 @@ const ManageEvents = () => {
     }
     setAnalytics(array);
   }, []);
+
+  const copyToClipboard = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Copied to clipboard.");
+      })
+      .catch((error) => {
+        message.error("Couldn't copy to clipboard.");
+      });
+  };
+
+  const handleOnChange = (event) => {
+    const { name, value } = event.target;
+    setCouponForm((prev) => ({
+      ...prev,
+      [name]: parseFloat(value),
+    }));
+  };
+
+  const handleSubmitCouponForm = () => {
+    if (
+      !couponForm ||
+      couponForm.discount === 0 ||
+      couponForm.discount > 100 ||
+      couponForm.discount < 0
+    ) {
+      message.error("Invalid discount value.");
+      return;
+    }
+
+    if (eventCoupon) {
+      handleUpdate(
+        {
+          path: `coupon/update/${selectedEvent?._id}/${eventCoupon?._id}`,
+          data: couponForm,
+        },
+        (res) => {
+          setEventCoupon(res?.data?.coupon);
+          queryClient.invalidateQueries(["get-coupon", selectedEvent?._id]);
+          setCouponForm({ discount: res?.data?.coupon?.discount });
+        },
+        (res) => {}
+      );
+    } else {
+      handleMutation(
+        {
+          path: `coupon/create/${selectedEvent?._id}`,
+          data: couponForm,
+        },
+        (res) => {
+          setEventCoupon(res?.coupon);
+          queryClient.invalidateQueries(["get-coupon", selectedEvent?._id]);
+          setCouponForm({ discount: res?.coupon?.discount });
+        },
+        (res) => {}
+      );
+    }
+  };
+
+  const expireCoupon = () => {
+    handleUpdate(
+      {
+        path: `coupon/expire/${selectedEvent?._id}/${eventCoupon?._id}`,
+        data: couponForm,
+      },
+      (res) => {
+        setEventCoupon(res?.data?.coupon);
+        queryClient.invalidateQueries(["get-coupon", selectedEvent?._id]);
+        setCouponForm({ discount: res?.data?.coupon?.discount });
+      },
+      (res) => {}
+    );
+  };
+
+  const activateCoupon = () => {
+    handleUpdate(
+      {
+        path: `coupon/activate/${selectedEvent?._id}/${eventCoupon?._id}`,
+        data: couponForm,
+      },
+      (res) => {
+        setEventCoupon(res?.data?.coupon);
+        queryClient.invalidateQueries(["get-coupon", selectedEvent?._id]);
+        setCouponForm({ discount: res?.data?.coupon?.discount });
+      },
+      (res) => {}
+    );
+  };
 
   return (
     <>
@@ -139,7 +264,7 @@ const ManageEvents = () => {
             height={290}
           />
         </div>
-        {isMobile && (
+        {/* {isMobile && (
           <div className="tables-selection-buttons-container">
             <button
               className={selectedTable === 1 ? "selected-button" : ""}
@@ -154,8 +279,8 @@ const ManageEvents = () => {
               Analytics
             </button>
           </div>
-        )}
-        <div className="all-tables-main-container">
+        )} */}
+        {/* <div className="all-tables-main-container">
           {!isMobile && (
             <div className="table-container">
               <div className="table-container-header">
@@ -188,6 +313,47 @@ const ManageEvents = () => {
               <EventAnalyticsTable analyticsData={analytics} />
             </div>
           )}
+        </div> */}
+
+        <div className="coupon-code-container">
+          <div className="container-header">
+            <h3>Discount Coupon</h3>
+          </div>
+          <div className="coup-code-main">
+            <div className="form-item">
+              <label>Discount (%)</label>
+              <input
+                type="number"
+                name="discount"
+                onChange={handleOnChange}
+                value={couponForm.discount}
+              />
+            </div>
+            {eventCoupon && (
+              <div className="form-item copy-code">
+                <label>Generated Code</label>
+                <input type="text" disabled value={eventCoupon?.code} />
+                <ReactSVG
+                  className="copy-icon"
+                  src="/icons/tools/copy.svg"
+                  onClick={() => copyToClipboard(eventCoupon?.code)}
+                />
+              </div>
+            )}
+            <PrimaryButton onClick={handleSubmitCouponForm}>
+              {!eventCoupon ? "Generate" : "Update"} Coupon Code
+            </PrimaryButton>
+            {eventCoupon && !eventCoupon?.isExpired && (
+              <TertiaryButton onClick={expireCoupon}>
+                Expire Coupon
+              </TertiaryButton>
+            )}
+            {eventCoupon && eventCoupon?.isExpired && (
+              <TertiaryButton onClick={activateCoupon}>
+                Activate Coupon
+              </TertiaryButton>
+            )}
+          </div>
         </div>
       </div>
       <AddNewEventModal

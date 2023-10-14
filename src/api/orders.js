@@ -34,7 +34,7 @@ export function useOrdersByTimeInterval(
 
 export function useOrdersByEventId(selectedEvent, onSuccess, onError) {
   const { response, isLoading } = useFetch(
-    ["ge-orders-by-eventId", selectedEvent],
+    ["get-orders-by-eventId", selectedEvent],
     `orders/${selectedEvent}`,
     {
       cacheTime: 1,
