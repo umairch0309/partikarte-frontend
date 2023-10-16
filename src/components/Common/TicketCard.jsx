@@ -6,10 +6,15 @@ import formatDate from "../../utilities/formatDate";
 import { message } from "antd";
 import CustomModal from "../UI/CustomModal";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
+import { useLocation } from "react-router-dom";
 
 const TicketCard = ({ ticket, eventId }) => {
   const { state, dispatch } = useBookingContext();
   const isMobile = useIsMobileWidth();
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const couponCode = queryParams.get("couponCode");
 
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [questions, setQuestions] = useState(ticket?.questions || []);
@@ -108,6 +113,7 @@ const TicketCard = ({ ticket, eventId }) => {
       dispatch({
         type: "CHECK_EVENT",
         eventId,
+        discountCode: couponCode || "",
       });
 
       if (count) {

@@ -9,6 +9,7 @@ import validateAddNewMember from "../../validation/AddNewMember";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import { useCountriesList } from "../../api/services";
+import { useAllRoles } from "../../api/roles";
 
 const initialState = {
   name: "",
@@ -22,6 +23,7 @@ const initialState = {
   city: "",
   postalCode: "",
   dateOfBirth: "",
+  permissions: "",
 };
 
 const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
@@ -31,6 +33,7 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
   const [frontSideImage, setFrontSideImage] = useState(null);
   const [backSideImage, setBackSideImage] = useState(null);
   const [countries, setCountries] = useState([]);
+  const [roles, setRoles] = useState([]);
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
@@ -40,6 +43,12 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
       console.log(res, "countries list error");
     }
   );
+
+  const { isLoading: isRolesLoading } = useAllRoles((res) => {
+    if (res?.roles) {
+      setRoles(res?.roles);
+    }
+  });
 
   const { handleMutation, isLoading: isEventCreating } = usePostApi();
   const queryClient = useQueryClient();
@@ -87,6 +96,7 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
     formData.append("surname", formValues.surname);
     formData.append("email", formValues.email);
     formData.append("role", formValues.memberType);
+    formData.append("permissions", formValues.permissions);
     formData.append("dob", formValues.dateOfBirth);
     formData.append("guestType", formValues.guestType);
     formData.append("addressDescription", formValues.address);
@@ -254,6 +264,29 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
           />
           {formErrors.address && (
             <p className="error-message">{formErrors.address}</p>
+          )}
+        </div>
+
+        <div
+          className={`single-form-item ${
+            formErrors.permissions ? "error" : ""
+          }`}
+        >
+          <label htmlFor="permissions">Choose permissions role</label>
+          <select
+            onChange={handleInputChange}
+            name="permissions"
+            id="permissions"
+            value={formValues.permissions}
+            onBlur={handleOnBlur}
+          >
+            <option value="">Choose permissions</option>
+            {!isRolesLoading &&
+              roles?.length > 0 &&
+              roles?.map((el) => <option value={el?._id}>{el?.name}</option>)}
+          </select>
+          {formErrors.permissions && (
+            <p className="select-error-message">{formErrors.permissions}</p>
           )}
         </div>
 

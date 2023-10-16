@@ -10,20 +10,12 @@ import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePutApi } from "../../hooks/api-hooks/usePutApi";
 import { ReactSVG } from "react-svg";
-import { fullAccessPermissions } from "../../utilities/Permissions";
-
-const rolePermissions = {
-  fullAccess: fullAccessPermissions,
-  eventManager: [],
-  accountant: [],
-  marketer: [],
-};
+import { Permssions } from "../../utilities/Permissions";
 
 const initialState = {
   name: "",
-  role: "fullAccess",
   description: "",
-  permissions: rolePermissions["fullAccess"],
+  permissions: Permssions,
 };
 
 const NewRoleModal = ({
@@ -32,6 +24,7 @@ const NewRoleModal = ({
   setRoleEditStatus,
   selectedRole,
   roleEditStatus,
+  roleViewStatus,
 }) => {
   const isMobile = useIsMobileWidth();
   const [formValues, setFormValues] = useState(initialState);
@@ -42,24 +35,15 @@ const NewRoleModal = ({
     usePutApi();
 
   useEffect(() => {
-    if (selectedRole && roleEditStatus) {
+    if (selectedRole && (roleEditStatus || roleViewStatus)) {
       setFormValues((prevState) => ({
         ...prevState,
-        role: selectedRole?.role,
         name: selectedRole?.name,
         description: selectedRole?.description,
         permissions: selectedRole?.permissions || [],
       }));
     }
-  }, [roleEditStatus]);
-
-  useEffect(() => {
-    console.log(setFormValues.role);
-    setFormValues((prevState) => ({
-      ...prevState,
-      permissions: rolePermissions[prevState.role] || [],
-    }));
-  }, [formValues.role]);
+  }, [roleEditStatus, roleViewStatus]);
 
   const handleInputChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -135,6 +119,8 @@ const NewRoleModal = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = await validateNewRole(formValues);
+    console.log(errors, "errors");
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
@@ -158,9 +144,10 @@ const NewRoleModal = ({
     setFormErrors({});
 
     if (selectedRole?._id && roleEditStatus) {
+      console.log("updating");
       handleUpdateRole(
         {
-          path: `/roles/update-role/${selectedRole?._id}`,
+          path: `roles/update-role/${selectedRole?._id}`,
           data: formData,
         },
         (res) => {
@@ -185,8 +172,6 @@ const NewRoleModal = ({
     }
   };
 
-  console.log(formValues);
-
   return (
     <CustomModal
       onCancel={() => {
@@ -200,8 +185,12 @@ const NewRoleModal = ({
         setShowNewRoleModal(false);
         setRoleEditStatus(false);
       }}
-      title={"Add Role and Permissions"}
-      subtitle={"Please enter the information to add role."}
+      title={roleViewStatus ? "View Role" : "Add Role and Permissions"}
+      subtitle={
+        roleViewStatus
+          ? "All the information added."
+          : "Please enter the information to add role."
+      }
       width={!isMobile && 700}
     >
       <form className="add-new-role-form-container" onSubmit={handleSubmit}>
@@ -212,7 +201,8 @@ const NewRoleModal = ({
             type="text"
             id="name"
             placeholder="Enter name"
-            onChange={handleInputChange}
+            onChange={roleViewStatus ? () => {} : handleInputChange}
+            disabled={roleViewStatus}
             value={formValues.name}
             onBlur={handleOnBlur}
           />
@@ -231,7 +221,8 @@ const NewRoleModal = ({
             type="text"
             id="description"
             placeholder="Enter description"
-            onChange={handleInputChange}
+            onChange={roleViewStatus ? () => {} : handleInputChange}
+            disabled={roleViewStatus}
             value={formValues.description}
             onBlur={handleOnBlur}
           />
@@ -240,29 +231,13 @@ const NewRoleModal = ({
           )}
         </div>
 
-        <div className={`single-form-item ${formErrors.role ? "error" : ""}`}>
-          <label htmlFor="role">Role Type*</label>
-          <select
-            onChange={handleInputChange}
-            name="role"
-            id="role"
-            value={formValues.role}
-            onBlur={handleOnBlur}
-          >
-            <option value="">Choose role type</option>
-            <option value="fullAccess">Full Access</option>
-            <option value="eventManager">Event Manager</option>
-            <option value="accountant">Accountant</option>
-            <option value="marketer">Marketer</option>
-          </select>
-          {formErrors.role && (
-            <p className="select-error-message">{formErrors.role}</p>
-          )}
-        </div>
-
         <div className="all-checkboxes-container">
           <p className="permission"> Permissions </p>
-          <p>Allow a permission by checking a box</p>
+          <p>
+            {roleViewStatus
+              ? "All module-wise permissions and sub-permissions"
+              : "Allow a permission by checking a box"}
+          </p>
           {formValues.permissions?.map((perm, index) => (
             <div className="single-roles-and-permission-form-item">
               <div key={index} className="single-checkbox-container">
@@ -273,14 +248,17 @@ const NewRoleModal = ({
                       size="small"
                       defaultChecked={perm.isGranted}
                       checked={perm.isGranted}
+                      disabled={roleViewStatus}
                       onChange={(v) =>
-                        handleInputChange({
-                          target: {
-                            checked: v,
-                            name: `${index}`,
-                            type: "checkbox",
-                          },
-                        })
+                        roleViewStatus
+                          ? () => {}
+                          : handleInputChange({
+                              target: {
+                                checked: v,
+                                name: `${index}`,
+                                type: "checkbox",
+                              },
+                            })
                       }
                     />
                     <ReactSVG
@@ -309,7 +287,10 @@ const NewRoleModal = ({
                           name={`${index}-${subIndex}`}
                           type="checkbox"
                           checked={subPerm.isGranted}
-                          onChange={handleInputChange}
+                          onChange={
+                            roleViewStatus ? () => {} : handleInputChange
+                          }
+                          disabled={roleViewStatus}
                         />
                         <span>{subPerm.name}</span>
                       </label>
@@ -321,12 +302,14 @@ const NewRoleModal = ({
           ))}
         </div>
 
-        <PrimaryButton
-          disabled={isRoleCreating || isRoleUpdating}
-          className={"form-submit-button"}
-        >
-          Confirm
-        </PrimaryButton>
+        {!roleViewStatus && (
+          <PrimaryButton
+            disabled={isRoleCreating || isRoleUpdating}
+            className={"form-submit-button"}
+          >
+            Confirm
+          </PrimaryButton>
+        )}
       </form>
     </CustomModal>
   );

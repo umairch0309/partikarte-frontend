@@ -1,8 +1,17 @@
 import { Dropdown, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
+import formatDate from "../../utilities/formatDate";
 
-const RolesTable = ({ rolesData, loading, setSelectedRole }) => {
+const RolesTable = ({
+  rolesData,
+  loading,
+  setSelectedRole,
+  setRoleEditStatus,
+  setShowNewRoleModal,
+  setRoleViewStatus,
+  onDeleteRole,
+}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -12,7 +21,13 @@ const RolesTable = ({ rolesData, loading, setSelectedRole }) => {
   const items = [
     {
       label: (
-        <div onClick={() => {}} className="button-in-dropdown">
+        <div
+          onClick={() => {
+            setRoleViewStatus(true);
+            setShowNewRoleModal(true);
+          }}
+          className="button-in-dropdown"
+        >
           <ReactSVG src="/icons/tools/eye.svg" />
           <span>View</span>
         </div>
@@ -22,7 +37,13 @@ const RolesTable = ({ rolesData, loading, setSelectedRole }) => {
     },
     {
       label: (
-        <div className="button-in-dropdown">
+        <div
+          className="button-in-dropdown"
+          onClick={() => {
+            setShowNewRoleModal(true);
+            setRoleEditStatus(true);
+          }}
+        >
           <ReactSVG className="button-svg" src="/icons/tools/edit.svg" />
           <span>Edit</span>
         </div>
@@ -32,7 +53,12 @@ const RolesTable = ({ rolesData, loading, setSelectedRole }) => {
     },
     {
       label: (
-        <div onClick={() => {}} className="button-in-dropdown">
+        <div
+          onClick={() => {
+            onDeleteRole();
+          }}
+          className="button-in-dropdown"
+        >
           <ReactSVG className="button-svg" src="/icons/tools/delete.svg" />
           <span>Delete</span>
         </div>
@@ -49,14 +75,16 @@ const RolesTable = ({ rolesData, loading, setSelectedRole }) => {
       key: "name",
     },
     {
-      title: "Role",
-      dataIndex: "role",
-      key: "role",
-    },
-    {
       title: "Description",
       dataIndex: "description",
       key: "description",
+      width: 490,
+    },
+    {
+      title: "Created on",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (text) => formatDate(text),
     },
     {
       title: "Actions",
@@ -71,12 +99,12 @@ const RolesTable = ({ rolesData, loading, setSelectedRole }) => {
                 items,
               }}
               trigger={["click"]}
-              placement="bottomLeft"
+              placement="left"
               className="dropdown-table-actions"
             >
               <button
                 onClick={() => {
-                  setSelectedRole(record?._id);
+                  setSelectedRole(record);
                 }}
                 className="dots-action-button"
               >

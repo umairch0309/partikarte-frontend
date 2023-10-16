@@ -13,6 +13,7 @@ const validationSchema = Yup.object().shape({
   frontSideImage: Yup.string().required("Required"),
   backSideImage: Yup.string().required("Required"),
   dateOfBirth: Yup.string().required("Required"),
+  permissions: Yup.string().required("Required"),
 });
 
 const validateAddNewMember = async (formValues) => {

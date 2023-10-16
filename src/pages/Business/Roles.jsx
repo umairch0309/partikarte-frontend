@@ -6,19 +6,37 @@ import { useAllRoles } from "../../api/roles";
 import RolesTable from "../../components/Tables/RolesTable";
 import SecondaryButton from "../../components/UI/SecondaryButton";
 import NewRoleModal from "../../components/Roles/NewRole";
+import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Roles = () => {
   const [showNewRoleModal, setShowNewRoleModal] = useState(false);
   const [roleEditStatus, setRoleEditStatus] = useState(false);
+  const [roleViewStatus, setRoleViewStatus] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
-
   const [filteredData, setFilteredData] = useState([]);
+
+  const queryClient = useQueryClient();
+
+  const { handleMutation, isLoading: isRoleDeleting } = useDeleteApi();
 
   const { isLoading: isRolesLoading } = useAllRoles((res) => {
     if (res?.roles) {
       setFilteredData(res?.roles);
     }
   });
+
+  const onDeleteRole = () => {
+    handleMutation(
+      {
+        path: `roles/delete-role/${selectedRole?._id}`,
+      },
+      (res) => {
+        queryClient.invalidateQueries(["get-all-roles"]);
+      },
+      (res) => {}
+    );
+  };
 
   return (
     <>
@@ -33,7 +51,15 @@ const Roles = () => {
               </SecondaryButton>
             </div>
           </div>
-          <RolesTable loading={isRolesLoading} rolesData={filteredData} />
+          <RolesTable
+            loading={isRolesLoading}
+            rolesData={filteredData}
+            setRoleEditStatus={setRoleEditStatus}
+            setSelectedRole={setSelectedRole}
+            setShowNewRoleModal={setShowNewRoleModal}
+            setRoleViewStatus={setRoleViewStatus}
+            onDeleteRole={onDeleteRole}
+          />
         </div>
       </div>
       <NewRoleModal
@@ -42,6 +68,7 @@ const Roles = () => {
         setShowNewRoleModal={setShowNewRoleModal}
         roleEditStatus={roleEditStatus}
         showNewRoleModal={showNewRoleModal}
+        roleViewStatus={roleViewStatus}
       />
     </>
   );

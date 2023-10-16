@@ -21,6 +21,7 @@ import { usePutApi } from "../../hooks/api-hooks/usePutApi";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCouponByEventId } from "../../api/coupons";
 import TertiaryButton from "../../components/UI/TertiaryButton";
+import { WEB_URL } from "../../constants";
 
 const couponInitialState = { discount: 0 };
 
@@ -336,7 +337,9 @@ const ManageEvents = () => {
                 <ReactSVG
                   className="copy-icon"
                   src="/icons/tools/copy.svg"
-                  onClick={() => copyToClipboard(eventCoupon?.code)}
+                  onClick={() =>
+                    copyToClipboard(`${WEB_URL}${eventCoupon?.code}`)
+                  }
                 />
               </div>
             )}

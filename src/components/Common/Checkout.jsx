@@ -436,14 +436,16 @@ const Checkout = () => {
 
         {(activePaymentType === "card" || activePaymentType === "bank") && (
           <>
-            <h4
-              className="discount-code-button"
-              onClick={() => setShowDiscountInput(true)}
-            >
-              Add Discount Coupon Code
-            </h4>
+            {!showDiscountInput && state?.discountCode?.trim() === "" && (
+              <h4
+                className="discount-code-button"
+                onClick={() => setShowDiscountInput(true)}
+              >
+                Add Discount Coupon Code
+              </h4>
+            )}
 
-            {showDiscountInput && (
+            {(showDiscountInput || state?.discountCode?.trim() !== "") && (
               <div className={`form-item `}>
                 <label>Discount Code</label>
                 <input
@@ -453,6 +455,7 @@ const Checkout = () => {
                   placeholder="Discount Code"
                   minLength={8}
                   maxLength={12}
+                  value={state.discountCode}
                   onChange={discountCodeChangeHandler}
                 />
               </div>

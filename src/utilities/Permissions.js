@@ -1,4 +1,4 @@
-export const fullAccessPermissions = [
+export const Permssions = [
   {
     name: "Dashboard",
     identifier: "dashboard",

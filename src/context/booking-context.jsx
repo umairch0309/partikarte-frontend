@@ -19,6 +19,7 @@ function bookingReducer(state, action) {
       return {
         ...(action.eventId !== state.eventId ? initialState : state),
         eventId: action.eventId,
+        discountCode: action.discountCode,
       };
     case "UPDATE_FIELD":
       return { ...state, [action.field]: action.value };
