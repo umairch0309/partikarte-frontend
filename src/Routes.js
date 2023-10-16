@@ -59,4 +59,9 @@ export const businessRoutes = [
     icon: "/icons/menu/organizer.svg",
     route: "/business/organizer-settings",
   },
+  {
+    title: "Roles & Permissions",
+    icon: "/icons/menu/roles.svg",
+    route: "/business/roles",
+  },
 ];

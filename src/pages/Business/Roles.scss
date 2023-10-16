@@ -1,0 +1,41 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.manage-roles-page-container {
+  .table-container {
+    margin-block: 30px;
+    background-color: white;
+    border-radius: $primaryBorderRadius;
+    width: 100%;
+    .table-container-header {
+      padding: 20px;
+      @include flex(row, space-between, center, 30px);
+      @media (max-width: 767px) {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: $secondaryColor;
+      }
+      .header-right {
+        @include flex(row, "", center, 20px);
+        @media (max-width: 767px) {
+          flex-wrap: wrap;
+        }
+      }
+      button {
+        white-space: nowrap;
+        @include flex(row, "", center, 5px);
+        @media (max-width: 767px) {
+          flex-grow: 1;
+        }
+        svg {
+          display: block;
+        }
+      }
+    }
+  }
+}

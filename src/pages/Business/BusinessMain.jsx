@@ -21,6 +21,7 @@ import ViewEventBusiness from "./ViewEventBusiness";
 import Customers from "./Customers";
 import Invoices from "./Invoices";
 import Finance from "./Finance";
+import Roles from "./Roles";
 
 const BusinessMain = () => {
   const { isLoggedIn, forgotEmail } = useAuthContext();
@@ -59,6 +60,7 @@ const BusinessMain = () => {
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/ticket-scanning" element={<TicketsScanning />} />
         <Route path="/user-management" element={<UserManagement />} />
+        <Route path="/roles" element={<Roles />} />
         <Route path="/organizer-settings/*" element={<OrganizerSettings />} />
 
         {/* Show 404 for any other unauthorized routes */}
