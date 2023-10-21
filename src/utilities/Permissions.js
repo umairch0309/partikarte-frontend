@@ -28,7 +28,7 @@ export const Permssions = [
   },
   {
     name: "Guest List",
-    identifier: "guestList",
+    identifier: "guestlists",
     isGranted: false,
     sub: [
       {
@@ -86,7 +86,7 @@ export const Permssions = [
   },
   {
     name: "Invoice",
-    identifier: "invoice",
+    identifier: "invoices",
     isGranted: false,
     sub: [
       {
@@ -118,7 +118,7 @@ export const Permssions = [
   },
   {
     name: "Events",
-    identifier: "events",
+    identifier: "manage-events",
     isGranted: false,
     sub: [
       { name: "Add new event", identifier: "addNewEvent", isGranted: false },
@@ -138,7 +138,7 @@ export const Permssions = [
   },
   {
     name: "Tickets",
-    identifier: "tickets",
+    identifier: "manage-tickets",
     isGranted: false,
     sub: [
       { name: "Create Ticket", identifier: "createTicket", isGranted: false },
@@ -156,7 +156,7 @@ export const Permssions = [
   },
   {
     name: "User management",
-    identifier: "userManagement",
+    identifier: "user-management",
     isGranted: false,
     sub: [
       { name: "Add member", identifier: "addMember", isGranted: false },
@@ -166,7 +166,7 @@ export const Permssions = [
   },
   {
     name: "Organizer Settings",
-    identifier: "organizerSettings",
+    identifier: "organizer-settings",
     isGranted: false,
     sub: [
       {
@@ -184,7 +184,7 @@ export const Permssions = [
   },
   {
     name: "Roles and Permission",
-    identifier: "rolesAndPermission",
+    identifier: "roles",
     isGranted: false,
     sub: [
       { name: "Add a Role", identifier: "addRole", isGranted: false },
@@ -193,22 +193,3 @@ export const Permssions = [
     ],
   },
 ];
-
-export const checkPermission = (permissions, identifier) => {
-  if (permissions && permissions?.length > 0) {
-    for (const permission of permissions) {
-      if (permission.identifier === identifier && permission.isGranted) {
-        return { status: true, permission };
-      }
-
-      if (permission.sub) {
-        const subPermission = checkPermission(permission.sub, identifier);
-        if (subPermission.status) {
-          return subPermission;
-        }
-      }
-    }
-  }
-
-  return { status: false };
-};

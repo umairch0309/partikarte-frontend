@@ -22,9 +22,11 @@ import Customers from "./Customers";
 import Invoices from "./Invoices";
 import Finance from "./Finance";
 import Roles from "./Roles";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const BusinessMain = () => {
   const { isLoggedIn, forgotEmail } = useAuthContext();
+  const { checkPermission } = usePermissionCheck();
 
   // If not logged in, show authentication-related routes
   if (!isLoggedIn) {
@@ -48,23 +50,60 @@ const BusinessMain = () => {
   return (
     <BusinessLayout>
       <Routes>
-        <Route path="/dashboard" index element={<Dashboard />} />
-        <Route path="/guestlists" element={<Guestlist />} />
-        <Route path="/settings/*" element={<Settings />} />
-        <Route path="/manage-events" element={<ManageEvents />} />
-        <Route path="/view-event/:eventId" element={<ViewEventBusiness />} />
-        <Route path="/manage-tickets" element={<ManageTickets />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/finance" element={<Finance />} />
-        <Route path="/customers" element={<Customers />} />
-        <Route path="/invoices" element={<Invoices />} />
-        <Route path="/ticket-scanning" element={<TicketsScanning />} />
-        <Route path="/user-management" element={<UserManagement />} />
-        <Route path="/roles" element={<Roles />} />
-        <Route path="/organizer-settings/*" element={<OrganizerSettings />} />
+        {checkPermission("dashboard").status && (
+          <Route path="/dashboard" index element={<Dashboard />} />
+        )}
+        {checkPermission("guestList").status && (
+          <Route path="/guestlists" element={<Guestlist />} />
+        )}
+        {checkPermission("settings").status && (
+          <Route path="/settings/*" element={<Settings />} />
+        )}
+        {checkPermission("events").status && (
+          <Route path="/manage-events" element={<ManageEvents />} />
+        )}
+        {checkPermission("events").status && (
+          <Route path="/view-event/:eventId" element={<ViewEventBusiness />} />
+        )}
+        {checkPermission("tickets").status && (
+          <Route path="/manage-tickets" element={<ManageTickets />} />
+        )}
+        {checkPermission("orders").status && (
+          <Route path="/orders" element={<Orders />} />
+        )}
+        {checkPermission("finance").status && (
+          <Route path="/finance" element={<Finance />} />
+        )}
+        {checkPermission("customers").status && (
+          <Route path="/customers" element={<Customers />} />
+        )}
+        {checkPermission("invoice").status && (
+          <Route path="/invoices" element={<Invoices />} />
+        )}
+        {checkPermission("guestList").status && (
+          <Route path="/ticket-scanning" element={<TicketsScanning />} />
+        )}
+        {checkPermission("userManagement").status && (
+          <Route path="/user-management" element={<UserManagement />} />
+        )}
+        {checkPermission("rolesAndPermission").status && (
+          <Route path="/roles" element={<Roles />} />
+        )}
+        {checkPermission("organizerSettings").status && (
+          <Route path="/organizer-settings/*" element={<OrganizerSettings />} />
+        )}
 
         {/* Show 404 for any other unauthorized routes */}
-        <Route path="*" element={<Navigate to="/business/dashboard" />} />
+        <Route
+          path="*"
+          element={
+            checkPermission("dashboard").status ? (
+              <Navigate to="/business/dashboard" />
+            ) : (
+              <Page404 />
+            )
+          }
+        />
         <Route path="*" element={<Page404 />} />
       </Routes>
     </BusinessLayout>

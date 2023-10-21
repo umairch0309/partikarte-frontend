@@ -10,6 +10,8 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("available");
     setIsLoggedIn(false);
   };
 

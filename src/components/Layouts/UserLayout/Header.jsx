@@ -6,16 +6,19 @@ import PrimaryButton from "../../UI/PrimaryButton";
 import { useAuthContext } from "../../../context/auth-context";
 import { useProfileDetails } from "../../../api/profile";
 import { Dropdown, Skeleton } from "antd";
+import { setEncryptedData } from "../../../utilities/EncryptedStorage";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, setUser } = useAuthContext();
+  const { user, setUser, setPermissions } = useAuthContext();
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
 
   const { isLoading } = useProfileDetails(
     (res) => {
       if (res?.data) {
         setUser(res?.data);
+        setPermissions(res?.data?.user.permissions);
+        setEncryptedData("available", res?.data?.user?.permissions);
       }
     },
     (res) => {
@@ -25,6 +28,8 @@ const Header = () => {
           setIsLoggedIn(false);
           setUser(null);
           localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          localStorage.removeItem("available");
         }
       }
     }
@@ -32,6 +37,8 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("available");
     setIsLoggedIn(false);
     navigate("/business/login");
   };

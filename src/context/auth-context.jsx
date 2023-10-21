@@ -1,16 +1,20 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
+import { getDecryptedData } from "../utilities/EncryptedStorage";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(getDecryptedData("token"));
   const [isLoggedIn, setIsLoggedIn] = useState(token !== null);
-  const [role, setRole] = useState(localStorage.getItem("role"));
+  const [role, setRole] = useState(getDecryptedData("role"));
   const [user, setUser] = useState(null);
   const [forgotEmail, setForgotEmail] = useState(null);
+  const [permissions, setPermissions] = useState(
+    getDecryptedData("available") || []
+  );
 
   useEffect(() => {
-    setToken(localStorage.getItem("token"));
+    setToken(getDecryptedData("token"));
   }, [isLoggedIn]);
 
   return (
@@ -26,6 +30,8 @@ const AuthProvider = ({ children }) => {
         user,
         setForgotEmail,
         forgotEmail,
+        setPermissions,
+        permissions,
       }}
     >
       {children}

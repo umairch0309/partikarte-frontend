@@ -6,17 +6,21 @@ import { businessRoutes } from "../../../Routes";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../context/auth-context";
 import { useProfileDetails } from "../../../api/profile";
+import { setEncryptedData } from "../../../utilities/EncryptedStorage";
 
 const Topbar = ({ title, subtitle }) => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn, user, setUser } = useAuthContext();
+  const { isLoggedIn, setIsLoggedIn, user, setUser, setPermissions } =
+    useAuthContext();
 
   const { isLoading } = useProfileDetails(
     (res) => {
       if (res?.data) {
         setUser(res?.data);
+        setPermissions(res?.data?.user?.permissions);
+        setEncryptedData("available", res?.data?.user?.permissions);
       }
     },
     (res) => {
@@ -26,6 +30,8 @@ const Topbar = ({ title, subtitle }) => {
           setIsLoggedIn(false);
           setUser(null);
           localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          localStorage.removeItem("available");
         }
       }
     }
@@ -33,6 +39,8 @@ const Topbar = ({ title, subtitle }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("available");
     setIsLoggedIn(false);
   };
 

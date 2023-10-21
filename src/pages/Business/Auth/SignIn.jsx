@@ -8,6 +8,7 @@ import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
 import { useAuthContext } from "../../../context/auth-context";
+import { setEncryptedData } from "../../../utilities/EncryptedStorage";
 
 const initalState = {
   email: "",
@@ -16,7 +17,8 @@ const initalState = {
 };
 
 const SignIn = () => {
-  const { setIsLoggedIn, setRole, setForgotEmail, setToken } = useAuthContext();
+  const { setIsLoggedIn, setRole, setForgotEmail, setToken, setPermissions } =
+    useAuthContext();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(initalState);
@@ -50,12 +52,14 @@ const SignIn = () => {
         data: formData,
       },
       (res) => {
-        localStorage.setItem("token", res?.data?.token);
-        localStorage.setItem("role", res?.data?.role);
+        setEncryptedData("token", res?.data?.token);
+        setEncryptedData("role", res?.data?.role);
+        setEncryptedData("available", res?.data?.permissions);
         setRole(res?.data?.role);
-        navigate("/business/dashboard");
-        setIsLoggedIn(true);
+        setPermissions(res?.data?.user?.permissions);
         setToken(res?.data?.token);
+        setIsLoggedIn(true);
+        navigate("/business/dashboard");
       },
       (res) => {
         if (res?.data?.verifyEmailRequested) {
