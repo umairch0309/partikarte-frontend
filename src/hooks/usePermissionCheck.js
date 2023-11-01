@@ -44,7 +44,16 @@ const usePermissionCheck = () => {
     return { status: false };
   };
 
-  return { checkPermission };
+  const getFirstGrantedPermission = () => {
+    for (const permission of permissions) {
+      if (permission.isGranted) {
+        return { status: true, permission };
+      }
+    }
+    return { status: false };
+  };
+
+  return { checkPermission, getFirstGrantedPermission };
 };
 
 export default usePermissionCheck;

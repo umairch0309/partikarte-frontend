@@ -26,7 +26,7 @@ import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const BusinessMain = () => {
   const { isLoggedIn, forgotEmail } = useAuthContext();
-  const { checkPermission } = usePermissionCheck();
+  const { checkPermission, getFirstGrantedPermission } = usePermissionCheck();
 
   // If not logged in, show authentication-related routes
   if (!isLoggedIn) {
@@ -59,13 +59,13 @@ const BusinessMain = () => {
         {checkPermission("settings").status && (
           <Route path="/settings/*" element={<Settings />} />
         )}
-        {checkPermission("events").status && (
+        {checkPermission("manage-events").status && (
           <Route path="/manage-events" element={<ManageEvents />} />
         )}
         {checkPermission("events").status && (
           <Route path="/view-event/:eventId" element={<ViewEventBusiness />} />
         )}
-        {checkPermission("tickets").status && (
+        {checkPermission("manage-tickets").status && (
           <Route path="/manage-tickets" element={<ManageTickets />} />
         )}
         {checkPermission("orders").status && (
@@ -77,19 +77,19 @@ const BusinessMain = () => {
         {checkPermission("customers").status && (
           <Route path="/customers" element={<Customers />} />
         )}
-        {checkPermission("invoice").status && (
+        {checkPermission("invoices").status && (
           <Route path="/invoices" element={<Invoices />} />
         )}
-        {checkPermission("guestList").status && (
+        {checkPermission("ticket-scanning").status && (
           <Route path="/ticket-scanning" element={<TicketsScanning />} />
         )}
-        {checkPermission("userManagement").status && (
+        {checkPermission("user-management").status && (
           <Route path="/user-management" element={<UserManagement />} />
         )}
-        {checkPermission("rolesAndPermission").status && (
+        {checkPermission("roles").status && (
           <Route path="/roles" element={<Roles />} />
         )}
-        {checkPermission("organizerSettings").status && (
+        {checkPermission("organizer-settings").status && (
           <Route path="/organizer-settings/*" element={<OrganizerSettings />} />
         )}
 
@@ -97,8 +97,12 @@ const BusinessMain = () => {
         <Route
           path="*"
           element={
-            checkPermission("dashboard").status ? (
-              <Navigate to="/business/dashboard" />
+            getFirstGrantedPermission()?.permission ? (
+              <Navigate
+                to={`/business/${
+                  getFirstGrantedPermission()?.permission?.identifier
+                }`}
+              />
             ) : (
               <Page404 />
             )

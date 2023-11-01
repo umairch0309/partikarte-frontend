@@ -17,6 +17,8 @@ const AuthProvider = ({ children }) => {
     setToken(getDecryptedData("token"));
   }, [isLoggedIn]);
 
+  console.log(permissions);
+
   return (
     <AuthContext.Provider
       value={{
