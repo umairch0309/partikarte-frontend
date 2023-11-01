@@ -2,8 +2,10 @@ import { Dropdown, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import DeleteAlert from "../UserManagement/DeleteAlert";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const MemebersTable = ({ membersData, isLoading }) => {
+  const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
@@ -14,7 +16,7 @@ const MemebersTable = ({ membersData, isLoading }) => {
 
   const items = [
     {
-      label: (
+      label: checkPermission("updateMember").status && (
         <div className="button-in-dropdown">
           <ReactSVG src="/icons/tools/edit.svg" />
           <span>Edit</span>
@@ -24,7 +26,7 @@ const MemebersTable = ({ membersData, isLoading }) => {
       className: "blue-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("deleteMember").status && (
         <div
           onClick={() => setShowDeleteAlert(true)}
           className="button-in-dropdown"

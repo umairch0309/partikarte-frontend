@@ -8,9 +8,11 @@ import FinanceInformation from "../../components/BusinessSettings/FinanceInforma
 import MarketingInformation from "../../components/BusinessSettings/MarketingInformation";
 import AccountInformation from "../../components/BusinessSettings/AccountInformation";
 import { useAuthContext } from "../../context/auth-context";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const Settings = () => {
   const location = useLocation();
+  const { checkPermission } = usePermissionCheck();
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
 
   const handleLogout = () => {
@@ -28,30 +30,38 @@ const Settings = () => {
         <aside className="business-settings-left">
           <h3>Update And Manage Your Account</h3>
           <div className="business-settings-menu">
-            <Link
-              to={"./"}
-              className={
-                location.pathname === "/business/settings" ||
-                location.pathname === "/business/settings/"
-                  ? "active"
-                  : ""
-              }
-            >
-              <ReactSVG src="/icons/menu/company.svg" />
-              <span>Company</span>
-            </Link>
-            <NavLink to={"./finance"}>
-              <ReactSVG src="/icons/menu/finance-dollar.svg" />
-              <span>Finance</span>
-            </NavLink>
-            <NavLink to={"./marketing"}>
-              <ReactSVG src="/icons/menu/marketing.svg" />
-              <span>Marketing</span>
-            </NavLink>
-            <NavLink to={"./account"}>
-              <ReactSVG src="/icons/menu/user-square.svg" />
-              <span>Account</span>
-            </NavLink>
+            {checkPermission("settingsCompanyInfo").status && (
+              <Link
+                to={"./"}
+                className={
+                  location.pathname === "/business/settings" ||
+                  location.pathname === "/business/settings/"
+                    ? "active"
+                    : ""
+                }
+              >
+                <ReactSVG src="/icons/menu/company.svg" />
+                <span>Company</span>
+              </Link>
+            )}
+            {checkPermission("settingsFinanceInfo").status && (
+              <NavLink to={"./finance"}>
+                <ReactSVG src="/icons/menu/finance-dollar.svg" />
+                <span>Finance</span>
+              </NavLink>
+            )}
+            {checkPermission("settingsMarketingInfo").status && (
+              <NavLink to={"./marketing"}>
+                <ReactSVG src="/icons/menu/marketing.svg" />
+                <span>Marketing</span>
+              </NavLink>
+            )}
+            {checkPermission("settingsAccountInfo").status && (
+              <NavLink to={"./account"}>
+                <ReactSVG src="/icons/menu/user-square.svg" />
+                <span>Account</span>
+              </NavLink>
+            )}
             <button onClick={handleLogout} className="logout-button-settings">
               Logout
             </button>
@@ -59,10 +69,18 @@ const Settings = () => {
         </aside>
         <div className="business-settings-right">
           <Routes>
-            <Route index element={<CompanyInformation />} />
-            <Route path="/finance" element={<FinanceInformation />} />
-            <Route path="/marketing" element={<MarketingInformation />} />
-            <Route path="/account" element={<AccountInformation />} />
+            {checkPermission("settingsCompanyInfo").status && (
+              <Route index element={<CompanyInformation />} />
+            )}{" "}
+            {checkPermission("settingsFinanceInfo").status && (
+              <Route path="/finance" element={<FinanceInformation />} />
+            )}
+            {checkPermission("settingsMarketingInfo").status && (
+              <Route path="/marketing" element={<MarketingInformation />} />
+            )}
+            {checkPermission("settingsAccountInfo").status && (
+              <Route path="/account" element={<AccountInformation />} />
+            )}
           </Routes>
         </div>
       </div>

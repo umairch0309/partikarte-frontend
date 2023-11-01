@@ -9,8 +9,10 @@ import CustomersTable from "../../components/Tables/CustomersTable";
 import { useOrdersByEventId } from "../../api/orders";
 import { CSVLink } from "react-csv";
 import { customers } from "../../utilities/csv-headers";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const Customers = () => {
+  const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
@@ -93,46 +95,48 @@ const Customers = () => {
           setSelectedEvent={setSelectedEvent}
         />
 
-        <div className="table-container">
-          <div className="table-container-header">
-            <h3>Customers</h3>
-            <div className="header-right">
-              <div className="search-container">
-                <ReactSVG src="/icons/tools/search.svg" />
-                <input
-                  onChange={(e) => handleSearchText(e.target.value)}
-                  type="text"
-                  name="search"
-                  placeholder="Search customers"
-                />
+        {checkPermission("viewCustomers").status && (
+          <div className="table-container">
+            <div className="table-container-header">
+              <h3>Customers</h3>
+              <div className="header-right">
+                <div className="search-container">
+                  <ReactSVG src="/icons/tools/search.svg" />
+                  <input
+                    onChange={(e) => handleSearchText(e.target.value)}
+                    type="text"
+                    name="search"
+                    placeholder="Search customers"
+                  />
+                </div>
+                <CSVLink
+                  data={filteredData}
+                  headers={customers}
+                  filename={"customers-list.csv"}
+                >
+                  <SecondaryButton>
+                    <ReactSVG src="/icons/tools/download-sheet.svg" />
+                    <span>Download Database (CSV)</span>
+                  </SecondaryButton>
+                </CSVLink>
+                <select
+                  name="timeframe"
+                  onChange={(e) => handleIntervalChange(e.target.value)}
+                  value={interval}
+                >
+                  <option value={"monthly"}>Monthly</option>
+                  <option value={"weekly"}>Weekly</option>
+                  <option value={"yearly"}>Yearly</option>
+                </select>
               </div>
-              <CSVLink
-                data={filteredData}
-                headers={customers}
-                filename={"customers-list.csv"}
-              >
-                <SecondaryButton>
-                  <ReactSVG src="/icons/tools/download-sheet.svg" />
-                  <span>Download Database (CSV)</span>
-                </SecondaryButton>
-              </CSVLink>
-              <select
-                name="timeframe"
-                onChange={(e) => handleIntervalChange(e.target.value)}
-                value={interval}
-              >
-                <option value={"monthly"}>Monthly</option>
-                <option value={"weekly"}>Weekly</option>
-                <option value={"yearly"}>Yearly</option>
-              </select>
             </div>
-          </div>
 
-          <CustomersTable
-            isLoading={isOrdersLoading}
-            customersData={filteredData}
-          />
-        </div>
+            <CustomersTable
+              isLoading={isOrdersLoading}
+              customersData={filteredData}
+            />
+          </div>
+        )}
       </div>
     </>
   );

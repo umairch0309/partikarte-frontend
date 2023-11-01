@@ -6,8 +6,10 @@ import SecondaryButton from "../../components/UI/SecondaryButton";
 import MemebersTable from "../../components/Tables/MembersTable";
 import AddNewMember from "../../components/UserManagement/AddNewMember";
 import { useBusinessManagers } from "../../api/business";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const UserManagement = () => {
+  const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
   const [showAddNewMember, setShowAddNewMember] = useState(false);
 
@@ -40,10 +42,12 @@ const UserManagement = () => {
                 <option value={"memeberType2"}>Member type 2</option>
                 <option value={"memeberType3"}>Member type 3</option>
               </select>
-              <SecondaryButton onClick={() => setShowAddNewMember(true)}>
-                <ReactSVG src="/icons/tools/plus-person.svg" />
-                <span>Add New Member</span>
-              </SecondaryButton>
+              {checkPermission("addMember").status && (
+                <SecondaryButton onClick={() => setShowAddNewMember(true)}>
+                  <ReactSVG src="/icons/tools/plus-person.svg" />
+                  <span>Add New Member</span>
+                </SecondaryButton>
+              )}
             </div>
           </div>
           <MemebersTable isLoading={isLoading} membersData={data} />

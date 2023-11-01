@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
 import { useQueryClient } from "@tanstack/react-query";
 import formatDate from "../../utilities/formatDate";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const EventsList = ({
   showHeader,
@@ -23,6 +24,8 @@ const EventsList = ({
 }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { checkPermission } = usePermissionCheck();
 
   console.log(selectedEvent);
 
@@ -86,7 +89,7 @@ const EventsList = ({
       className: "royal-blue-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("updateEvent").status && (
         <div
           onClick={() => setShoweditEventModal(true)}
           className="button-in-dropdown"
@@ -99,7 +102,7 @@ const EventsList = ({
       className: "blue-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("deleteEvent").status && (
         <div onClick={handleDelete} className="button-in-dropdown">
           <ReactSVG className="button-svg" src="/icons/tools/delete.svg" />
           <span>Delete</span>
@@ -129,13 +132,15 @@ const EventsList = ({
                       placeholder="Search events..."
                     />
                   </div>
-                  <PrimaryButton
-                    onClick={() => setShowAddNewEventModal(true)}
-                    className={"add-new-event"}
-                  >
-                    <ReactSVG src="/icons/tools/add-event.svg" />
-                    <span>Add new Event</span>
-                  </PrimaryButton>
+                  {checkPermission("addNewEvent").status && (
+                    <PrimaryButton
+                      onClick={() => setShowAddNewEventModal(true)}
+                      className={"add-new-event"}
+                    >
+                      <ReactSVG src="/icons/tools/add-event.svg" />
+                      <span>Add new Event</span>
+                    </PrimaryButton>
+                  )}
                 </div>
               )}
               <div className="header-right-arrows">
@@ -162,13 +167,15 @@ const EventsList = ({
                   placeholder="Search events..."
                 />
               </div>
-              <PrimaryButton
-                onClick={() => setShowAddNewEventModal(true)}
-                className={"add-new-event"}
-              >
-                <ReactSVG src="/icons/tools/add-event.svg" />
-                <span>Add new Event</span>
-              </PrimaryButton>
+              {checkPermission("addNewEvent").status && (
+                <PrimaryButton
+                  onClick={() => setShowAddNewEventModal(true)}
+                  className={"add-new-event"}
+                >
+                  <ReactSVG src="/icons/tools/add-event.svg" />
+                  <span>Add new Event</span>
+                </PrimaryButton>
+              )}
             </div>
           )}
         </>

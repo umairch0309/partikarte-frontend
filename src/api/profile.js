@@ -5,6 +5,7 @@ export function useProfileDetails(onSuccess, onError) {
     ["get-profile"],
     "auth/get-profile",
     {
+      cacheTime: 60000 * 2,
       onSuccess,
       onError,
     }

@@ -8,8 +8,10 @@ import SecondaryButton from "../../components/UI/SecondaryButton";
 import NewRoleModal from "../../components/Roles/NewRole";
 import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
 import { useQueryClient } from "@tanstack/react-query";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const Roles = () => {
+  const { checkPermission } = usePermissionCheck();
   const [showNewRoleModal, setShowNewRoleModal] = useState(false);
   const [roleEditStatus, setRoleEditStatus] = useState(false);
   const [roleViewStatus, setRoleViewStatus] = useState(false);
@@ -46,9 +48,11 @@ const Roles = () => {
           <div className="table-container-header">
             <h3>Roles and Permissions</h3>
             <div className="header-right">
-              <SecondaryButton onClick={() => setShowNewRoleModal(true)}>
-                Add a role
-              </SecondaryButton>
+              {checkPermission("addRole").status && (
+                <SecondaryButton onClick={() => setShowNewRoleModal(true)}>
+                  Add a role
+                </SecondaryButton>
+              )}
             </div>
           </div>
           <RolesTable

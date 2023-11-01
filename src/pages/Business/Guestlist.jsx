@@ -10,8 +10,11 @@ import SecondaryButton from "../../components/UI/SecondaryButton";
 import { useAllGuestsForEvent } from "../../api/guests";
 import { guestlist } from "../../utilities/csv-headers";
 import { CSVLink } from "react-csv";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const Guestlist = () => {
+  const { checkPermission } = usePermissionCheck();
+
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [guestType, setGuestType] = useState("allGuestTypes");
@@ -158,10 +161,12 @@ const Guestlist = () => {
               </select>
             </div>
             <div className="header-right">
-              <SecondaryButton onClick={() => setShowAddPeopleModal(true)}>
-                <ReactSVG src="/icons/tools/people-list.svg" />
-                <span>Add People to Guest List</span>
-              </SecondaryButton>
+              {checkPermission("guestListAddPeople").status && (
+                <SecondaryButton onClick={() => setShowAddPeopleModal(true)}>
+                  <ReactSVG src="/icons/tools/people-list.svg" />
+                  <span>Add People to Guest List</span>
+                </SecondaryButton>
+              )}
               <CSVLink
                 data={filteredData}
                 headers={guestlist}

@@ -5,8 +5,10 @@ import RefundOrderAlert from "../Orders/RefundOrderAlert";
 import SendTickets from "../Orders/SendTickets";
 import OrderInvoice from "../Orders/OrderInvoice";
 import formatDate from "../../utilities/formatDate";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const InvoicesTable = ({ customersData, isLoading }) => {
+  const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
   const [showRefundAlert, setShowRefundAlert] = useState(false);
   const [showSendTicketModal, setShowSendTicketModal] = useState(false);
@@ -20,7 +22,7 @@ const InvoicesTable = ({ customersData, isLoading }) => {
 
   const items = [
     {
-      label: (
+      label: checkPermission("viewInvoices").status && (
         <div
           onClick={() => setShowOrderInvoice(true)}
           className="button-in-dropdown"
@@ -33,7 +35,7 @@ const InvoicesTable = ({ customersData, isLoading }) => {
       className: "royal-blue-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("viewInvoices").status && (
         <div className="button-in-dropdown">
           <ReactSVG className="button-svg" src="/icons/tools/view-order.svg" />
           <span>View Order</span>
@@ -43,7 +45,7 @@ const InvoicesTable = ({ customersData, isLoading }) => {
       className: "blue-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("refund").status && (
         <div
           onClick={() => setShowRefundAlert(true)}
           className="button-in-dropdown"
@@ -56,7 +58,7 @@ const InvoicesTable = ({ customersData, isLoading }) => {
       className: "red-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("resendTicketsEmail").status && (
         <div
           onClick={() => setShowSendTicketModal(true)}
           className="button-in-dropdown"
@@ -65,7 +67,7 @@ const InvoicesTable = ({ customersData, isLoading }) => {
             className="button-svg"
             src="/icons/tools/cancel-ticket.svg"
           />
-          <span>Resend/Cancel Tickets</span>
+          <span>Resend Tickets</span>
         </div>
       ),
       key: "3",

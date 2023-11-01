@@ -7,8 +7,10 @@ import StatCard from "../../components/Common/StatCard";
 import SecondaryButton from "../../components/UI/SecondaryButton";
 import TicketsTable from "../../components/Tables/TicketsTable";
 import NewTicketModal from "../../components/ManageTickets/NewTicketModal";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const ManageTickets = () => {
+  const { checkPermission } = usePermissionCheck();
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -85,14 +87,16 @@ const ManageTickets = () => {
                   onChange={(e) => setSearchedText(e.target.value)}
                 />
               </div>
-              <SecondaryButton
-                onClick={() => {
-                  setShowNewTicketModal(true);
-                }}
-              >
-                <ReactSVG src="/icons/tools/ticket-outlined.svg" />
-                <span>Create tickets</span>
-              </SecondaryButton>
+              {checkPermission("createTicket").status && (
+                <SecondaryButton
+                  onClick={() => {
+                    setShowNewTicketModal(true);
+                  }}
+                >
+                  <ReactSVG src="/icons/tools/ticket-outlined.svg" />
+                  <span>Create tickets</span>
+                </SecondaryButton>
+              )}
             </div>
           </div>
           <TicketsTable

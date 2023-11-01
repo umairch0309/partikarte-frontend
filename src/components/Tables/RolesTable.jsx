@@ -2,6 +2,7 @@ import { Dropdown, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import formatDate from "../../utilities/formatDate";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const RolesTable = ({
   rolesData,
@@ -12,6 +13,7 @@ const RolesTable = ({
   setRoleViewStatus,
   onDeleteRole,
 }) => {
+  const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const RolesTable = ({
       className: "royal-blue-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("editRole").status && (
         <div
           className="button-in-dropdown"
           onClick={() => {
@@ -52,7 +54,7 @@ const RolesTable = ({
       className: "blue-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("deleteRole").status && (
         <div
           onClick={() => {
             onDeleteRole();

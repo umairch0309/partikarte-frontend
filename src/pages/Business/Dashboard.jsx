@@ -12,6 +12,7 @@ import { useActiveEvents, useAllEvents } from "../../api/manage-events";
 import formatDate from "../../utilities/formatDate";
 import { Skeleton } from "antd";
 import { useNavigate } from "react-router-dom";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const monthNames = [
   "January",
@@ -30,6 +31,8 @@ const monthNames = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { checkPermission } = usePermissionCheck();
+
   const [ordersData, setOrdersData] = useState([]);
   const [eventsData, setEventsData] = useState([]);
   const [ordersDataForChart, setOrdersDataForChart] = useState([]);
@@ -102,124 +105,132 @@ const Dashboard = () => {
       />
       <div className="dashboard-page-container">
         <div className="dashboard-page-left">
-          <div className="chart-main-container">
-            <div className="chart-container-header">
-              <div className="header-left">
-                <h3>Ticket sales graph</h3>
+          {checkPermission("dashboardTicketSaleGraph").status && (
+            <div className="chart-main-container">
+              <div className="chart-container-header">
+                <div className="header-left">
+                  <h3>Ticket sales graph</h3>
+                </div>
+                <div className="header-right">
+                  <select
+                    value={selectedEvent}
+                    onChange={(e) => setSelectedEvent(e.target.value)}
+                  >
+                    <option value={""}>Choose event</option>
+                    {allEventsData?.length > 0 &&
+                      allEventsData?.map((el) => (
+                        <option value={el?._id}>{el?.eventName}</option>
+                      ))}
+                  </select>
+                  <select
+                    value={selectedInterval}
+                    onChange={(e) => setSelectedInterval(e.target.value)}
+                  >
+                    <option value={"monthly"}>Monthly</option>
+                    <option value={"yearly"}>Yearly</option>
+                    <option value={"weekly"}>Weekly</option>
+                  </select>
+                </div>
               </div>
-              <div className="header-right">
-                <select
-                  value={selectedEvent}
-                  onChange={(e) => setSelectedEvent(e.target.value)}
-                >
-                  <option value={""}>Choose event</option>
-                  {allEventsData?.length > 0 &&
-                    allEventsData?.map((el) => (
-                      <option value={el?._id}>{el?.eventName}</option>
-                    ))}
-                </select>
-                <select
-                  value={selectedInterval}
-                  onChange={(e) => setSelectedInterval(e.target.value)}
-                >
-                  <option value={"monthly"}>Monthly</option>
-                  <option value={"yearly"}>Yearly</option>
-                  <option value={"weekly"}>Weekly</option>
-                </select>
-              </div>
+              <Chart
+                selectedInterval={selectedInterval}
+                data={ordersDataForChart}
+                height={290}
+              />
             </div>
-            <Chart
-              selectedInterval={selectedInterval}
-              data={ordersDataForChart}
-              height={290}
-            />
-          </div>
-          <div className="latest-orders-container">
-            <div className="latest-orders-container-header">
-              <div className="header-left">
-                <h3>Latest orders</h3>
+          )}
+          {checkPermission("dashboardLatestOrders").status && (
+            <div className="latest-orders-container">
+              <div className="latest-orders-container-header">
+                <div className="header-left">
+                  <h3>Latest orders</h3>
+                </div>
+                <div className="header-right">
+                  <select
+                    value={orderFilter}
+                    onChange={(e) => setOrderFilter(e.target.value)}
+                  >
+                    <option value={"latest"}>Latest</option>
+                    <option value={"last-month"}>Last month</option>
+                    <option value={"last-week"}>Last week</option>
+                  </select>
+                </div>
               </div>
-              <div className="header-right">
-                <select
-                  value={orderFilter}
-                  onChange={(e) => setOrderFilter(e.target.value)}
-                >
-                  <option value={"latest"}>Latest</option>
-                  <option value={"last-month"}>Last month</option>
-                  <option value={"last-week"}>Last week</option>
-                </select>
-              </div>
+              <OrdersTable isLoading={isLoading} ordersData={filteredOrders} />
             </div>
-            <OrdersTable isLoading={isLoading} ordersData={filteredOrders} />
-          </div>
+          )}
         </div>
         <div className="dashboard-page-right">
-          <div className="active-events-container">
-            <h3>Active Events</h3>
-            <div className="all-active-events-container">
-              {!isEventsLoading ? (
-                eventsData?.length > 0 ? (
-                  eventsData?.map((event, index) => (
-                    <div className="single-active-event" key={index}>
-                      <h5>{event?.eventName}</h5>
-                      <h6>{event?.eventDescription}</h6>
-                      <div className="more-button-container">
-                        <button
-                          onClick={() =>
-                            navigate(`/business/view-event/${event?._id}`)
-                          }
-                        >
-                          More
-                        </button>
-                        <p>{formatDate(event.eventStart)}</p>
+          {checkPermission("dashboardActiveEvents").status && (
+            <div className="active-events-container">
+              <h3>Active Events</h3>
+              <div className="all-active-events-container">
+                {!isEventsLoading ? (
+                  eventsData?.length > 0 ? (
+                    eventsData?.map((event, index) => (
+                      <div className="single-active-event" key={index}>
+                        <h5>{event?.eventName}</h5>
+                        <h6>{event?.eventDescription}</h6>
+                        <div className="more-button-container">
+                          <button
+                            onClick={() =>
+                              navigate(`/business/view-event/${event?._id}`)
+                            }
+                          >
+                            More
+                          </button>
+                          <p>{formatDate(event.eventStart)}</p>
+                        </div>
+                        <hr />
+                        <div className="revenue-details-container">
+                          <p>Total Revenue:</p>
+                          <h3>
+                            ${event?.revenue}{" "}
+                            <span>({event?.ticketsSold} tickets )</span>
+                          </h3>
+                        </div>
                       </div>
-                      <hr />
-                      <div className="revenue-details-container">
-                        <p>Total Revenue:</p>
-                        <h3>
-                          ${event?.revenue}{" "}
-                          <span>({event?.ticketsSold} tickets )</span>
-                        </h3>
-                      </div>
-                    </div>
-                  ))
+                    ))
+                  ) : (
+                    <p>No active events</p>
+                  )
                 ) : (
-                  <p>No active events</p>
-                )
-              ) : (
-                <Skeleton active={true} size={"small"} />
-              )}
-            </div>
-          </div>
-          <div className="balance-sheet-container">
-            <div className="balance-sheet-header">
-              <h3>Balance Sheet</h3>
-              <select
-                onChange={(e) => setSelectedMonth(e.target.value)}
-                value={selectedMonth}
-              >
-                {monthNames.map((m) => (
-                  <option value={m}>{m}</option>
-                ))}
-              </select>
-            </div>
-            <div className="all-balance-sheets-container">
-              <div className="single-balance-sheet">
-                <h4>Total Orders</h4>
-                <h3>{revenueData?.[0]?.totalOrders || 0}</h3>
-              </div>
-              <div className="single-balance-sheet">
-                <h4>Balance</h4>
-                <h3>${revenueData?.[0]?.totalRevenue || 0}</h3>
-              </div>
-              <div className="single-balance-sheet">
-                <h4>Fee’s</h4>
-                <h3>
-                  ${parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
-                </h3>
+                  <Skeleton active={true} size={"small"} />
+                )}
               </div>
             </div>
-          </div>
+          )}
+          {checkPermission("dashboardBalanceSheet").status && (
+            <div className="balance-sheet-container">
+              <div className="balance-sheet-header">
+                <h3>Balance Sheet</h3>
+                <select
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  value={selectedMonth}
+                >
+                  {monthNames.map((m) => (
+                    <option value={m}>{m}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="all-balance-sheets-container">
+                <div className="single-balance-sheet">
+                  <h4>Total Orders</h4>
+                  <h3>{revenueData?.[0]?.totalOrders || 0}</h3>
+                </div>
+                <div className="single-balance-sheet">
+                  <h4>Balance</h4>
+                  <h3>${revenueData?.[0]?.totalRevenue || 0}</h3>
+                </div>
+                <div className="single-balance-sheet">
+                  <h4>Fee’s</h4>
+                  <h3>
+                    ${parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
+                  </h3>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

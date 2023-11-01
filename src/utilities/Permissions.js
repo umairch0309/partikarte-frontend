@@ -123,7 +123,7 @@ export const Permssions = [
     sub: [
       { name: "Add new event", identifier: "addNewEvent", isGranted: false },
       { name: "Update Event", identifier: "updateEvent", isGranted: false },
-      { name: "Delete Ticket", identifier: "deleteTicket", isGranted: false },
+      { name: "Delete Event", identifier: "deleteEvent", isGranted: false },
       {
         name: "Tickets Analytics",
         identifier: "ticketsAnalytics",
@@ -178,6 +178,11 @@ export const Permssions = [
       {
         name: "Company Details",
         identifier: "companyDetails",
+        isGranted: false,
+      },
+      {
+        name: "Ticket Customization",
+        identifier: "ticketCustomization",
         isGranted: false,
       },
     ],

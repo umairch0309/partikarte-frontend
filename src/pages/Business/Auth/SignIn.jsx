@@ -56,7 +56,7 @@ const SignIn = () => {
         setEncryptedData("role", res?.data?.role);
         setEncryptedData("available", res?.data?.permissions);
         setRole(res?.data?.role);
-        setPermissions(res?.data?.user?.permissions);
+        setPermissions(res?.data?.permissions);
         setToken(res?.data?.token);
         setIsLoggedIn(true);
         navigate("/business/dashboard");

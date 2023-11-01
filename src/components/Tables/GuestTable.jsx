@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import formatDate from "../../utilities/formatDate";
 import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const GuestTable = ({
   guestsData,
@@ -12,6 +13,7 @@ const GuestTable = ({
   setEditSelected,
   selectedGuest,
 }) => {
+  const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
 
   const { isDeleting, handleMutation } = useDeleteApi();
@@ -33,7 +35,7 @@ const GuestTable = ({
 
   const items = [
     {
-      label: (
+      label: checkPermission("guestListEdit").status && (
         <div
           onClick={() => {
             setShowAddPeopleModal(true);
@@ -49,7 +51,7 @@ const GuestTable = ({
       className: "blue-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("guestListDelete").status && (
         <div onClick={handleDelete} className="button-in-dropdown">
           <ReactSVG className="button-svg" src="/icons/tools/delete.svg" />
           <span>Delete</span>
@@ -157,7 +159,7 @@ const GuestTable = ({
       scroll={{ scrollToFirstRowOnChange: true, x: window.innerWidth <= 768 }}
       columns={columns}
       dataSource={data}
-      loading={isLoading}
+      loading={isLoading || isDeleting}
     />
   );
 };

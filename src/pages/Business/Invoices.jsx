@@ -11,8 +11,10 @@ import { useOrdersByEventId, useOrdersByTimeInterval } from "../../api/orders";
 import { CSVLink } from "react-csv";
 import { customers } from "../../utilities/csv-headers";
 import InvoicesTable from "../../components/Tables/InvoicesTable";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const Invoices = () => {
+  const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedInterval, setSelectedInterval] = useState("weekly");
@@ -144,24 +146,26 @@ const Invoices = () => {
             showCalendar={true}
           />
         </div>
-        <div className="order-analytics-chart-container">
-          <div className="container-header">
-            <h3>Invoices Analytics</h3>
-            <select
-              value={selectedInterval}
-              onChange={(e) => setSelectedInterval(e.target.value)}
-            >
-              <option value={"monthly"}>Monthly</option>
-              <option value={"weekly"}>Weekly</option>
-              <option value={"yearly"}>Yearly</option>
-            </select>
+        {checkPermission("invoiceAnalytics").status && (
+          <div className="order-analytics-chart-container">
+            <div className="container-header">
+              <h3>Invoices Analytics</h3>
+              <select
+                value={selectedInterval}
+                onChange={(e) => setSelectedInterval(e.target.value)}
+              >
+                <option value={"monthly"}>Monthly</option>
+                <option value={"weekly"}>Weekly</option>
+                <option value={"yearly"}>Yearly</option>
+              </select>
+            </div>
+            <Chart
+              selectedEvent={selectedEvent}
+              data={ordersDataForChart}
+              height={290}
+            />
           </div>
-          <Chart
-            selectedEvent={selectedEvent}
-            data={ordersDataForChart}
-            height={290}
-          />
-        </div>
+        )}
 
         <div className="table-container">
           <div className="table-container-header">

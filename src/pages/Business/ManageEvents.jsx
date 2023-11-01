@@ -22,11 +22,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCouponByEventId } from "../../api/coupons";
 import TertiaryButton from "../../components/UI/TertiaryButton";
 import { WEB_URL } from "../../constants";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const couponInitialState = { discount: 0 };
 
 const ManageEvents = () => {
   const navigate = useNavigate();
+  const { checkPermission } = usePermissionCheck();
   const [countriesRevenues, setCountriesRevenues] = useState([]);
   const [analytics, setAnalytics] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
@@ -255,16 +257,18 @@ const ManageEvents = () => {
             showCalendar={true}
           />
         </div>
-        <div className="order-analytics-chart-container">
-          <div className="container-header">
-            <h3>Tickets Analytics</h3>
+        {checkPermission("ticketsAnalytics").status && (
+          <div className="order-analytics-chart-container">
+            <div className="container-header">
+              <h3>Tickets Analytics</h3>
+            </div>
+            <Chart
+              data={ordersDataForChart}
+              selectedInterval={selectedInterval}
+              height={290}
+            />
           </div>
-          <Chart
-            data={ordersDataForChart}
-            selectedInterval={selectedInterval}
-            height={290}
-          />
-        </div>
+        )}
         {/* {isMobile && (
           <div className="tables-selection-buttons-container">
             <button
@@ -316,48 +320,50 @@ const ManageEvents = () => {
           )}
         </div> */}
 
-        <div className="coupon-code-container">
-          <div className="container-header">
-            <h3>Discount Coupon</h3>
-          </div>
-          <div className="coup-code-main">
-            <div className="form-item">
-              <label>Discount (%)</label>
-              <input
-                type="number"
-                name="discount"
-                onChange={handleOnChange}
-                value={couponForm.discount}
-              />
+        {checkPermission("generateCouponCode").status && (
+          <div className="coupon-code-container">
+            <div className="container-header">
+              <h3>Discount Coupon</h3>
             </div>
-            {eventCoupon && (
-              <div className="form-item copy-code">
-                <label>Generated Code</label>
-                <input type="text" disabled value={eventCoupon?.code} />
-                <ReactSVG
-                  className="copy-icon"
-                  src="/icons/tools/copy.svg"
-                  onClick={() =>
-                    copyToClipboard(`${WEB_URL}${eventCoupon?.code}`)
-                  }
+            <div className="coup-code-main">
+              <div className="form-item">
+                <label>Discount (%)</label>
+                <input
+                  type="number"
+                  name="discount"
+                  onChange={handleOnChange}
+                  value={couponForm.discount}
                 />
               </div>
-            )}
-            <PrimaryButton onClick={handleSubmitCouponForm}>
-              {!eventCoupon ? "Generate" : "Update"} Coupon Code
-            </PrimaryButton>
-            {eventCoupon && !eventCoupon?.isExpired && (
-              <TertiaryButton onClick={expireCoupon}>
-                Expire Coupon
-              </TertiaryButton>
-            )}
-            {eventCoupon && eventCoupon?.isExpired && (
-              <TertiaryButton onClick={activateCoupon}>
-                Activate Coupon
-              </TertiaryButton>
-            )}
+              {eventCoupon && (
+                <div className="form-item copy-code">
+                  <label>Generated Code</label>
+                  <input type="text" disabled value={eventCoupon?.code} />
+                  <ReactSVG
+                    className="copy-icon"
+                    src="/icons/tools/copy.svg"
+                    onClick={() =>
+                      copyToClipboard(`${WEB_URL}${eventCoupon?.code}`)
+                    }
+                  />
+                </div>
+              )}
+              <PrimaryButton onClick={handleSubmitCouponForm}>
+                {!eventCoupon ? "Generate" : "Update"} Coupon Code
+              </PrimaryButton>
+              {eventCoupon && !eventCoupon?.isExpired && (
+                <TertiaryButton onClick={expireCoupon}>
+                  Expire Coupon
+                </TertiaryButton>
+              )}
+              {eventCoupon && eventCoupon?.isExpired && (
+                <TertiaryButton onClick={activateCoupon}>
+                  Activate Coupon
+                </TertiaryButton>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <AddNewEventModal
         showAddNewEventModal={showAddNewEventModal}

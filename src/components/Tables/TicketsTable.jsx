@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import formatDate from "../../utilities/formatDate";
 import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
+import usePermissionCheck from "../../hooks/usePermissionCheck";
 
 const TicketsTable = ({
   ticketsData,
@@ -12,6 +13,7 @@ const TicketsTable = ({
   selectedTicket,
   selectedEvent,
 }) => {
+  const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const TicketsTable = ({
 
   const items = [
     {
-      label: (
+      label: checkPermission("updateTicket").status && (
         <div
           onClick={() => {
             setTicketEditStatus(true);
@@ -55,7 +57,7 @@ const TicketsTable = ({
       className: "blue-button-dropdown",
     },
     {
-      label: (
+      label: checkPermission("deleteTicket").status && (
         <div onClick={handleDelete} className="button-in-dropdown">
           <ReactSVG className="button-svg" src="/icons/tools/delete.svg" />
           <span>Delete</span>
