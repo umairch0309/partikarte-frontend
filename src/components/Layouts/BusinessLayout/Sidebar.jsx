@@ -22,9 +22,7 @@ const Sidebar = () => {
       <ReactSVG src="/blue-logo.svg" />
       <div className="sidebar-all-routes-container">
         {businessRoutes.map((route) => {
-          return checkPermission(
-            route.route.substring(route.route.lastIndexOf("/") + 1)
-          ).status ? (
+          return checkPermission(route.route.split("/").pop()).status ? (
             <NavLink
               key={route.title}
               className="single-sidebar-item"

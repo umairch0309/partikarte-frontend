@@ -6,7 +6,7 @@ const usePermissionCheck = () => {
   const checkSubPermissions = (permissions, identifier) => {
     if (permissions && permissions.length > 0) {
       for (const permission of permissions) {
-        if (role === "owner" && permission.identifier === identifier) {
+        if (role === "owner") {
           return { status: true, permission };
         }
         if (permission.identifier === identifier && permission.isGranted) {
@@ -19,9 +19,10 @@ const usePermissionCheck = () => {
   };
 
   const checkPermission = (identifier) => {
+    console.log(identifier, "identifier");
     if (permissions && permissions.length > 0) {
       for (const permission of permissions) {
-        if (role === "owner" && permission.identifier === identifier) {
+        if (role === "owner") {
           return { status: true, permission };
         }
         if (permission.identifier === identifier && permission.isGranted) {
