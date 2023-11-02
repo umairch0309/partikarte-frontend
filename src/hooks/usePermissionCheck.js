@@ -4,11 +4,11 @@ const usePermissionCheck = () => {
   const { role, permissions } = useAuthContext();
 
   const checkSubPermissions = (permissions, identifier) => {
+    if (role === "owner") {
+      return { status: true };
+    }
     if (permissions && permissions.length > 0) {
       for (const permission of permissions) {
-        if (role === "owner") {
-          return { status: true, permission };
-        }
         if (permission.identifier === identifier && permission.isGranted) {
           return { status: true, permission };
         }
@@ -19,12 +19,11 @@ const usePermissionCheck = () => {
   };
 
   const checkPermission = (identifier) => {
-    console.log(identifier, "identifier");
+    if (role === "owner") {
+      return { status: true };
+    }
     if (permissions && permissions.length > 0) {
       for (const permission of permissions) {
-        if (role === "owner") {
-          return { status: true, permission };
-        }
         if (permission.identifier === identifier && permission.isGranted) {
           return { status: true, permission };
         }
@@ -51,7 +50,12 @@ const usePermissionCheck = () => {
         return { status: true, permission };
       }
     }
-    return { status: false };
+    return {
+      status: true,
+      permission: {
+        identifier: "dashboard",
+      },
+    };
   };
 
   return { checkPermission, getFirstGrantedPermission };
