@@ -13,6 +13,7 @@ import GuestsTableInScanning from "../../components/Tables/GuestsTableInScanning
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import { useOrdersByTimeInterval } from "../../api/orders";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const TicketsScanning = () => {
   const navigate = useNavigate();
@@ -64,6 +65,17 @@ const TicketsScanning = () => {
     }
     setGuests(array);
   }, []);
+
+  const copyToClipboard = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Copied to clipboard.");
+      })
+      .catch((error) => {
+        message.error("Couldn't copy to clipboard.");
+      });
+  };
 
   return (
     <>
@@ -127,6 +139,23 @@ const TicketsScanning = () => {
             icon={<ReactSVG src="/icons/tools/tick-person-colored.svg" />}
             variant={"orange-stat-card"}
           />
+        </div>
+        <div className="event-code-container">
+          <div className="container-header">
+            <h3>Scanning Code</h3>
+          </div>
+          <div className="event-code-main">
+            <div className="form-item">
+              <div className="form-item copy-code">
+                <input type="text" disabled value={selectedEvent?.eventCode} />
+                <ReactSVG
+                  className="copy-icon"
+                  src="/icons/tools/copy.svg"
+                  onClick={() => copyToClipboard(`${selectedEvent?.eventCode}`)}
+                />
+              </div>
+            </div>
+          </div>
         </div>
         <div className="order-analytics-chart-container">
           <div className="container-header">

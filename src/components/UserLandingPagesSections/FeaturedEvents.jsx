@@ -15,7 +15,16 @@ const settings = {
   autoplay: true,
   autoplaySpeed: 3000,
   dots: false,
+  centerMode: false,
   responsive: [
+    {
+      breakpoint: 5000,
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        infinite: true,
+      },
+    },
     {
       breakpoint: 2440,
       settings: {
@@ -105,7 +114,7 @@ const FeaturedEvents = ({ titleStart, titleEnd, status }) => {
       </div>
       <div className="featured-events-main">
         {allEvents?.length > 0 ? (
-          <Slider {...settings} ref={sliderRef}>
+          <Slider className="all-events-slider" {...settings} ref={sliderRef}>
             {allEvents?.map((event, index) => {
               return (
                 <div key={index} className="single-slider-item">

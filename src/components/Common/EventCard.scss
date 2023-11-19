@@ -12,7 +12,6 @@
   flex-direction: column;
   position: relative;
   cursor: pointer;
-  max-width: 369px;
   &:hover {
     outline: 5px solid opacityColor($primaryColor, 0.3);
   }

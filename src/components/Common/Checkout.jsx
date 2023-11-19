@@ -11,6 +11,7 @@ import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { useCountriesList } from "../../api/services";
 import { useBookingContext } from "../../context/booking-context";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
+import SecondaryButton from "../UI/SecondaryButton";
 
 const initialState = {
   termsAndConditions: false,
@@ -33,7 +34,7 @@ const errorPaymentFormInputStyle = {
 };
 const payment = new PaymentJs();
 
-const Checkout = () => {
+const Checkout = ({ setCoupon }) => {
   const { state, dispatch } = useBookingContext();
   const navigate = useNavigate();
   const [showSuccessStatus, setShowSuccessStatus] = useState(false);
@@ -46,6 +47,8 @@ const Checkout = () => {
   const [formErrors, setFormErrors] = useState({});
   const [countries, setCountries] = useState([]);
   const [showDiscountInput, setShowDiscountInput] = useState(false);
+  const [showCouponApplied, setShowCouponApplied] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
@@ -58,6 +61,7 @@ const Checkout = () => {
   );
 
   const { handleMutation, isLoading: isEventCreating } = usePostApi();
+
   // console.log(paymentData);
 
   useEffect(() => {
@@ -112,6 +116,44 @@ const Checkout = () => {
     });
   };
 
+  const calculateTotal = () => {
+    let total = state.orderAmount?.toFixed(2);
+    const couponDiscount =
+      state.orderAmount?.toFixed(2) / appliedCoupon?.discount;
+    if (appliedCoupon?.discount && couponDiscount) {
+      total = total - couponDiscount;
+    }
+    return total;
+  };
+
+  const buttonText = () => {
+    const total = calculateTotal();
+    const discountText = appliedCoupon?.discount
+      ? `(${appliedCoupon?.discount}% Discount)`
+      : "";
+    return `${total} ${discountText}`;
+  };
+
+  const applyDiscountCodeHandler = async () => {
+    handleMutation(
+      {
+        path: "coupon/validate",
+        data: { eventId: state?.eventId, couponCode: state?.discountCode },
+      },
+      (res) => {
+        console.log("applied discountCode", res);
+        setShowCouponApplied(true);
+        setAppliedCoupon(res?.coupon);
+        setCoupon(res?.coupon);
+      },
+      (res) => {
+        console.log(res, " couldnt do discount code");
+        setAppliedCoupon(null);
+        setShowCouponApplied(false);
+      }
+    );
+  };
+
   const submitFormHandler = async (e) => {
     e.preventDefault();
     const errors = await validateCheckoutForm(paymentData, activePaymentType);
@@ -129,7 +171,7 @@ const Checkout = () => {
     formData.append("recommendations", paymentData?.recommendations);
     formData.append("tickets", JSON.stringify(state?.tickets));
     formData.append("noOfTickets", state?.totalTickets);
-    formData.append("orderAmount", state?.orderAmount);
+    formData.append("orderAmount", calculateTotal() || 0);
     formData.append("customerEmail", paymentData?.email);
     formData.append("customerName", paymentData?.name);
 
@@ -245,8 +287,6 @@ const Checkout = () => {
       navigate(-1);
     }
   };
-
-  console.log(countriesLoading, countries);
 
   return (
     <div className="checkout-component">
@@ -445,20 +485,39 @@ const Checkout = () => {
               </h4>
             )}
 
-            {(showDiscountInput || state?.discountCode?.trim() !== "") && (
-              <div className={`form-item `}>
-                <label>Discount Code</label>
-                <input
-                  type="text"
-                  name="discountCode"
-                  id="discountCode"
-                  placeholder="Discount Code"
-                  minLength={8}
-                  maxLength={12}
-                  value={state.discountCode}
-                  onChange={discountCodeChangeHandler}
-                />
-              </div>
+            {!showCouponApplied ? (
+              (showDiscountInput || state?.discountCode?.trim() !== "") && (
+                <>
+                  <div className={`form-item `}>
+                    <label>Discount Code</label>
+                    <input
+                      type="text"
+                      name="discountCode"
+                      id="discountCode"
+                      placeholder="Discount Code"
+                      minLength={8}
+                      maxLength={12}
+                      value={state.discountCode}
+                      onChange={discountCodeChangeHandler}
+                    />
+                  </div>
+                  <SecondaryButton
+                    type={"button"}
+                    disabled={
+                      state?.discountCode?.trim() === "" ||
+                      state?.discountCode?.length !== 8
+                    }
+                    onClick={applyDiscountCodeHandler}
+                  >
+                    Apply Code
+                  </SecondaryButton>
+                </>
+              )
+            ) : (
+              <p className="black">
+                Coupon has been applied and you got{" "}
+                {appliedCoupon?.discount || 0}% discount
+              </p>
             )}
           </>
         )}
@@ -538,7 +597,7 @@ const Checkout = () => {
           type={state.totalTickets === 0 ? "button" : "submit"}
           className="submit-payment-form"
         >
-          Pay ${state.orderAmount?.toFixed(2)}
+          Pay ${buttonText()}
         </PrimaryButton>
       </form>
       {activePaymentType === "card" && (

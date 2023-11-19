@@ -67,6 +67,11 @@ const NewTicketModal = ({
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
+    if (name === "paidTicket && value === false") {
+      setFormValues({ ...formValues, vatPercentage: 0, ticketPrice: 0 });
+    } else if (name === "limitedTickets" && value === false) {
+      setFormValues({ ...formValues, numberOfTickets: 0 });
+    }
   };
 
   const handleOnBlur = async (e) => {

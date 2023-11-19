@@ -13,6 +13,7 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const { state } = useBookingContext();
   const [data, setData] = useState(null);
+  const [coupon, setCoupon] = useState(null);
   const { isLoading } = useSingleEventForCustomer(state.eventId, (res) => {
     setData(res?.event);
     console.log(res?.event);
@@ -23,6 +24,15 @@ const CheckoutPage = () => {
       navigate("/");
     }
   }, [state]);
+
+  const totalPriceCalculated = () => {
+    let total = state.orderAmount?.toFixed(2);
+    const couponDiscount = state.orderAmount?.toFixed(2) / coupon?.discount;
+    if (coupon?.discount) {
+      total = total - couponDiscount;
+    }
+    return total;
+  };
 
   return state?.eventId ? (
     <div className="checkout-payment-page">
@@ -35,7 +45,7 @@ const CheckoutPage = () => {
           </div>
           <div className="checkout-left-main">
             <h5>Total Amount</h5>
-            <h1>$ {state?.orderAmount?.toFixed(2)}</h1>
+            <h1>$ {totalPriceCalculated()}</h1>
             {!isLoading ? (
               <>
                 <div className="selected-event">
@@ -61,19 +71,22 @@ const CheckoutPage = () => {
             <div className="totals-container">
               <div className="totals-item">
                 <h4>Subtotal</h4>
-                <h4>$ {state?.orderAmount?.toFixed(2)}</h4>
+                <h4>$ {totalPriceCalculated()}</h4>
               </div>
               <hr />{" "}
               <div className="totals-item tax-item">
                 <h4>Sales tax (6.5%)</h4>
-                <h4>$ {(state?.orderAmount * 0.065).toFixed(2)}</h4>
+                <h4>$ {(totalPriceCalculated() * 0.065).toFixed(2)}</h4>
               </div>
               <hr />{" "}
               <div className="totals-item ">
                 <h4>Total due</h4>
                 <h4>
                   ${" "}
-                  {(state?.orderAmount + state?.orderAmount * 0.065).toFixed(2)}
+                  {(
+                    totalPriceCalculated() +
+                    totalPriceCalculated() * 0.065
+                  ).toFixed(2)}
                 </h4>
               </div>
             </div>
@@ -88,7 +101,7 @@ const CheckoutPage = () => {
             <ReactSVG src="/icons/tools/left-arrow.svg" />
             <p>Back</p>
           </div>
-          <Checkout />
+          <Checkout setCoupon={setCoupon} />
         </div>
       </div>
     </div>

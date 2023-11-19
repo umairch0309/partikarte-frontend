@@ -8,21 +8,44 @@
   @media (max-width: 767px) {
     padding-inline: 3%;
   }
-  @include flex(column, "", center);
+  @include flex(column, flex-start, flex-start, 30px);
+  h1 {
+    font-size: 40px;
+    font-weight: 400;
+    color: $secondaryColor;
+  }
   .all-events-container {
-    @include flex(row, space-around, center);
-
-    // @include flex(row, "", center, 5.001%);
-    // padding-inline: 1.65%;
     width: 100%;
-    @media (max-width: 767px) {
-      flex-direction: column;
-      gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 24px;
+    grid-row-gap: 30px;
+
+    @media (min-width: 2441px) {
+      grid-template-columns: repeat(5, 1fr);
     }
-    flex-wrap: wrap;
+    @media (max-width: 2440px) {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    @media (max-width: 1840px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 1440px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 1100px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 700px) {
+      grid-template-columns: repeat(1, 1fr);
+      justify-content: center;
+      align-items: center;
+    }
+
+    padding-bottom: 30px;
+
     .listing-event-card {
-      width: 30%;
-      margin-bottom: 3.33%;
+      min-width: 320px;
       @media (max-width: 767px) {
         width: 100%;
       }

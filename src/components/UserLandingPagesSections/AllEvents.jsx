@@ -62,12 +62,17 @@ const AllEvents = ({ link, searchText, interval }) => {
 
   return (
     <div className="all-events-user-landing-page">
+      <h1>All Events</h1>
       <div className="all-events-container">
         {isLoading ? (
-          <>
-            <Skeleton active={true} paragraph={{ rows: 5 }} size={"small"} />
-            <Skeleton active={true} paragraph={{ rows: 5 }} size={"small"} />
-          </>
+          Array.from({ length: 8 }, (_, index) => (
+            <Skeleton
+              key={index}
+              active={true}
+              paragraph={{ rows: 5 }}
+              size={"small"}
+            />
+          ))
         ) : filteredEvents.length > 0 ? (
           filteredEvents.slice(0, eventsCount).map((event, index) => {
             return (

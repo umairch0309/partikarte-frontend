@@ -4,7 +4,7 @@ import { ReactSVG } from "react-svg";
 import { useNavigate } from "react-router-dom";
 import formatDate from "../../utilities/formatDate";
 
-const EventCard = ({ event, className }) => {
+const EventCard = ({ event, className, style }) => {
   const navigate = useNavigate();
 
   const minPriceTicket = event?.tickets?.reduce(
@@ -18,6 +18,7 @@ const EventCard = ({ event, className }) => {
         navigate(`/all-events/${event?._id}`);
       }}
       className={`single-event-card ${className}`}
+      style={{ ...style }}
     >
       {event?.eventBanner ? (
         <img src={event?.eventBanner} alt={event?.eventName} />

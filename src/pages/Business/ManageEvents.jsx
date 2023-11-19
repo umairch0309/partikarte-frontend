@@ -364,6 +364,25 @@ const ManageEvents = () => {
             </div>
           </div>
         )}
+
+        <div className="coupon-code-container">
+          <div className="container-header">
+            <h3>Event Tickets Scanning</h3>
+          </div>
+          <div className="coup-code-main">
+            <div className="form-item">
+              <div className="form-item copy-code">
+                <label>Generated Code</label>
+                <input type="text" disabled value={selectedEvent?.eventCode} />
+                <ReactSVG
+                  className="copy-icon"
+                  src="/icons/tools/copy.svg"
+                  onClick={() => copyToClipboard(`${selectedEvent?.eventCode}`)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <AddNewEventModal
         showAddNewEventModal={showAddNewEventModal}

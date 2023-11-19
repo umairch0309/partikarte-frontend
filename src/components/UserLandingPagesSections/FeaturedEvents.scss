@@ -77,18 +77,21 @@
       }
     }
   }
-
+  .all-events-slider {
+    gap: 30px;
+  }
   .featured-events-main {
     margin-top: 40px;
-    // @include flex(row, space-between, center);
+
     .single-slider-item {
       width: 100%;
-      padding-inline: 5%;
+      padding-inline: 15px;
       display: flex !important;
       justify-content: center;
       align-items: center;
     }
     .event-in-slider-item {
+      min-width: 320px;
       @media (max-width: 699px) {
         max-width: 326.56px;
         margin-inline: auto;

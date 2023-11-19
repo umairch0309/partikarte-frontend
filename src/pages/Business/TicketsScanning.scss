@@ -64,6 +64,52 @@
       color: white;
     }
   }
+  .event-code-container {
+    margin-block: 30px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    .container-header {
+      @include flex(row, space-between, center);
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: $secondaryColor;
+      }
+    }
+    .event-code-main {
+      margin-top: 20px;
+      display: flex;
+      gap: 30px;
+      align-items: flex-end;
+      @media (max-width: 767px) {
+        flex-wrap: wrap;
+        button {
+          width: 100%;
+        }
+      }
+
+      .form-item {
+        display: flex;
+        flex-direction: column;
+        @media (max-width: 767px) {
+          width: 100%;
+        }
+        label {
+          padding-bottom: 5px;
+        }
+      }
+      .copy-code {
+        position: relative;
+        .copy-icon {
+          position: absolute;
+          right: 10px;
+          bottom: 12px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
   .order-analytics-chart-container {
     margin-top: 30px;
     background-color: white;

@@ -53,7 +53,7 @@ const BusinessMain = () => {
         {checkPermission("dashboard").status && (
           <Route path="/dashboard" index element={<Dashboard />} />
         )}
-        {checkPermission("guestList").status && (
+        {checkPermission("guestlists").status && (
           <Route path="/guestlists" element={<Guestlist />} />
         )}
         {checkPermission("settings").status && (
