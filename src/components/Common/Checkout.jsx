@@ -71,7 +71,7 @@ const Checkout = ({ setCoupon }) => {
   useEffect(() => {
     if (activePaymentType === "card") {
       payment.init(
-        "M4FdU31h65jw72oH6Xz6",
+        "f8MjXVeBVjTx8ANPMzUu",
         "card-number",
         "cvv",
         function (payment) {
