@@ -8,11 +8,13 @@
   @media (max-width: 767px) {
     padding-inline: 3%;
   }
-  @include flex(column, flex-start, flex-start, 30px);
+  @include flex(column, flex-start, center, 30px);
   h1 {
     font-size: 40px;
     font-weight: 400;
     color: $secondaryColor;
+    width: 100%;
+    text-align: start;
   }
   .all-events-container {
     width: 100%;
