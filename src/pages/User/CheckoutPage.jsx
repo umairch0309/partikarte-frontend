@@ -28,7 +28,7 @@ const CheckoutPage = () => {
   const totalPriceCalculated = () => {
     let total = state.orderAmount?.toFixed(2);
     const couponDiscount = state.orderAmount?.toFixed(2) / coupon?.discount;
-    if (coupon?.discount) {
+    if (coupon?.discount && couponDiscount) {
       total = total - couponDiscount;
     }
     return total;
@@ -76,17 +76,16 @@ const CheckoutPage = () => {
               <hr />{" "}
               <div className="totals-item tax-item">
                 <h4>Sales tax (6.5%)</h4>
-                <h4>$ {(totalPriceCalculated() * 0.065).toFixed(2)}</h4>
+                <h4>$ {totalPriceCalculated() * 0.065}</h4>
               </div>
               <hr />{" "}
               <div className="totals-item ">
                 <h4>Total due</h4>
                 <h4>
-                  ${" "}
-                  {(
-                    totalPriceCalculated() +
-                    totalPriceCalculated() * 0.065
-                  ).toFixed(2)}
+                  {`$${(
+                    parseFloat(totalPriceCalculated()) +
+                    parseFloat(totalPriceCalculated()) * 0.065
+                  ).toFixed(2)}`}
                 </h4>
               </div>
             </div>
