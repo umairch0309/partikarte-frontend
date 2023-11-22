@@ -82,11 +82,10 @@ const CheckoutPage = () => {
               <div className="totals-item ">
                 <h4>Total due</h4>
                 <h4>
-                  ${" "}
-                  {(
-                    totalPriceCalculated() +
-                    totalPriceCalculated() * 0.065
-                  ).toFixed(2)}
+                  {`$${(
+                    parseFloat(totalPriceCalculated()) +
+                    parseFloat(totalPriceCalculated()) * 0.065
+                  ).toFixed(2)}`}
                 </h4>
               </div>
             </div>
