@@ -3,8 +3,9 @@ import { ReactSVG } from "react-svg";
 import "./CheckoutSelectedEvent.scss";
 import { useState } from "react";
 import { useBookingContext } from "../../context/booking-context";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
-const CheckoutSelectedEvent = ({ ticket }) => {
+const CheckoutSelectedEvent = ({ ticket, eventCurrency }) => {
   const { state, dispatch } = useBookingContext();
 
   const updateTicketInContext = (e) => {
@@ -56,8 +57,13 @@ const CheckoutSelectedEvent = ({ ticket }) => {
       </div>
       <div className="event-tile-right">
         <div className="price-container">
-          <h4>€ {ticket.price.toFixed(2)}</h4>
-          <h6>Total: €{(ticket.price * ticket?.noOfTickets).toFixed(2)}</h6>
+          <h4>
+            {currencySymbolGenerator(eventCurrency)} {ticket.price.toFixed(2)}
+          </h4>
+          <h6>
+            Total: {currencySymbolGenerator(eventCurrency)}
+            {(ticket.price * ticket?.noOfTickets).toFixed(2)}
+          </h6>
         </div>
         <button onClick={deleteTicketInContext} className="delete-button">
           <ReactSVG src="/icons/tools/delete.svg" />

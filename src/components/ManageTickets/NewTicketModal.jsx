@@ -278,6 +278,7 @@ const NewTicketModal = ({
                 onBlur={handleOnBlur}
                 disabled={!formValues.paidTicket}
                 min={0}
+                step={0.01}
               />
               {formErrors.ticketPrice && (
                 <p className="error-message">{formErrors.ticketPrice}</p>
@@ -319,6 +320,7 @@ const NewTicketModal = ({
                 id="vatPercentage"
                 placeholder="VAT%"
                 min={0}
+                step={0.01}
                 onChange={(e) =>
                   formValues.paidTicket ? handleInputChange(e) : () => {}
                 }

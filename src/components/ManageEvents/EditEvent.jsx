@@ -28,6 +28,7 @@ let initialState = {
   lng: "",
   lat: "",
   eventLink: "",
+  eventCurrency: "EUR",
 };
 
 const EditEvent = ({
@@ -72,6 +73,7 @@ const EditEvent = ({
         lng: selectedEvent?.eventCoordinatesX || "",
         lat: selectedEvent?.eventCoordinatesY || "",
         eventLink: selectedEvent?.eventAddress?.eventLink || "",
+        eventCurrency: selectedEvent?.eventCurrency || "",
       };
       formik.setValues(initialState);
     }
@@ -87,6 +89,7 @@ const EditEvent = ({
     formData.append("eventStart", values.startingDate);
     formData.append("eventEnd", values.endingDate);
     formData.append("eventType", values.eventType);
+    formData.append("eventCurrency", values.eventCurrency);
     formData.append("eventCategory", values.category);
     formData.append("eventVenue", values.venueName);
     formData.append("eventDescription", values.description);
@@ -291,6 +294,31 @@ const EditEvent = ({
           />
           {formik.touched.description && formik.errors.description && (
             <p className="error-message">{formik.errors.description}</p>
+          )}
+        </div>
+        <div
+          className={`single-form-item ${
+            formik.touched.eventCurrency && formik.errors.eventCurrency
+              ? "error"
+              : ""
+          }`}
+        >
+          <label htmlFor="eventCurrency">Event Currency</label>
+          <select
+            name="eventCurrency"
+            id="eventCurrency"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.eventCurrency}
+          >
+            <option value="">Choose event currency</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
+          {formik.touched.eventCurrency && formik.errors.eventCurrency && (
+            <p className="select-error-message">
+              {formik.errors.eventCurrency}
+            </p>
           )}
         </div>
         <div className="side-by-side-guest-input">

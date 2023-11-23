@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useReducer } from "react";
 
 const initialState = {
   orderAmount: 0,
+  orderAmountWithVat: 0,
   totalTickets: 0,
   tickets: [],
   recommendations: false,
@@ -37,6 +38,19 @@ function bookingReducer(state, action) {
             ]
           : [...state.tickets, action.ticket];
 
+      const totalVatCalculated = () => {
+        let total = 0;
+        updatedTickets?.forEach((ticket) => {
+          if (ticket?.show && ticket?.noOfTickets > 0) {
+            for (let i = 0; i < ticket?.noOfTickets; i++) {
+              total += parseFloat(ticket?.ticketVat);
+            }
+          }
+        });
+        console.log(total, "total vat calculated");
+        return total;
+      };
+
       return {
         ...state,
         tickets: updatedTickets,
@@ -44,6 +58,7 @@ function bookingReducer(state, action) {
           (total, obj) => total + obj.noOfTickets * obj.price,
           0
         ),
+        orderAmountWithVat: totalVatCalculated(),
       };
     case "DELETE_TICKET":
       const ticketExists = state.tickets.findIndex(
@@ -57,6 +72,20 @@ function bookingReducer(state, action) {
               ...state.tickets.slice(ticketExists + 1),
             ]
           : [...state.tickets, action.ticket];
+
+      const totalVatCalculatedForDelete = () => {
+        let total = 0;
+        tickets?.forEach((ticket) => {
+          if (ticket?.show && ticket?.noOfTickets > 0) {
+            for (let i = 0; i < ticket?.noOfTickets; i++) {
+              total += parseFloat(ticket?.ticketVat);
+            }
+          }
+        });
+        console.log(total, "total vat calculated");
+        return total;
+      };
+
       return {
         ...state,
         tickets: tickets,
@@ -64,6 +93,7 @@ function bookingReducer(state, action) {
           (total, obj) => total + obj.noOfTickets * obj.price,
           0
         ),
+        orderAmountWithVat: totalVatCalculatedForDelete(),
       };
     default:
       return state;

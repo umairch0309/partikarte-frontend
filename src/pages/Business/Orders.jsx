@@ -12,6 +12,7 @@ import { useOrdersByEventId, useOrdersByTimeInterval } from "../../api/orders";
 import { CSVLink } from "react-csv";
 import { customers } from "../../utilities/csv-headers";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
 const Orders = () => {
   const { checkPermission } = usePermissionCheck();
@@ -119,7 +120,10 @@ const Orders = () => {
           />
           <StatCard
             title={"Revenue generated"}
-            number={"€" + (parseInt(selectedEvent?.revenue).toFixed(2) || 0)}
+            number={
+              currencySymbolGenerator(selectedEvent?.eventCurrency) +
+              (parseInt(selectedEvent?.revenue).toFixed(2) || 0)
+            }
             icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
             variant={"green-stat-card"}
             showCalendar={true}
@@ -127,7 +131,7 @@ const Orders = () => {
           <StatCard
             title={"Partikarte Fees"}
             number={
-              "€" +
+              currencySymbolGenerator(selectedEvent?.eventCurrency) +
               (
                 (parseInt(selectedEvent?.revenue).toFixed(2) || 0) * 0.08
               ).toFixed(2)
@@ -139,7 +143,8 @@ const Orders = () => {
           <StatCard
             title={"Total Paid Out"}
             number={
-              "€" + (parseInt(selectedEvent?.totalPaidOut).toFixed(2) || 0.0)
+              currencySymbolGenerator(selectedEvent?.eventCurrency) +
+              (parseInt(selectedEvent?.totalPaidOut).toFixed(2) || 0.0)
             }
             icon={<ReactSVG src="/icons/tools/clipboardtick-colored.svg" />}
             variant={"orange-stat-card"}

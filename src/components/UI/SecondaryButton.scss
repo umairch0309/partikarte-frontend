@@ -14,4 +14,7 @@
   &:hover {
     background-color: opacityColor($primaryColor, 0.7);
   }
+  &:disabled {
+    cursor: not-allowed;
+  }
 }

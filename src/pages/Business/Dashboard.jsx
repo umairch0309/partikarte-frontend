@@ -13,6 +13,7 @@ import formatDate from "../../utilities/formatDate";
 import { Skeleton } from "antd";
 import { useNavigate } from "react-router-dom";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
 const monthNames = [
   "January",
@@ -185,7 +186,8 @@ const Dashboard = () => {
                         <div className="revenue-details-container">
                           <p>Total Revenue:</p>
                           <h3>
-                            €{event?.revenue}{" "}
+                            {currencySymbolGenerator(event?.eventCurrency)}
+                            {event?.revenue}{" "}
                             <span>({event?.ticketsSold} tickets )</span>
                           </h3>
                         </div>
@@ -220,12 +222,17 @@ const Dashboard = () => {
                 </div>
                 <div className="single-balance-sheet">
                   <h4>Balance</h4>
-                  <h3>€{revenueData?.[0]?.totalRevenue || 0}</h3>
+                  <h3>
+                    {" "}
+                    {currencySymbolGenerator("EUR")}{" "}
+                    {revenueData?.[0]?.totalRevenue || 0}
+                  </h3>
                 </div>
                 <div className="single-balance-sheet">
                   <h4>Fee’s</h4>
                   <h3>
-                    €{parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
+                    {currencySymbolGenerator("EUR")}
+                    {parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
                   </h3>
                 </div>
               </div>

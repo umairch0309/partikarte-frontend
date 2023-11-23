@@ -7,8 +7,9 @@ import { message } from "antd";
 import CustomModal from "../UI/CustomModal";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import { useLocation } from "react-router-dom";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
-const TicketCard = ({ ticket, eventId }) => {
+const TicketCard = ({ ticket, eventId, eventCurrency }) => {
   const { state, dispatch } = useBookingContext();
   const isMobile = useIsMobileWidth();
 
@@ -40,6 +41,7 @@ const TicketCard = ({ ticket, eventId }) => {
           ...state.tickets[ticketIndexInContext],
           ticketId: ticket?._id,
           noOfTickets: ticketCount,
+          ticketVat: ticket?.vat,
           price: ticket?.price,
           ticketName: ticket?.ticketName,
           allQuestions: [],
@@ -68,6 +70,7 @@ const TicketCard = ({ ticket, eventId }) => {
           ticket: {
             ticketId: ticket?._id,
             noOfTickets: count,
+            ticketVat: ticket?.vat,
             price: ticket?.price,
             ticketName: ticket?.ticketName,
             show: true,
@@ -170,6 +173,7 @@ const TicketCard = ({ ticket, eventId }) => {
           ticketId: ticket?._id,
           noOfTickets: ticketCount + 1 <= 10 ? ticketCount + 1 : ticketCount,
           price: ticket?.price,
+          ticketVat: ticket?.vat,
           ticketName: ticket?.ticketName,
           show: true,
           allQuestions: [
@@ -203,7 +207,10 @@ const TicketCard = ({ ticket, eventId }) => {
           now >= validFrom && now <= validTo ? (
             <div className="ticket-card-bottom">
               <div className="ticket-card-bottom-controls-container">
-                <h4 className="price">€{ticket?.price}</h4>
+                <h4 className="price">
+                  {currencySymbolGenerator(eventCurrency)}
+                  {ticket?.price}
+                </h4>
                 <div className="buttons-container">
                   <PrimaryButton
                     onClick={() => {
