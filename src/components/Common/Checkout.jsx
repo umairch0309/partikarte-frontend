@@ -13,6 +13,7 @@ import { useBookingContext } from "../../context/booking-context";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import SecondaryButton from "../UI/SecondaryButton";
 import { message } from "antd";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
 const initialState = {
   termsAndConditions: false,
@@ -35,7 +36,7 @@ const errorPaymentFormInputStyle = {
 };
 const payment = new PaymentJs();
 
-const Checkout = ({ setCoupon }) => {
+const Checkout = ({ setCoupon, eventData }) => {
   const { state, dispatch } = useBookingContext();
   const navigate = useNavigate();
   const [showSuccessStatus, setShowSuccessStatus] = useState(false);
@@ -118,13 +119,12 @@ const Checkout = ({ setCoupon }) => {
   };
 
   const calculateTotal = () => {
-    let total = state.orderAmount?.toFixed(2);
-    const couponDiscount =
-      state.orderAmount?.toFixed(2) / appliedCoupon?.discount;
+    let total = state.orderAmount;
+    const couponDiscount = state.orderAmount / appliedCoupon?.discount;
     if (appliedCoupon?.discount && couponDiscount) {
       total = total - couponDiscount;
     }
-    return total;
+    return (total + state.orderAmountWithVat).toFixed(2);
   };
 
   const buttonText = () => {
@@ -173,6 +173,7 @@ const Checkout = ({ setCoupon }) => {
     formData.append("tickets", JSON.stringify(state?.tickets));
     formData.append("noOfTickets", state?.totalTickets);
     formData.append("orderAmount", calculateTotal() || 0);
+    formData.append("orderVatAmount", state?.orderAmountWithVat || 0);
     formData.append("customerEmail", paymentData?.email);
     formData.append("customerName", paymentData?.name);
 
@@ -603,7 +604,7 @@ const Checkout = ({ setCoupon }) => {
           type={state.totalTickets === 0 ? "button" : "submit"}
           className="submit-payment-form"
         >
-          Pay €{buttonText()}
+          Pay {currencySymbolGenerator(eventData?.eventCurrency)} {buttonText()}
         </PrimaryButton>
       </form>
       {/* {activePaymentType === "card" && (

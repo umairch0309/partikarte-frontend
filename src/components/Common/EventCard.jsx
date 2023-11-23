@@ -3,6 +3,7 @@ import "./EventCard.scss";
 import { ReactSVG } from "react-svg";
 import { useNavigate } from "react-router-dom";
 import formatDate from "../../utilities/formatDate";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
 const EventCard = ({ event, className, style }) => {
   const navigate = useNavigate();
@@ -38,7 +39,10 @@ const EventCard = ({ event, className, style }) => {
         <div className="event-price"> No tickets available</div>
       ) : (
         <div className="event-price">
-          Starting from <strong>{`€${minPriceTicket?.price}`}</strong>
+          Starting from{" "}
+          <strong>{`${currencySymbolGenerator(event?.eventCurrency)}${
+            minPriceTicket?.price
+          }`}</strong>
         </div>
       )}
     </div>

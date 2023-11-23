@@ -8,6 +8,7 @@ import SecondaryButton from "../../components/UI/SecondaryButton";
 import TicketsTable from "../../components/Tables/TicketsTable";
 import NewTicketModal from "../../components/ManageTickets/NewTicketModal";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
 const ManageTickets = () => {
   const { checkPermission } = usePermissionCheck();
@@ -68,7 +69,10 @@ const ManageTickets = () => {
           />
           <StatCard
             title={"Revenue generated"}
-            number={"€" + (selectedEvent?.revenue || 0)}
+            number={
+              currencySymbolGenerator(selectedEvent?.eventCurrency) +
+              (selectedEvent?.revenue || 0)
+            }
             icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
             variant={"green-stat-card"}
             showCalendar={true}

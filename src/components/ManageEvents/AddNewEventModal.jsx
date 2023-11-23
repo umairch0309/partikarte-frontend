@@ -27,6 +27,7 @@ const initialState = {
   lng: "",
   lat: "",
   eventLink: "",
+  eventCurrency: "EUR",
 };
 
 const AddNewEventModal = ({
@@ -59,6 +60,7 @@ const AddNewEventModal = ({
     formData.append("eventStart", values.startingDate);
     formData.append("eventEnd", values.endingDate);
     formData.append("eventType", values.eventType);
+    formData.append("eventCurrency", values.eventCurrency);
     formData.append("eventCategory", values.category);
     formData.append("eventVenue", values.venueName);
     formData.append("eventDescription", values.description);
@@ -265,6 +267,31 @@ const AddNewEventModal = ({
             <p className="error-message">{formik.errors.description}</p>
           )}
         </div>
+        <div
+          className={`single-form-item ${
+            formik.touched.eventCurrency && formik.errors.eventCurrency
+              ? "error"
+              : ""
+          }`}
+        >
+          <label htmlFor="eventCurrency">Event Currency</label>
+          <select
+            name="eventCurrency"
+            id="eventCurrency"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.eventCurrency}
+          >
+            <option value="">Choose event currency</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
+          {formik.touched.eventCurrency && formik.errors.eventCurrency && (
+            <p className="select-error-message">
+              {formik.errors.eventCurrency}
+            </p>
+          )}
+        </div>
         <div className="side-by-side-guest-input">
           <div
             className={`single-form-item ${
@@ -307,6 +334,7 @@ const AddNewEventModal = ({
             )}
           </div>
         </div>
+
         <div
           className={`single-form-item ${
             formik.touched.venueName && formik.errors.venueName ? "error" : ""

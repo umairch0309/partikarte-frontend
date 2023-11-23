@@ -51,7 +51,12 @@ const ViewEvent = () => {
           {data?.tickets?.length > 0 ? (
             data?.tickets?.map((ticket, index) => {
               return (
-                <TicketCard eventId={eventId} key={index} ticket={ticket} />
+                <TicketCard
+                  eventId={eventId}
+                  key={index}
+                  ticket={ticket}
+                  eventCurrency={data?.eventCurrency}
+                />
               );
             })
           ) : (

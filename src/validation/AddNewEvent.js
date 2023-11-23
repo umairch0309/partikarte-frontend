@@ -8,6 +8,7 @@ export const AddNewEventSchema = Yup.object().shape({
     .oneOf(["Venue", "Online"], "Required")
     .required("Required"),
   venueName: Yup.string().required("Required"),
+  eventCurrency: Yup.string().required("Required"),
   eventBanner: Yup.string().required("Event banner is required."),
   address: Yup.string().when("eventType", {
     is: "Venue",

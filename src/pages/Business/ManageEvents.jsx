@@ -23,6 +23,7 @@ import { useCouponByEventId } from "../../api/coupons";
 import TertiaryButton from "../../components/UI/TertiaryButton";
 import { WEB_URL } from "../../constants";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
 const couponInitialState = { discount: 0 };
 
@@ -251,7 +252,10 @@ const ManageEvents = () => {
           />
           <StatCard
             title={"Revenue generated"}
-            number={"€" + (selectedEvent?.revenue || 0)}
+            number={
+              currencySymbolGenerator(selectedEvent?.eventCurrency) +
+              (selectedEvent?.revenue || 0)
+            }
             icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
             variant={"green-stat-card"}
             showCalendar={true}

@@ -12,6 +12,7 @@ import { useProfileDetails } from "../../api/profile";
 import { useBusinessTransactions } from "../../api/transactions";
 import TransactionsTable from "../../components/Tables/TransactionsTable";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
 const Finance = () => {
   const { checkPermission } = usePermissionCheck();
@@ -92,7 +93,7 @@ const Finance = () => {
             <StatCard
               title={"Current Balance"}
               number={
-                "€" +
+                currencySymbolGenerator("EUR") +
                 (parseInt(data?.business?.earnings?.currentBalance).toFixed(
                   2
                 ) || 0)
@@ -104,7 +105,7 @@ const Finance = () => {
             <StatCard
               title={"All Time Earnings"}
               number={
-                "€" +
+                currencySymbolGenerator("EUR") +
                 (parseInt(data?.business?.earnings?.totalEarnings).toFixed(2) ||
                   0)
               }
@@ -115,7 +116,7 @@ const Finance = () => {
             <StatCard
               title={"Widthdrawn amount"}
               number={
-                "€" +
+                currencySymbolGenerator("EUR") +
                 (
                   (parseInt(
                     data?.business?.earnings?.totalEarnings -
