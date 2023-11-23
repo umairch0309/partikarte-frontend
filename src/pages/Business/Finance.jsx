@@ -92,7 +92,7 @@ const Finance = () => {
             <StatCard
               title={"Current Balance"}
               number={
-                "$" +
+                "€" +
                 (parseInt(data?.business?.earnings?.currentBalance).toFixed(
                   2
                 ) || 0)
@@ -104,7 +104,7 @@ const Finance = () => {
             <StatCard
               title={"All Time Earnings"}
               number={
-                "$" +
+                "€" +
                 (parseInt(data?.business?.earnings?.totalEarnings).toFixed(2) ||
                   0)
               }
@@ -115,7 +115,7 @@ const Finance = () => {
             <StatCard
               title={"Widthdrawn amount"}
               number={
-                "$" +
+                "€" +
                 (
                   (parseInt(
                     data?.business?.earnings?.totalEarnings -

@@ -38,7 +38,7 @@ const EventCard = ({ event, className, style }) => {
         <div className="event-price"> No tickets available</div>
       ) : (
         <div className="event-price">
-          Starting from <strong>{`$${minPriceTicket?.price}`}</strong>
+          Starting from <strong>{`€${minPriceTicket?.price}`}</strong>
         </div>
       )}
     </div>

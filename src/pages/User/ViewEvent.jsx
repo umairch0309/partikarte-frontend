@@ -149,6 +149,10 @@ const ViewEvent = () => {
                   padding: "10px",
                   borderRadius: "10px",
                 }}
+                center={{
+                  lat: parseFloat(data?.eventCoordinatesY),
+                  lng: parseFloat(data?.eventCoordinatesX),
+                }}
               />
               {showMap && (
                 <div className="get-directions-button-wrapper">

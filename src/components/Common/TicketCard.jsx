@@ -203,7 +203,7 @@ const TicketCard = ({ ticket, eventId }) => {
           now >= validFrom && now <= validTo ? (
             <div className="ticket-card-bottom">
               <div className="ticket-card-bottom-controls-container">
-                <h4 className="price">${ticket?.price}</h4>
+                <h4 className="price">€{ticket?.price}</h4>
                 <div className="buttons-container">
                   <PrimaryButton
                     onClick={() => {

@@ -1,16 +1,16 @@
 import React from "react";
 import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 
-const GoogleMapComponent = ({ setShowMap, styleOptions }) => {
+const GoogleMapComponent = ({ setShowMap, styleOptions, center }) => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyA07lD6jhIN2OwvpX1cXsj5NAiN3T5pDjk",
   });
 
   const mapContainerStyle = styleOptions;
-  const center = {
-    lat: 48.1121925, // Example latitude
-    lng: 17.0935551, // Example longitude
-  };
+  // const center = {
+  //   lat: 48.1121925, // Example latitude
+  //   lng: 17.0935551, // Example longitude
+  // };
 
   if (loadError) {
     return <div>Error loading Google Maps</div>;
