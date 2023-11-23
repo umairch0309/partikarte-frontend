@@ -56,8 +56,8 @@ const CheckoutSelectedEvent = ({ ticket }) => {
       </div>
       <div className="event-tile-right">
         <div className="price-container">
-          <h4>$ {ticket.price.toFixed(2)}</h4>
-          <h6>Total: ${(ticket.price * ticket?.noOfTickets).toFixed(2)}</h6>
+          <h4>€ {ticket.price.toFixed(2)}</h4>
+          <h6>Total: €{(ticket.price * ticket?.noOfTickets).toFixed(2)}</h6>
         </div>
         <button onClick={deleteTicketInContext} className="delete-button">
           <ReactSVG src="/icons/tools/delete.svg" />

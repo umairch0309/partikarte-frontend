@@ -185,7 +185,7 @@ const Dashboard = () => {
                         <div className="revenue-details-container">
                           <p>Total Revenue:</p>
                           <h3>
-                            ${event?.revenue}{" "}
+                            €{event?.revenue}{" "}
                             <span>({event?.ticketsSold} tickets )</span>
                           </h3>
                         </div>
@@ -220,12 +220,12 @@ const Dashboard = () => {
                 </div>
                 <div className="single-balance-sheet">
                   <h4>Balance</h4>
-                  <h3>${revenueData?.[0]?.totalRevenue || 0}</h3>
+                  <h3>€{revenueData?.[0]?.totalRevenue || 0}</h3>
                 </div>
                 <div className="single-balance-sheet">
                   <h4>Fee’s</h4>
                   <h3>
-                    ${parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
+                    €{parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
                   </h3>
                 </div>
               </div>

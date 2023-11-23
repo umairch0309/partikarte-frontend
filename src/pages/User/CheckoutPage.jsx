@@ -45,7 +45,7 @@ const CheckoutPage = () => {
           </div>
           <div className="checkout-left-main">
             <h5>Total Amount</h5>
-            <h1>$ {totalPriceCalculated()}</h1>
+            <h1>€ {totalPriceCalculated()}</h1>
             {!isLoading ? (
               <>
                 <div className="selected-event">
@@ -71,18 +71,18 @@ const CheckoutPage = () => {
             <div className="totals-container">
               <div className="totals-item">
                 <h4>Subtotal</h4>
-                <h4>$ {totalPriceCalculated()}</h4>
+                <h4>€ {totalPriceCalculated()}</h4>
               </div>
               <hr />{" "}
               <div className="totals-item tax-item">
                 <h4>Sales tax (6.5%)</h4>
-                <h4>$ {totalPriceCalculated() * 0.065}</h4>
+                <h4>€ {totalPriceCalculated() * 0.065}</h4>
               </div>
               <hr />{" "}
               <div className="totals-item ">
                 <h4>Total due</h4>
                 <h4>
-                  {`$${(
+                  {`€${(
                     parseFloat(totalPriceCalculated()) +
                     parseFloat(totalPriceCalculated()) * 0.065
                   ).toFixed(2)}`}

@@ -68,7 +68,7 @@ const ManageTickets = () => {
           />
           <StatCard
             title={"Revenue generated"}
-            number={"$" + (selectedEvent?.revenue || 0)}
+            number={"€" + (selectedEvent?.revenue || 0)}
             icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
             variant={"green-stat-card"}
             showCalendar={true}

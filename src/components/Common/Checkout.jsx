@@ -12,6 +12,7 @@ import { useCountriesList } from "../../api/services";
 import { useBookingContext } from "../../context/booking-context";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import SecondaryButton from "../UI/SecondaryButton";
+import { message } from "antd";
 
 const initialState = {
   termsAndConditions: false,
@@ -308,14 +309,19 @@ const Checkout = ({ setCoupon }) => {
           Credit Card
         </PrimaryButton>
         <PrimaryButton
-          onClick={() => {
-            setActivePaymentType("bank");
-            setFormErrors({});
-          }}
+          // onClick={() => {
+          //   setActivePaymentType("bank");
+          //   setFormErrors({});
+          // }}
           className={`top-payment-button ${
             activePaymentType !== "bank" && "in-active-button"
           }`}
-          disabled={state.orderAmount === 0}
+          onClick={() => {
+            message.error("Bank Transfer will be available soon.");
+          }}
+          title="Bank Transfer will be available soon."
+          // disabled={state.orderAmount === 0}
+          disabled={true}
         >
           <ReactSVG src="/icons/tools/bank-payment.svg" />
           Bank Transfer
@@ -457,7 +463,7 @@ const Checkout = ({ setCoupon }) => {
             className="name-input"
             placeholder={
               activePaymentType === "card"
-                ? "Account Holder Name"
+                ? "Name on Credit Card"
                 : "Your full name"
             }
             minLength={6}
@@ -597,10 +603,10 @@ const Checkout = ({ setCoupon }) => {
           type={state.totalTickets === 0 ? "button" : "submit"}
           className="submit-payment-form"
         >
-          Pay ${buttonText()}
+          Pay €{buttonText()}
         </PrimaryButton>
       </form>
-      {activePaymentType === "card" && (
+      {/* {activePaymentType === "card" && (
         <>
           <div className="other-payment-options-divider">
             <hr />
@@ -620,7 +626,7 @@ const Checkout = ({ setCoupon }) => {
             </button>
           </div>
         </>
-      )}
+      )} */}
 
       {/* SUCCESS MODAL */}
       <StatusModal
