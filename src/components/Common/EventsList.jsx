@@ -27,7 +27,7 @@ const EventsList = ({
 
   const { checkPermission } = usePermissionCheck();
 
-  console.log(selectedEvent);
+  console.log(selectedEvent, "selected Event");
 
   const { isDeleting, handleMutation } = useDeleteApi();
   const handleDelete = () => {
