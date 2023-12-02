@@ -1,9 +1,9 @@
-export const BASE_URL = "http://localhost:5600/api/";
-export const WEB_URL = "http://localhost:5600/";
+// export const BASE_URL = "http://localhost:5600/api/";
+// export const WEB_URL = "http://localhost:5600/";
 
 // LIVE URL
-// export const BASE_URL = "http://15.188.15.210/api/";
-// export const WEB_URL = "http://15.188.15.210/";
+export const BASE_URL = "http://15.188.15.210/api/";
+export const WEB_URL = "http://15.188.15.210/";
 
 // SSL
 // export const BASE_URL = "https://partikarte.si/api/";
