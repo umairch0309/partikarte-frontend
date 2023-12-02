@@ -37,8 +37,8 @@ export function usePatchApi() {
         afterSucess(res?.data);
       },
       onError: async (res) => {
-        ShowMessageError(res?.response?.data?.message, path);
-        afterError(res?.response?.data);
+        ShowMessageError(res?.data?.message, path);
+        afterError(res?.data);
       },
     });
   }

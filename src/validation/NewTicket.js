@@ -29,7 +29,6 @@ const validateNewTicket = async (formValues) => {
     return {};
   } catch (error) {
     const errors = {};
-    console.log(error);
     error.inner.forEach((err) => {
       errors[err.path] = err.message;
     });

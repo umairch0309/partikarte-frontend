@@ -66,11 +66,17 @@ const NewTicketModal = ({
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
+    console.log(name, typeof value, value);
     setFormValues({ ...formValues, [name]: value });
-    if (name === "paidTicket && value === false") {
-      setFormValues({ ...formValues, vatPercentage: 0, ticketPrice: 0 });
+    if (name === "paidTicket" && value === false) {
+      setFormValues({
+        ...formValues,
+        vatPercentage: 0,
+        ticketPrice: 0,
+        [name]: value,
+      });
     } else if (name === "limitedTickets" && value === false) {
-      setFormValues({ ...formValues, numberOfTickets: 0 });
+      setFormValues({ ...formValues, numberOfTickets: 0, [name]: value });
     }
   };
 
@@ -178,7 +184,7 @@ const NewTicketModal = ({
     }
   };
 
-  console.log(formValues);
+  // console.log(formValues);
 
   return (
     <CustomModal
@@ -351,6 +357,7 @@ const NewTicketModal = ({
                   size="small"
                   checked={formValues.limitedTickets}
                   onChange={(e) => {
+                    console.log(e, "checked limitation");
                     handleInputChange({
                       target: { name: "limitedTickets", value: e },
                     });
