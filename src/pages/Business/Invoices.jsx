@@ -18,22 +18,9 @@ const Invoices = () => {
   const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [selectedInterval, setSelectedInterval] = useState("weekly");
   const [filteredData, setFilteredData] = useState([]);
   const [interval, setInterval] = useState("weekly");
   const [searchText, setSearchText] = useState("");
-
-  const [ordersDataForChart, setOrdersDataForChart] = useState([]);
-  const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
-    [selectedInterval, selectedEvent?._id],
-    `${selectedInterval}${
-      selectedEvent?._id ? `?eventId=${selectedEvent?._id}` : ""
-    }`,
-    (res) => {
-      console.log(res);
-      setOrdersDataForChart(res?.orders);
-    }
-  );
 
   const { isLoading: isOrdersLoading } = useOrdersByEventId(
     selectedEvent?._id,
@@ -110,68 +97,6 @@ const Invoices = () => {
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
         />
-        <div className="stats-cards-container">
-          <StatCard
-            title={"Tickets sold"}
-            number={selectedEvent?.ticketsSold || 0}
-            icon={<ReactSVG src="/icons/tools/ticket-filled-colored.svg" />}
-            variant={"yellow-stat-card"}
-            showCalendar={true}
-          />
-          <StatCard
-            title={"Revenue generated"}
-            number={
-              currencySymbolGenerator(selectedEvent?.eventCurrency) +
-              (parseInt(selectedEvent?.revenue).toFixed(2) || 0)
-            }
-            icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
-            variant={"green-stat-card"}
-            showCalendar={true}
-          />
-          <StatCard
-            title={"Partikarte Fees"}
-            number={
-              currencySymbolGenerator(selectedEvent?.eventCurrency) +
-              (
-                (parseInt(selectedEvent?.revenue).toFixed(2) || 0) * 0.08
-              ).toFixed(2)
-            }
-            icon={<ReactSVG src="/icons/tools/percentage-colored.svg" />}
-            variant={"blue-stat-card"}
-            showCalendar={true}
-          />
-          <StatCard
-            title={"Total Paid Out"}
-            number={
-              currencySymbolGenerator(selectedEvent?.eventCurrency) +
-              (parseInt(selectedEvent?.totalPaidOut).toFixed(2) || 0.0)
-            }
-            icon={<ReactSVG src="/icons/tools/clipboardtick-colored.svg" />}
-            variant={"orange-stat-card"}
-            showCalendar={true}
-          />
-        </div>
-        {checkPermission("invoiceAnalytics").status && (
-          <div className="order-analytics-chart-container">
-            <div className="container-header">
-              <h3>Invoices Analytics</h3>
-              <select
-                value={selectedInterval}
-                onChange={(e) => setSelectedInterval(e.target.value)}
-              >
-                <option value={"monthly"}>Monthly</option>
-                <option value={"weekly"}>Weekly</option>
-                <option value={"yearly"}>Yearly</option>
-              </select>
-            </div>
-            <Chart
-              selectedEvent={selectedEvent}
-              data={ordersDataForChart}
-              height={290}
-            />
-          </div>
-        )}
-
         <div className="table-container">
           <div className="table-container-header">
             <h3>Invoices</h3>

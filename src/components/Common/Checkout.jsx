@@ -259,7 +259,6 @@ const Checkout = ({ setCoupon, eventData }) => {
           (res) => {
             console.log("Bank Payment Done");
             setShowSuccessStatus(true);
-            dispatch({ type: "RESET_STATE" });
           },
           (res) => {
             console.log(res, " couldnt do bank payment");
@@ -274,7 +273,6 @@ const Checkout = ({ setCoupon, eventData }) => {
           },
           (res) => {
             console.log("Free payment done");
-            dispatch({ type: "RESET_STATE" });
             setShowSuccessStatus(true);
           },
           (res) => {
@@ -632,7 +630,10 @@ const Checkout = ({ setCoupon, eventData }) => {
       {/* SUCCESS MODAL */}
       <StatusModal
         open={showSuccessStatus}
-        onCancel={setShowSuccessStatus}
+        onCancel={(status) => {
+          setShowSuccessStatus(status);
+          dispatch({ type: "RESET_STATE" });
+        }}
         headline="Congratulations!"
         description="You successfully have bought the ticket(s). Please enjoy your event."
         button={{ text: "Continue Shopping", link: "/all-events" }}

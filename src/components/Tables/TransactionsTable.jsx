@@ -11,7 +11,7 @@ const TransactionsTable = ({ transactionsData, loading }) => {
 
   const columns = [
     {
-      title: "TxnId",
+      title: "Id",
       dataIndex: "txnId",
       key: "txnId",
     },
@@ -26,7 +26,7 @@ const TransactionsTable = ({ transactionsData, loading }) => {
       key: "accountNo",
     },
     {
-      title: "Transferred To",
+      title: " Account holder",
       dataIndex: "accountName",
       key: "accountName",
     },

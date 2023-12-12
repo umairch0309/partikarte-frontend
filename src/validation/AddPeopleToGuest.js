@@ -4,8 +4,7 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   surname: Yup.string().required("Required"),
   guestType: Yup.string().required("Required"),
-  email: Yup.string().email("Invalid email").required("Required"),
-  phoneNumber: Yup.string().required("Required"),
+  email: Yup.string().email("Invalid email"),
 });
 
 const validateAddPeopleToGuest = async (formValues) => {

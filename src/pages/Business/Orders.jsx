@@ -128,28 +128,6 @@ const Orders = () => {
             variant={"green-stat-card"}
             showCalendar={true}
           />
-          <StatCard
-            title={"Partikarte Fees"}
-            number={
-              currencySymbolGenerator(selectedEvent?.eventCurrency) +
-              (
-                (parseInt(selectedEvent?.revenue).toFixed(2) || 0) * 0.08
-              ).toFixed(2)
-            }
-            icon={<ReactSVG src="/icons/tools/percentage-colored.svg" />}
-            variant={"blue-stat-card"}
-            showCalendar={true}
-          />
-          <StatCard
-            title={"Total Paid Out"}
-            number={
-              currencySymbolGenerator(selectedEvent?.eventCurrency) +
-              (parseInt(selectedEvent?.totalPaidOut).toFixed(2) || 0.0)
-            }
-            icon={<ReactSVG src="/icons/tools/clipboardtick-colored.svg" />}
-            variant={"orange-stat-card"}
-            showCalendar={true}
-          />
         </div>
         {checkPermission("ordersAnalytics").status && (
           <div className="order-analytics-chart-container">
@@ -175,7 +153,7 @@ const Orders = () => {
         {checkPermission("customerList").status && (
           <div className="table-container">
             <div className="table-container-header">
-              <h3>Customers</h3>
+              <h3>Orders</h3>
               <div className="header-right">
                 <div className="search-container">
                   <ReactSVG src="/icons/tools/search.svg" />

@@ -112,7 +112,7 @@ const CompanyInformation = () => {
           <label htmlFor="companyVAT">VAT number</label>
           <input
             name="companyVAT"
-            type="number"
+            type="text"
             id="companyVAT"
             placeholder="VAT number"
             onChange={handleInputChange}
@@ -131,7 +131,7 @@ const CompanyInformation = () => {
           <label htmlFor="companyRegistryNumber">Registry number</label>
           <input
             name="companyRegistryNumber"
-            type="number"
+            type="text"
             id="companyRegistryNumber"
             placeholder="Registry number"
             onChange={handleInputChange}

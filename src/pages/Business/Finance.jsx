@@ -18,8 +18,6 @@ const Finance = () => {
   const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [interval, setInterval] = useState("yearly");
-  const [transactions, setTransactions] = useState([]);
 
   const { isLoading } = useProfileDetails((res) => {
     if (res?.data) {
@@ -36,51 +34,6 @@ const Finance = () => {
     }
   );
 
-  const handleIntervalChange = (text) => {
-    applyFilters(text);
-    setInterval(text);
-  };
-
-  const applyFilters = (interval) => {
-    let filtered = transactions || [];
-
-    if (interval === "monthly") {
-      const currentDate = new Date();
-      filtered = filtered.filter((guest) => {
-        const guestDate = new Date(guest.createdAt);
-        return (
-          guestDate.getFullYear() === currentDate.getFullYear() &&
-          guestDate.getMonth() === currentDate.getMonth()
-        );
-      });
-    } else if (interval === "weekly") {
-      const currentDate = new Date();
-      const currentWeek = Math.ceil(
-        (currentDate - new Date(currentDate.getFullYear(), 0, 1)) /
-          (7 * 24 * 60 * 60 * 1000)
-      );
-      filtered = filtered.filter((guest) => {
-        const guestDate = new Date(guest.createdAt);
-        const guestWeek = Math.ceil(
-          (guestDate - new Date(guestDate.getFullYear(), 0, 1)) /
-            (7 * 24 * 60 * 60 * 1000)
-        );
-        return (
-          currentWeek === guestWeek &&
-          currentDate.getFullYear() === guestDate.getFullYear()
-        );
-      });
-    } else if (interval === "yearly") {
-      const currentDate = new Date();
-      filtered = filtered.filter((guest) => {
-        const guestDate = new Date(guest.createdAt);
-        return currentDate.getFullYear() === guestDate.getFullYear();
-      });
-    }
-
-    setFilteredData(filtered);
-  };
-
   return (
     <>
       <Topbar
@@ -91,7 +44,7 @@ const Finance = () => {
         {checkPermission("financeTransactionStats").status && (
           <div className="stats-cards-container">
             <StatCard
-              title={"Current Balance"}
+              title={"Sales"}
               number={
                 currencySymbolGenerator("EUR") +
                 (parseInt(data?.business?.earnings?.currentBalance).toFixed(
@@ -103,7 +56,7 @@ const Finance = () => {
               showCalendar={false}
             />
             <StatCard
-              title={"All Time Earnings"}
+              title={"Fees"}
               number={
                 currencySymbolGenerator("EUR") +
                 (parseInt(data?.business?.earnings?.totalEarnings).toFixed(2) ||
@@ -114,15 +67,13 @@ const Finance = () => {
               showCalendar={false}
             />
             <StatCard
-              title={"Widthdrawn amount"}
+              title={"Earnings"}
               number={
                 currencySymbolGenerator("EUR") +
-                (
-                  (parseInt(
-                    data?.business?.earnings?.totalEarnings -
-                      data?.business?.earnings?.currentBalance
-                  ).toFixed(2) || 0) * 0.08
-                ).toFixed(2)
+                (parseInt(
+                  data?.business?.earnings?.totalEarnings -
+                    data?.business?.earnings?.currentBalance
+                ).toFixed(2) || 0)
               }
               icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
               variant={"yellow-stat-card"}
@@ -134,7 +85,7 @@ const Finance = () => {
         {checkPermission("financeTransactionList").status && (
           <div className="table-container">
             <div className="table-container-header">
-              <h3>Transactions</h3>
+              <h3>Bank Transactions</h3>
               <div className="header-right">
                 <CSVLink
                   data={filteredData}
@@ -146,15 +97,6 @@ const Finance = () => {
                     <span>Download Database (CSV)</span>
                   </SecondaryButton>
                 </CSVLink>
-                <select
-                  name="timeframe"
-                  onChange={(e) => handleIntervalChange(e.target.value)}
-                  value={interval}
-                >
-                  <option value={"monthly"}>Monthly</option>
-                  <option value={"weekly"}>Weekly</option>
-                  <option value={"yearly"}>Yearly</option>
-                </select>
               </div>
             </div>
             <TransactionsTable

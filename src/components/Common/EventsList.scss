@@ -4,9 +4,9 @@
 .event-list-main-container {
   width: calc(100vw - 320px);
   max-width: calc(100vw - 320px);
-  @media (min-width: 1300px) {
-    max-width: calc(1440px - 320px);
-  }
+  // @media (min-width: 1300px) {
+  //   max-width: calc(1440px - 320px);
+  // }
   @media (max-width: 767px) {
     min-width: 100%;
     max-width: 100%;

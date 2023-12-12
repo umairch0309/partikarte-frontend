@@ -111,7 +111,7 @@ const MarketingInformation = () => {
             formErrors.apiAccessKey ? "error" : ""
           }`}
         >
-          <label htmlFor="apiAccessKey">API Access Key</label>
+          <label htmlFor="apiAccessKey">API Integration</label>
           <input
             name="apiAccessKey"
             type="text"

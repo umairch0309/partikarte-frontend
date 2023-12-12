@@ -51,6 +51,18 @@ const Topbar = ({ title, subtitle }) => {
     setOpen(false);
   };
 
+  const getGreeting = () => {
+    const currentHour = new Date().getHours();
+
+    if (currentHour >= 5 && currentHour < 12) {
+      return "Good Morning ☀️";
+    } else if (currentHour >= 12 && currentHour < 18) {
+      return "Good Afternoon 🌅";
+    } else {
+      return "Good Evening 🌃";
+    }
+  };
+
   return (
     <>
       <header className="topbar-container">
@@ -67,7 +79,7 @@ const Topbar = ({ title, subtitle }) => {
                   user?.user?.name ||
                   user?.business?.company?.companyName?.split(" ")[0] ||
                   "User"
-                }, Good Evening 🌃`
+                }, ${getGreeting()}`
               : subtitle}
           </h5>
         </div>

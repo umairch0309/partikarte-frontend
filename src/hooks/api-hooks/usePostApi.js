@@ -38,7 +38,7 @@ export function usePostApi() {
         afterSucess(res?.data);
       },
       onError: async (res) => {
-        ShowMessageError(res?.data?.message, path);
+        ShowMessageError(res?.response?.data?.message, path);
         afterError(res?.data);
       },
     });

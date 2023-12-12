@@ -27,8 +27,6 @@ const EventsList = ({
 
   const { checkPermission } = usePermissionCheck();
 
-  console.log(selectedEvent, "selected Event");
-
   const { isDeleting, handleMutation } = useDeleteApi();
   const handleDelete = () => {
     if (selectedEvent?.ticketsSold > 0) {
@@ -48,10 +46,20 @@ const EventsList = ({
     );
   };
 
+  const [allEvents, setAllEvents] = useState([]);
   const [eventsData, setEventsData] = useState([]);
   const { isLoading } = useAllEvents((res) => {
     setEventsData(res?.events);
+    setAllEvents(res?.events);
   });
+
+  const handleSearchEvent = (e) => {
+    setEventsData(
+      allEvents.filter((event) =>
+        event?.eventName?.toLowerCase()?.includes(e.target.value?.toLowerCase())
+      )
+    );
+  };
 
   useEffect(() => {
     if (!selectedEvent && eventsData?.length > 0) {
@@ -122,27 +130,27 @@ const EventsList = ({
               <h3>Latest Events</h3>
             </div>
             <div className="event-list-header-right">
-              {showInputs && (
-                <div className="header-right-search-button-container">
-                  <div className="search-container">
-                    <ReactSVG src="/icons/tools/search.svg" />
-                    <input
-                      type="text"
-                      name="search"
-                      placeholder="Search events..."
-                    />
-                  </div>
-                  {checkPermission("addNewEvent").status && (
-                    <PrimaryButton
-                      onClick={() => setShowAddNewEventModal(true)}
-                      className={"add-new-event"}
-                    >
-                      <ReactSVG src="/icons/tools/add-event.svg" />
-                      <span>Add new Event</span>
-                    </PrimaryButton>
-                  )}
+              <div className="header-right-search-button-container">
+                <div className="search-container">
+                  <ReactSVG src="/icons/tools/search.svg" />
+                  <input
+                    type="text"
+                    name="search"
+                    placeholder="Search in events..."
+                    onChange={handleSearchEvent}
+                  />
                 </div>
-              )}
+                {showInputs && checkPermission("addNewEvent").status && (
+                  <PrimaryButton
+                    onClick={() => setShowAddNewEventModal(true)}
+                    className={"add-new-event"}
+                  >
+                    <ReactSVG src="/icons/tools/add-event.svg" />
+                    <span>Add new Event</span>
+                  </PrimaryButton>
+                )}
+              </div>
+
               <div className="header-right-arrows">
                 <ReactSVG
                   onClick={() => handleScroll(-320)}
@@ -195,7 +203,7 @@ const EventsList = ({
               <div className="event-header">
                 <div className="date-container">
                   <ReactSVG src="/icons/tools/clock.svg" />
-                  <span>{formatDate(event?.createdAt)}</span>
+                  <span>{formatDate(event?.eventStart)}</span>
                 </div>
                 {showActions && (
                   <Dropdown
@@ -211,8 +219,7 @@ const EventsList = ({
               </div>
               <h3>{event?.eventName}</h3>
               <p className="ticket-time-date">
-                Available from {formatDate(event?.eventStart)} to{" "}
-                {formatDate(event?.eventEnd)}
+                Event Venue: {event?.eventVenue}
               </p>
             </div>
           ))

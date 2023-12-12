@@ -120,7 +120,7 @@ const GuestTable = ({
       title: "Added by",
       dataIndex: "addedBy",
       key: "addedBy",
-      render: (text, record) => record?.addedBy?.role?.toUpperCase(),
+      render: (text, record) => record?.addedBy?.username,
     },
     {
       title: "Actions",

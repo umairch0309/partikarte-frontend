@@ -22,10 +22,7 @@ const Settings = () => {
 
   return (
     <div className="business-settings-page">
-      <Topbar
-        title={"Settings"}
-        subtitle={"Customise your application based upon need!"}
-      />
+      <Topbar title={"Settings"} subtitle={"Easily change your information."} />
       <div className="business-settings-main-container">
         <aside className="business-settings-left">
           <h3>Update And Manage Your Account</h3>
@@ -53,7 +50,7 @@ const Settings = () => {
             {checkPermission("settingsMarketingInfo").status && (
               <NavLink to={"./marketing"}>
                 <ReactSVG src="/icons/menu/marketing.svg" />
-                <span>Marketing</span>
+                <span>Marketing & API</span>
               </NavLink>
             )}
             {checkPermission("settingsAccountInfo").status && (

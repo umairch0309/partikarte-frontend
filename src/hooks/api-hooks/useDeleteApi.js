@@ -36,7 +36,7 @@ export function useDeleteApi() {
         afterSucess(res);
       },
       onError: async (res) => {
-        ShowMessageError(res?.data?.message, path);
+        ShowMessageError(res?.response?.data?.message, path);
         afterError(res);
       },
     });

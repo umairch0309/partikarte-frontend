@@ -20,7 +20,6 @@ const Guestlist = () => {
   const [guestType, setGuestType] = useState("allGuestTypes");
   const [notified, setNotified] = useState("all");
   const [searchText, setSearchText] = useState("");
-  const [interval, setInterval] = useState("monthly");
 
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedGuest, setSelectedGuest] = useState(null);
@@ -35,26 +34,21 @@ const Guestlist = () => {
   });
 
   const handleSearchText = (text) => {
-    applyFilters(text, guestType, notified, interval);
+    applyFilters(text, guestType, notified);
     setSearchText(text);
-  };
-
-  const handleIntervalChange = (text) => {
-    applyFilters(searchText, guestType, notified, text);
-    setInterval(text);
   };
 
   const handleGuestTypeFilter = (value) => {
     setGuestType(value);
-    applyFilters(searchText, value, notified, interval);
+    applyFilters(searchText, value, notified);
   };
 
   const handleNotifiedFilter = (value) => {
     setNotified(value);
-    applyFilters(searchText, guestType, value, interval);
+    applyFilters(searchText, guestType, value);
   };
 
-  const applyFilters = (searchText, guestType, notified, interval) => {
+  const applyFilters = (searchText, guestType, notified) => {
     let filtered = data;
 
     filtered = filtered.filter((guest) =>
@@ -71,40 +65,6 @@ const Guestlist = () => {
       filtered = filtered.filter((guest) => guest?.isNotified === true);
     }
 
-    if (interval === "monthly") {
-      const currentDate = new Date();
-      filtered = filtered.filter((guest) => {
-        const guestDate = new Date(guest.createdAt);
-        return (
-          guestDate.getFullYear() === currentDate.getFullYear() &&
-          guestDate.getMonth() === currentDate.getMonth()
-        );
-      });
-    } else if (interval === "weekly") {
-      const currentDate = new Date();
-      const currentWeek = Math.ceil(
-        (currentDate - new Date(currentDate.getFullYear(), 0, 1)) /
-          (7 * 24 * 60 * 60 * 1000)
-      );
-      filtered = filtered.filter((guest) => {
-        const guestDate = new Date(guest.createdAt);
-        const guestWeek = Math.ceil(
-          (guestDate - new Date(guestDate.getFullYear(), 0, 1)) /
-            (7 * 24 * 60 * 60 * 1000)
-        );
-        return (
-          currentWeek === guestWeek &&
-          currentDate.getFullYear() === guestDate.getFullYear()
-        );
-      });
-    } else if (interval === "yearly") {
-      const currentDate = new Date();
-      filtered = filtered.filter((guest) => {
-        const guestDate = new Date(guest.createdAt);
-        return currentDate.getFullYear() === guestDate.getFullYear();
-      });
-    }
-
     setFilteredData(filtered);
   };
 
@@ -112,7 +72,7 @@ const Guestlist = () => {
     <>
       <Topbar
         title={"Guest List"}
-        subtitle={"Explore or customise your guests!"}
+        subtitle={"Easily manage your event Guest List!"}
       />
       <div className="guestlist-page-container">
         <EventsList
@@ -149,15 +109,6 @@ const Guestlist = () => {
                 <option value={"allNotified"}>All notified</option>
                 <option value={"allNotNotified"}>Not notified</option>
                 <option value={"all"}>All</option>
-              </select>
-              <select
-                name="timeframe"
-                onChange={(e) => handleIntervalChange(e.target.value)}
-                value={interval}
-              >
-                <option value={"monthly"}>Monthly</option>
-                <option value={"weekly"}>Weekly</option>
-                <option value={"yearly"}>Yearly</option>
               </select>
             </div>
             <div className="header-right">

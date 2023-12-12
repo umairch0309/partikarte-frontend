@@ -8,6 +8,7 @@ import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { usePutApi } from "../../hooks/api-hooks/usePutApi";
 import { useProfileDetails } from "../../api/profile";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuthContext } from "../../context/auth-context";
 
 const initialState = {
   oldPassword: "",
@@ -21,6 +22,13 @@ const AccountInformation = () => {
   const [formErrors, setFormErrors] = useState({});
   const [showPasswords, setShowPasswords] = useState([false, false]);
   const [data, setData] = useState(null);
+
+  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
 
   const { response, isLoading: profileLoading } = useProfileDetails((res) => {
     setData(res?.data);
@@ -78,7 +86,9 @@ const AccountInformation = () => {
         path: "auth/change-password",
         data: formData,
       },
-      (res) => {},
+      (res) => {
+        handleLogout();
+      },
       (res) => {
         setFormErrors({ oldPassword: "Incorrect", newPassword: "Incorrect" });
       }
@@ -163,8 +173,8 @@ const AccountInformation = () => {
       <div className="heading-sub-heading-container">
         <h3>Change Password</h3>
         <p>
-          To change the password enter the old password and new and click Save
-          changes
+          To change the password enter the old password and new one, then click
+          Save password
         </p>
       </div>
 

@@ -85,7 +85,7 @@ const FinanceInformation = () => {
             formErrors.accountName ? "error" : ""
           }`}
         >
-          <label htmlFor="accountName">Account name</label>
+          <label htmlFor="accountName">Account holder</label>
           <input
             name="accountName"
             type="text"
@@ -103,7 +103,7 @@ const FinanceInformation = () => {
       <div
         className={`single-form-item ${formErrors.invoiceEmail ? "error" : ""}`}
       >
-        <label htmlFor="invoiceEmail">Send Invoice to Email</label>
+        <label htmlFor="invoiceEmail">Send Invoices to this E-mail</label>
         <input
           name="invoiceEmail"
           type="text"
