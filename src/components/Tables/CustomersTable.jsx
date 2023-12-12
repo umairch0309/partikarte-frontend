@@ -111,6 +111,13 @@ const CustomersTable = ({ customersData, isLoading }) => {
       align: "center",
     },
     {
+      title: "Newsletter Subscription",
+      dataIndex: "newsLetterSubscription",
+      key: "newsLetterSubscription",
+      align: "center",
+      render: (text, record) => (record.recommendations ? "Yes" : "No"),
+    },
+    {
       title: "Actions",
       dataIndex: "actions",
       key: "actions",

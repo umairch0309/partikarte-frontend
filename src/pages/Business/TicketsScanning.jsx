@@ -14,6 +14,7 @@ import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import { useOrdersByTimeInterval } from "../../api/orders";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
+import ScanningChart from "../../components/Common/ScanningChart";
 
 const TicketsScanning = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const TicketsScanning = () => {
   const isMobile = useIsMobileWidth();
 
   const [ordersDataForChart, setOrdersDataForChart] = useState([]);
-  const [selectedInterval, setSelectedInterval] = useState("monthly");
+  const [selectedInterval, setSelectedInterval] = useState("daily");
 
   const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
     [selectedInterval, selectedEvent?._id],
@@ -117,25 +118,25 @@ const TicketsScanning = () => {
         <div className="stats-cards-container">
           <StatCard
             title={"Total Tickets"}
-            number={62571}
+            number={selectedEvent?.ticketsSold}
             icon={<ReactSVG src="/icons/tools/ticket-filled-colored.svg" />}
             variant={"yellow-stat-card"}
           />
           <StatCard
             title={"Tickets Scanned"}
-            number={345}
+            number={selectedEvent?.scannedTickets}
             icon={<ReactSVG src="/icons/tools/scan-ticket-colored.svg" />}
             variant={"green-stat-card"}
           />
           <StatCard
             title={"Total Guests"}
-            number={8186}
+            number={selectedEvent?.totalGuests}
             icon={<ReactSVG src="/icons/tools/people-list-colored.svg" />}
             variant={"blue-stat-card"}
           />
           <StatCard
             title={"Guests Permitted"}
-            number={1102}
+            number={selectedEvent?.totalScannedGuests}
             icon={<ReactSVG src="/icons/tools/tick-person-colored.svg" />}
             variant={"orange-stat-card"}
           />
@@ -157,21 +158,12 @@ const TicketsScanning = () => {
             </div>
           </div>
         </div>
-        <div className="order-analytics-chart-container">
+        {/* <div className="order-analytics-chart-container">
           <div className="container-header">
-            <h3>Tickets Analytics</h3>
-            <select onChange={(e) => setSelectedInterval(e.target.value)}>
-              <option value={"monthly"}>Monthly</option>
-              <option value={"weekly"}>Weekly</option>
-              <option value={"yearly"}>Yearly</option>
-            </select>
+            <h3>Attendes Admission</h3>
           </div>
-          <Chart
-            selectedInterval={selectedInterval}
-            data={ordersDataForChart}
-            height={290}
-          />
-        </div>
+          <ScanningChart data={ordersDataForChart} height={290} />
+        </div> */}
         {isMobile && (
           <div className="tables-selection-buttons-container">
             <button

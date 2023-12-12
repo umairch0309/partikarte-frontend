@@ -38,7 +38,9 @@ const Dashboard = () => {
   const [eventsData, setEventsData] = useState([]);
   const [ordersDataForChart, setOrdersDataForChart] = useState([]);
   const [allEventsData, setAllEventsData] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState("undefined");
+  const [selectedEventForOrders, setSelectedEventForOrders] =
+    useState("undefined");
   const [selectedInterval, setSelectedInterval] = useState("weekly");
   const [orderFilter, setOrderFilter] = useState("latest");
   const [filteredOrders, setFilteredOrders] = useState([]);
@@ -48,12 +50,14 @@ const Dashboard = () => {
 
   const { isLoading: isAllEventsLoading } = useAllEvents((res) => {
     setAllEventsData(res?.events);
-    setSelectedEvent(res?.events[0]?._id);
+    // setSelectedEvent(res?.events[0]?._id);
   });
 
   const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
     [selectedInterval, selectedEvent],
-    `${selectedInterval}${selectedEvent ? `?eventId=${selectedEvent}` : ""}`,
+    `${selectedInterval}${
+      selectedEvent ? `?eventId=${selectedEvent}` : "undefined"
+    }`,
     (res) => {
       console.log(res);
       setOrdersDataForChart(res?.orders);
@@ -78,14 +82,20 @@ const Dashboard = () => {
     if (orderFilter === "last-month") {
       const lastMonth = new Date();
       lastMonth.setMonth(lastMonth.getMonth() - 1);
-      filteredAndSortedOrders = filteredAndSortedOrders.filter(
-        (order) => new Date(order.updatedAt) >= lastMonth
+      filteredAndSortedOrders = filteredAndSortedOrders.filter((order) =>
+        new Date(order.updatedAt) >= lastMonth &&
+        selectedEventForOrders === "undefined"
+          ? 1
+          : order.eventId?._id === selectedEventForOrders
       );
     } else if (orderFilter === "last-week") {
       const lastWeek = new Date();
       lastWeek.setDate(lastWeek.getDate() - 7);
-      filteredAndSortedOrders = filteredAndSortedOrders.filter(
-        (order) => new Date(order.updatedAt) >= lastWeek
+      filteredAndSortedOrders = filteredAndSortedOrders.filter((order) =>
+        new Date(order.updatedAt) >= lastWeek &&
+        selectedEventForOrders === "undefined"
+          ? 1
+          : order.eventId?._id === selectedEventForOrders
       );
     }
 
@@ -95,8 +105,14 @@ const Dashboard = () => {
         new Date(b.updatedAt)?.getTime() - new Date(a.updatedAt)?.getTime()
     );
 
-    setFilteredOrders(filteredAndSortedOrders);
-  }, [ordersData, orderFilter]);
+    setFilteredOrders(
+      filteredAndSortedOrders?.filter((order) =>
+        selectedEventForOrders === "undefined"
+          ? true
+          : order.eventId?._id === selectedEventForOrders
+      )
+    );
+  }, [ordersData, orderFilter, selectedEventForOrders]);
 
   return (
     <>
@@ -118,6 +134,7 @@ const Dashboard = () => {
                     onChange={(e) => setSelectedEvent(e.target.value)}
                   >
                     <option value={""}>Choose event</option>
+                    <option value={"undefined"}>All Events</option>
                     {allEventsData?.length > 0 &&
                       allEventsData?.map((el) => (
                         <option value={el?._id}>{el?.eventName}</option>
@@ -127,9 +144,10 @@ const Dashboard = () => {
                     value={selectedInterval}
                     onChange={(e) => setSelectedInterval(e.target.value)}
                   >
+                    <option value={"daily"}>Today</option>
+                    <option value={"weekly"}>Weekly</option>
                     <option value={"monthly"}>Monthly</option>
                     <option value={"yearly"}>Yearly</option>
-                    <option value={"weekly"}>Weekly</option>
                   </select>
                 </div>
               </div>
@@ -148,6 +166,17 @@ const Dashboard = () => {
                 </div>
                 <div className="header-right">
                   <select
+                    value={selectedEventForOrders}
+                    onChange={(e) => setSelectedEventForOrders(e.target.value)}
+                  >
+                    <option value={""}>Choose event</option>
+                    <option value={"undefined"}>All Events</option>
+                    {allEventsData?.length > 0 &&
+                      allEventsData?.map((el) => (
+                        <option value={el?._id}>{el?.eventName}</option>
+                      ))}
+                  </select>
+                  <select
                     value={orderFilter}
                     onChange={(e) => setOrderFilter(e.target.value)}
                   >
@@ -162,6 +191,43 @@ const Dashboard = () => {
           )}
         </div>
         <div className="dashboard-page-right">
+          {checkPermission("dashboardBalanceSheet").status && (
+            <div className="balance-sheet-container">
+              <div className="balance-sheet-header">
+                <h3>Balance Sheet</h3>
+                <select
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  value={selectedMonth}
+                >
+                  {monthNames.map((m) => (
+                    <option value={m}>{m}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="all-balance-sheets-container">
+                <div className="single-balance-sheet">
+                  <h4>Total Orders</h4>
+                  <h3>{revenueData?.[0]?.totalOrders || 0}</h3>
+                </div>
+                <div className="single-balance-sheet">
+                  <h4>Revenue</h4>
+                  <h3>
+                    {" "}
+                    {currencySymbolGenerator("EUR")}{" "}
+                    {revenueData?.[0]?.totalRevenue || 0}
+                  </h3>
+                </div>
+                <div className="single-balance-sheet">
+                  <h4>Fee’s</h4>
+                  <h3>
+                    {currencySymbolGenerator("EUR")}
+                    {parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
+                  </h3>
+                </div>
+              </div>
+            </div>
+          )}
+
           {checkPermission("dashboardActiveEvents").status && (
             <div className="active-events-container">
               <h3>Active Events</h3>
@@ -199,42 +265,6 @@ const Dashboard = () => {
                 ) : (
                   <Skeleton active={true} size={"small"} />
                 )}
-              </div>
-            </div>
-          )}
-          {checkPermission("dashboardBalanceSheet").status && (
-            <div className="balance-sheet-container">
-              <div className="balance-sheet-header">
-                <h3>Balance Sheet</h3>
-                <select
-                  onChange={(e) => setSelectedMonth(e.target.value)}
-                  value={selectedMonth}
-                >
-                  {monthNames.map((m) => (
-                    <option value={m}>{m}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="all-balance-sheets-container">
-                <div className="single-balance-sheet">
-                  <h4>Total Orders</h4>
-                  <h3>{revenueData?.[0]?.totalOrders || 0}</h3>
-                </div>
-                <div className="single-balance-sheet">
-                  <h4>Balance</h4>
-                  <h3>
-                    {" "}
-                    {currencySymbolGenerator("EUR")}{" "}
-                    {revenueData?.[0]?.totalRevenue || 0}
-                  </h3>
-                </div>
-                <div className="single-balance-sheet">
-                  <h4>Fee’s</h4>
-                  <h3>
-                    {currencySymbolGenerator("EUR")}
-                    {parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
-                  </h3>
-                </div>
               </div>
             </div>
           )}

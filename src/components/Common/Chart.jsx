@@ -14,11 +14,17 @@ const Chart = ({ height, data: chartData, selectedInterval }) => {
     chartData?.map((order) => ({
       ...order,
       ...(selectedInterval !== "yearly" && {
-        updatedAt: new Date(order.updatedAt).toLocaleDateString("en-US", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        }),
+        updatedAt:
+          selectedInterval === "daily"
+            ? new Date(order.updatedAt).toLocaleTimeString("en-US", {
+                hour: "numeric",
+                hour12: true,
+              })
+            : new Date(order.updatedAt).toLocaleDateString("en-US", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }),
       }),
     })) || [];
 

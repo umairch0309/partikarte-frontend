@@ -67,8 +67,10 @@
           }
         }
         .header-right {
+          @include flex(row, flex-end, center, 10px);
           select {
             min-width: 120px;
+            max-width: 150px;
             padding-inline: 10px;
             height: 40px;
             border-color: transparent;

@@ -41,6 +41,9 @@ body {
     &::placeholder {
       color: $placeHolderColor;
     }
+    &:hover {
+      border: 1px solid $primaryColor !important;
+    }
   }
   select,
   input {
@@ -48,6 +51,14 @@ body {
   }
   a {
     text-decoration: none;
+  }
+  .search-input-container,
+  .search-container {
+    input {
+      &:hover {
+        border: none !important;
+      }
+    }
   }
 }
 

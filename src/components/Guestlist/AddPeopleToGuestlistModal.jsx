@@ -8,6 +8,16 @@ import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import { usePutApi } from "../../hooks/api-hooks/usePutApi";
+import {
+  Button,
+  ConfigProvider,
+  Divider,
+  Form,
+  Input,
+  Select,
+  Space,
+} from "antd";
+const { Option } = Select;
 
 const initialState = {
   name: "",
@@ -30,6 +40,25 @@ const AddPeopleToGuestlistModal = ({
   const isMobile = useIsMobileWidth();
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
+  const [newOption, setNewOption] = useState("");
+  const [options, setOptions] = useState([
+    {
+      label: "Choose guest type",
+      value: "",
+    },
+    {
+      label: "VIP",
+      value: "vip",
+    },
+    {
+      label: "VVIP",
+      value: "vvip",
+    },
+    {
+      label: "Economy",
+      value: "economy",
+    },
+  ]);
 
   useEffect(() => {
     if (selectedGuest?._id && editSelected) {
@@ -117,7 +146,7 @@ const AddPeopleToGuestlistModal = ({
       open={showAddPeopleModal}
       onOk={() => setShowAddPeopleModal(false)}
       title={"Add Guest"}
-      subtitle={"Please enter the information to add guest in list."}
+      subtitle={"Please enter the information to add guest to the list"}
       width={!isMobile && 700}
     >
       <form className="add-guest-form-container" onSubmit={handleSubmit}>
@@ -159,18 +188,59 @@ const AddPeopleToGuestlistModal = ({
           className={`single-form-item ${formErrors.guestType ? "error" : ""}`}
         >
           <label htmlFor="guestType">Guest Type*</label>
-          <select
-            onChange={handleInputChange}
-            name="guestType"
-            id="guestType"
-            value={formValues.guestType}
-            onBlur={handleOnBlur}
-          >
-            <option value="">Choose guest type</option>
-            <option value="vip">VIP</option>
-            <option value="vvip">VVIP</option>
-            <option value="economy">Economy</option>
-          </select>
+          <ConfigProvider>
+            <Select
+              onChange={(v) =>
+                handleInputChange({ target: { name: "guestType", value: v } })
+              }
+              name="guestType"
+              id="guestType"
+              value={formValues.guestType}
+              style={{
+                width: "100%",
+                marginTop: "5px",
+                ...(formErrors.guestType && {
+                  border: "1px solid red",
+                  borderRadius: "10px",
+                }),
+              }}
+              options={options}
+              dropdownRender={(menu) => (
+                <>
+                  {menu}
+                  <Divider
+                    style={{
+                      margin: "8px 0",
+                    }}
+                  />
+                  <Space
+                    style={{
+                      padding: "0 8px 4px",
+                    }}
+                  >
+                    <Input
+                      style={{ width: "100%" }}
+                      value={newOption}
+                      onChange={(e) => setNewOption(e.target.value)}
+                      placeholder="Specify any other"
+                    />
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        setOptions([
+                          ...options,
+                          { label: newOption, value: newOption },
+                        ]);
+                        setNewOption("");
+                      }}
+                    >
+                      Add
+                    </Button>
+                  </Space>
+                </>
+              )}
+            />
+          </ConfigProvider>
           {formErrors.guestType && (
             <p className="select-error-message">{formErrors.guestType}</p>
           )}
