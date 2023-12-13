@@ -17,6 +17,7 @@ import {
   Select,
   Space,
 } from "antd";
+import { PhoneInput } from "react-international-phone";
 const { Option } = Select;
 
 const initialState = {
@@ -263,20 +264,33 @@ const AddPeopleToGuestlistModal = ({
               <p className="error-message">{formErrors.email}</p>
             )}
           </div>
+
           <div
-            className={`single-form-item ${
+            className={`single-form-item  ${
               formErrors.phoneNumber ? "error" : ""
             }`}
           >
             <label htmlFor="phoneNumber">Phone Number</label>
-            <input
-              name="phoneNumber"
-              type="number"
-              id="phoneNumber"
-              placeholder="Phone number"
-              onChange={handleInputChange}
+            <PhoneInput
+              defaultCountry="usa"
               value={formValues.phoneNumber}
-              onBlur={handleOnBlur}
+              className={`phone-input-whole ${
+                formErrors.phoneNumber ? "phone-input-whole-error" : ""
+              }`}
+              inputClassName="phone-input"
+              onChange={(e) =>
+                handleInputChange({
+                  target: { value: e, name: "phoneNumber" },
+                })
+              }
+              onBlur={(e) =>
+                handleOnBlur({
+                  target: {
+                    value: e,
+                    name: "phoneNumber",
+                  },
+                })
+              }
             />
             {formErrors.phoneNumber && (
               <p className="error-message">{formErrors.phoneNumber}</p>
@@ -296,8 +310,8 @@ const AddPeopleToGuestlistModal = ({
             />
             <label htmlFor="notifyPeople">Notify people</label>
           </div> */}
-          {/* <div className="side-by-side-guest-input"> */}
-          {/* <button
+          <div className="side-by-side-guest-input-for-footer-buttons">
+            <button
               onClick={() => {
                 setShowAddPeopleModal(false);
                 setShowMultiplePeopleModal(true);
@@ -306,11 +320,12 @@ const AddPeopleToGuestlistModal = ({
               className="add-multiple-button"
             >
               Add multiple guests
-            </button> */}
-          <PrimaryButton disabled={isCreating || isUpdating}>
-            Confirm
-          </PrimaryButton>
-          {/* </div> */}
+            </button>
+
+            <PrimaryButton disabled={isCreating || isUpdating}>
+              Save
+            </PrimaryButton>
+          </div>
         </div>
       </form>
     </CustomModal>

@@ -13,16 +13,19 @@ const GuestsTableInScanning = ({ guestsData }) => {
       title: "Guest type",
       dataIndex: "guestType",
       key: "guestType",
+      render: (text) => (
+        <span style={{ textTransform: "uppercase" }}>{text}</span>
+      ),
     },
     {
       title: "No. of Guest",
-      dataIndex: "guestNumber",
-      key: "guestNumber",
+      dataIndex: "totalGuests",
+      key: "totalGuests",
     },
     {
       title: "Guest Admited",
-      dataIndex: "admittedGuest",
-      key: "admittedGuest",
+      dataIndex: "totalPresentGuests",
+      key: "totalPresentGuests",
     },
   ];
 

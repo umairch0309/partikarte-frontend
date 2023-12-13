@@ -158,6 +158,7 @@ const Guestlist = () => {
         showMultiplePeopleModal={showMultiplePeopleModal}
         setShowAddPeopleModal={setShowAddPeopleModal}
         setShowMultiplePeopleModal={setShowMultiplePeopleModal}
+        selectedEvent={selectedEvent}
       />
     </>
   );

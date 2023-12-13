@@ -140,7 +140,7 @@ const SignIn = () => {
           <PrimaryButton type="submit">Sign In</PrimaryButton>
         </form>
 
-        <div className="sign-in-options-divider">
+        {/* <div className="sign-in-options-divider">
           <hr />
           <p>or</p>
           <hr />
@@ -161,7 +161,7 @@ const SignIn = () => {
           <a href="https://policies.google.com/terms?hl=en-GB" target="_blank">
             Terms of Service.
           </a>
-        </p>
+        </p> */}
       </div>
     </div>
   );

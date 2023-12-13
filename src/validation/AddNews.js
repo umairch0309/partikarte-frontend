@@ -2,12 +2,10 @@ import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
-  event: Yup.string().required("Required"),
-  startingDate: Yup.string().required("Required"),
   description: Yup.string().required("Required"),
-  newsImages: Yup.array()
-    .min(1, "At least 1 image is required")
-    .required("At least 1 image is required"),
+  // newsImages: Yup.array()
+  //   .min(1, "At least 1 image is required")
+  //   .required("At least 1 image is required"),
 });
 
 const validateAddNews = async (formValues) => {

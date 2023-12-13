@@ -186,24 +186,24 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
         <div className="side-by-side-guest-input">
           <div
             className={`single-form-item ${
-              formErrors.guestType ? "error" : ""
+              formErrors.memberType ? "error" : ""
             }`}
           >
-            <label htmlFor="guestType">Guest Type*</label>
+            <label htmlFor="memberType">Member Type*</label>
             <select
               onChange={handleInputChange}
-              name="guestType"
-              id="guestType"
-              value={formValues.guestType}
+              name="memberType"
+              id="memberType"
+              value={formValues.memberType}
               onBlur={handleOnBlur}
             >
-              <option value="">Choose guest type</option>
-              <option value="vip">VIP</option>
-              <option value="vvip">VVIP</option>
-              <option value="normal">Normal</option>
+              <option value="">Choose member type</option>
+              <option value="admin">Admin</option>
+              <option value="owner">Owner</option>
+              <option value="business manager">Business Manager</option>
             </select>
-            {formErrors.guestType && (
-              <p className="select-error-message">{formErrors.guestType}</p>
+            {formErrors.memberType && (
+              <p className="select-error-message">{formErrors.memberType}</p>
             )}
           </div>
           <div
@@ -229,27 +229,6 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
         </div>
 
         <div
-          className={`single-form-item ${formErrors.memberType ? "error" : ""}`}
-        >
-          <label htmlFor="memberType">Member Type</label>
-          <select
-            onChange={handleInputChange}
-            name="memberType"
-            id="memberType"
-            value={formValues.memberType}
-            onBlur={handleOnBlur}
-          >
-            <option value="">Choose member type</option>
-            <option value="admin">Admin</option>
-            <option value="owner">Owner</option>
-            <option value="business manager">Business Manager</option>
-          </select>
-          {formErrors.memberType && (
-            <p className="select-error-message">{formErrors.memberType}</p>
-          )}
-        </div>
-
-        <div
           className={`single-form-item ${formErrors.address ? "error" : ""}`}
         >
           <label htmlFor="address">Address</label>
@@ -272,7 +251,7 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
             formErrors.permissions ? "error" : ""
           }`}
         >
-          <label htmlFor="permissions">Choose permissions role</label>
+          <label htmlFor="permissions">Choose permissions role*</label>
           <select
             onChange={handleInputChange}
             name="permissions"
@@ -358,7 +337,7 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
                   formErrors.frontSideImage ? "image-error" : ""
                 }`}
               >
-                Click to upload FRONT SIDE OF ID
+                Click to upload FRONT SIDE OF ID*
               </label>
             ) : (
               <div className="id-image-container">
@@ -389,7 +368,7 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
                   formErrors.backSideImage ? "image-error" : ""
                 }`}
               >
-                Click to upload BACK SIDE OF ID
+                Click to upload BACK SIDE OF ID*
               </label>
             ) : (
               <div className="id-image-container">

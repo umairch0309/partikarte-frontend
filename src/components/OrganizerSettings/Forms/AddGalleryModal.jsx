@@ -85,7 +85,7 @@ const AddGalleryModal = ({
     const formData = new FormData();
     formData.append("galleryName", formValues.galleryTitle);
     formData.append("event", formValues.event);
-    formData.append("date", formValues.startingDate);
+    formData.append("date", new Date().toISOString());
     imagesArray.map((image, index) => {
       formData.append(`newImages${index}`, image);
     });
@@ -193,7 +193,7 @@ const AddGalleryModal = ({
           )}
         </div>
 
-        <div
+        {/* <div
           className={`single-form-item ${
             formErrors.startingDate ? "error" : ""
           }`}
@@ -212,7 +212,7 @@ const AddGalleryModal = ({
           {formErrors.startingDate && (
             <p className="select-error-message">{formErrors.startingDate}</p>
           )}
-        </div>
+        </div> */}
 
         <div className={`single-form-item ${formErrors.event ? "error" : ""}`}>
           <label htmlFor="event">Event</label>
@@ -224,6 +224,8 @@ const AddGalleryModal = ({
             onBlur={handleOnBlur}
           >
             <option value="">Choose event</option>
+            <option value="no-specific-event">No specific event.</option>
+
             {eventsData?.length > 0 &&
               eventsData?.map((el) => (
                 <option value={el?._id}>{el?.eventName}</option>

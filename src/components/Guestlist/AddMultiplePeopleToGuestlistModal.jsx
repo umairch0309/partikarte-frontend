@@ -3,52 +3,100 @@ import CustomModal from "../UI/CustomModal";
 import "./ModalForm.scss";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import PrimaryButton from "../UI/PrimaryButton";
-import validateAddMultiplePeopleToGuest from "../../validation/AddMultiplePeopleToGuest";
-import useHandleOnBlur from "../../hooks/useHandleOnBlur";
-
-const initialState = {
-  guestInfo: "",
-  guestType: "",
-  notifyPeople: true,
-};
+import { CSVLink } from "react-csv";
+import CSVReader from "react-csv-reader";
+import { usePostApi } from "../../hooks/api-hooks/usePostApi";
+import { useQueryClient } from "@tanstack/react-query";
+import { message } from "antd";
 
 const AddMultiplePeopleToGuestlistModal = ({
   setShowAddPeopleModal,
   setShowMultiplePeopleModal,
   showMultiplePeopleModal,
+  selectedEvent,
 }) => {
   const isMobile = useIsMobileWidth();
-  const [formValues, setFormValues] = useState(initialState);
-  const [formErrors, setFormErrors] = useState({});
+  const [guests, setGuests] = useState([]);
+  const { handleMutation, isLoading: isCreating } = usePostApi();
+  const queryClient = useQueryClient();
 
-  const handleInputChange = async (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
+  const headers = [
+    { label: "Name", key: "name" },
+    { label: "Surname", key: "surname" },
+    { label: "Guest Type", key: "guestType" },
+    { label: "Email", key: "email" },
+    { label: "Phone Number", key: "phoneNumber" },
+  ];
+  const data = [{}];
 
-  const handleOnBlur = async (e) => {
-    useHandleOnBlur(e, validateAddMultiplePeopleToGuest, setFormErrors);
-  };
+  const handleFileUpload = (data) => {
+    if (data && data.length > 0) {
+      const uploadedHeaders = Object.keys(data[0]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const errors = await validateAddMultiplePeopleToGuest(formValues);
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
+      const isValidHeaders =
+        headers.every((expectedHeader) =>
+          uploadedHeaders.includes(expectedHeader.key)
+        ) &&
+        uploadedHeaders.every((uploadedHeader) =>
+          headers.some(
+            (expectedHeader) => expectedHeader.key === uploadedHeader
+          )
+        );
+
+      if (isValidHeaders) {
+        const invalidEmails = [];
+
+        // Check for valid email addresses
+        const guestsWithValidEmails = data.filter((guest, index) => {
+          const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guest.email);
+          if (!isValidEmail) {
+            invalidEmails.push(index + 1);
+          }
+          return isValidEmail;
+        });
+
+        setGuests(guestsWithValidEmails);
+        console.log("Uploaded Guests:", guestsWithValidEmails);
+
+        if (invalidEmails.length > 0) {
+          message.warning(
+            `Invalid email addresses in records: ${invalidEmails.join(", ")}`
+          );
+          return;
+        }
+
+        onSaveHandler(guestsWithValidEmails);
+      } else {
+        message.error(
+          "Please upload a valid file with valid data and headers."
+        );
+        console.error("Invalid headers in the uploaded file.");
+      }
     }
+  };
 
-    const formData = new FormData();
-    formData.append("guestInfo", formValues.guestInfo);
-    formData.append("guestType", formValues.guestType);
-    formData.append("notifyPeople", formValues.notifyPeople);
+  const onSaveHandler = (guests) => {
+    if (guests?.length > 0) {
+      handleMutation(
+        {
+          path: "guests/multiple-new-guests",
+          data: { guests, eventId: selectedEvent?._id },
+        },
+        (res) => {
+          queryClient.invalidateQueries(["get-all-guests", selectedEvent?._id]);
+          setShowMultiplePeopleModal(false);
+          setShowAddPeopleModal(false);
+        },
+        (res) => {}
+      );
+    } else {
+      message.error("Please upload a valid file with valid data.");
+    }
   };
 
   return (
     <CustomModal
       onCancel={() => {
-        setFormValues(initialState);
-        setFormErrors({});
         setShowMultiplePeopleModal(false);
       }}
       open={showMultiplePeopleModal}
@@ -59,69 +107,53 @@ const AddMultiplePeopleToGuestlistModal = ({
       }
       width={!isMobile && 700}
     >
-      <form className="add-guest-form-container" onSubmit={handleSubmit}>
-        <div
-          className={`single-form-item ${formErrors.guestInfo ? "error" : ""}`}
-        >
-          <label htmlFor="guestInfo">Guest Info*</label>
-          <textarea
-            name="guestInfo"
-            id="guestInfo"
-            placeholder="Enter guests information and press enter to save next guest..."
-            onChange={handleInputChange}
-            value={formValues.guestInfo}
-            onBlur={handleOnBlur}
-          />
-          {formErrors.guestInfo && (
-            <p className="error-message">{formErrors.guestInfo}</p>
-          )}
-        </div>
-        <div
-          className={`single-form-item ${formErrors.guestType ? "error" : ""}`}
-        >
-          <label htmlFor="guestType">Guest Type*</label>
-          <select
-            onChange={handleInputChange}
-            name="guestType"
-            id="guestType"
-            value={formValues.guestType}
-            onBlur={handleOnBlur}
-          >
-            <option value="">Choose guest type</option>
-            <option value="vip">VIP</option>
-            <option value="vvip">VVIP</option>
-            <option value="economy">Economy</option>
-          </select>
-          {formErrors.guestType && (
-            <p className="select-error-message">{formErrors.guestType}</p>
-          )}
+      <form className="add-guest-form-container">
+        <div>
+          Please download the template file and fill it with your guests
+          accordingly. To download the template file, please click the button
+          below.
         </div>
         <div className="side-by-side-guest-input">
-          {/* <div className="single-form-item radio-input-container">
-            <input
-              className="radio-input"
-              name="notifyPeople"
-              type="radio"
-              id="notifyPeople"
-              onChange={handleInputChange}
-              value={formValues.notifyPeople}
-              onBlur={handleOnBlur}
-            />
-            <label htmlFor="notifyPeople">Notify people</label>
-          </div> */}
-          <div className="side-by-side-guest-input">
-            <button
-              onClick={() => {
-                setShowMultiplePeopleModal(false);
-                setShowAddPeopleModal(true);
-              }}
-              type="button"
-              className="add-multiple-button"
-            >
-              Add single guest
-            </button>
-            <PrimaryButton>Confirm</PrimaryButton>
-          </div>
+          <CSVLink
+            data={data}
+            headers={headers}
+            filename={"guest_template.csv"}
+            className="add-multiple-button"
+          >
+            Download Template
+          </CSVLink>
+          <button
+            onClick={() => {
+              setShowMultiplePeopleModal(false);
+              setShowAddPeopleModal(true);
+            }}
+            type="button"
+            className="add-multiple-button"
+          >
+            Add single guest
+          </button>
+          <label className="upload-all-guests-file" htmlFor="uploadGuests">
+            Upload Guests Sheet
+          </label>
+          <CSVReader
+            inputId="uploadGuests"
+            onFileLoaded={handleFileUpload}
+            parserOptions={{
+              header: true,
+              dynamicTyping: true,
+              skipEmptyLines: true,
+              transformHeader: (header) => {
+                const words = header.toLowerCase().split(/\W+/);
+                const camelCaseHeader = words.reduce((result, word, index) => {
+                  return index === 0
+                    ? word
+                    : result + word.charAt(0).toUpperCase() + word.slice(1);
+                }, "");
+                return camelCaseHeader;
+              },
+            }}
+            inputStyle={{ display: "none" }}
+          />
         </div>
       </form>
     </CustomModal>

@@ -10,19 +10,27 @@ const TicketsTableInScanning = ({ ticketsData }) => {
 
   const columns = [
     {
+      title: "Ticket Name",
+      dataIndex: "ticketName",
+      key: "ticketName",
+    },
+    {
       title: "Type of tickets",
       dataIndex: "ticketType",
       key: "ticketType",
+      render: (text) => (
+        <span style={{ textTransform: "uppercase" }}>{text}</span>
+      ),
     },
     {
       title: "Qty. Sold",
-      dataIndex: "soldQuantity",
-      key: "soldQuantity",
+      dataIndex: "ticketOrders",
+      key: "ticketOrders",
     },
     {
-      title: "Qty. Admited",
-      dataIndex: "admitedQuantity",
-      key: "admitedQuantity",
+      title: "Qty. Remaining",
+      dataIndex: "remainingCapacity",
+      key: "remainingCapacity",
     },
   ];
 

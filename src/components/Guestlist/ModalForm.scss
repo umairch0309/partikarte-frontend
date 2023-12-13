@@ -15,13 +15,16 @@
       white-space: nowrap;
       width: 100%;
     }
-
+    // input[type="file"] {
+    //   display: none;
+    // }
     .add-multiple-button {
       background: none;
       border: none;
       font-size: 16px;
       font-weight: 500;
       color: $secondaryColor;
+      white-space: nowrap;
     }
   }
   .single-form-item {
@@ -44,6 +47,30 @@
       padding-top: 10px;
     }
   }
+  .phone-input-whole {
+    margin-top: 5px;
+    border: 1px solid #e6e9ed;
+    padding-right: 15px;
+    border-radius: $primaryBorderRadius;
+    &:focus-within {
+      outline: 2px solid $primaryColor;
+    }
+    button {
+      height: 50px;
+      border: none;
+      width: 70px;
+      border-radius: $primaryBorderRadius;
+    }
+    .phone-input {
+      margin-top: 0px;
+      height: 50px;
+      border: none;
+      border-radius: $primaryBorderRadius;
+      &:hover {
+        border: none !important;
+      }
+    }
+  }
   .error {
     width: 100%;
     position: relative;
@@ -63,6 +90,54 @@
     }
     .select-error-message {
       margin-right: 30px;
+    }
+  }
+  .upload-guests-sheet-input {
+    display: none;
+  }
+
+  .side-by-side-guest-input-for-footer-buttons {
+    @include flex(row, space-between, center, 30px);
+    justify-content: space-between;
+    width: 100%;
+    button {
+      width: fit-content;
+      white-space: nowrap;
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+
+    .add-multiple-button {
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      color: $secondaryColor;
+    }
+  }
+  .csv-reader-input {
+    display: none;
+  }
+  .upload-all-guests-file {
+    font-size: 16px;
+    font-weight: 500;
+    height: 50px;
+    padding-inline: 33px;
+    background: $primaryColor;
+    border: 1px solid transparent;
+    color: white;
+    border-radius: $primaryBorderRadius;
+    transition: all 0.2s;
+    @include flex(row, center, center);
+    white-space: nowrap;
+    &:hover {
+      background-color: transparent;
+      color: $primaryColor;
+      @include customBorder(1px, solid, $primaryColor, 10px);
+    }
+    &:disabled {
+      cursor: not-allowed;
     }
   }
 }
