@@ -116,10 +116,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <Topbar
-        title={"Welcome to Partikarte"}
-        subtitle={"Hey David, Good Evening 🌃"}
-      />
+      <Topbar title={"Welcome to Partikarte"} hideSearchInput={true} />
       <div className="dashboard-page-container">
         <div className="dashboard-page-left">
           {checkPermission("dashboardTicketSaleGraph").status && (

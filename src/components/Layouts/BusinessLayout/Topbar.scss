@@ -61,7 +61,7 @@
     }
   }
   .topbar-right {
-    @include flex(row, space-between, center, 20px);
+    @include flex(row, flex-end, center, 20px);
     width: 50%;
     @media (max-width: 767px) {
       width: 100%;

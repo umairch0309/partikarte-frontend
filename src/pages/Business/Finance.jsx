@@ -38,7 +38,7 @@ const Finance = () => {
     <>
       <Topbar
         title={"Finance"}
-        subtitle={"Manage your Finance with Overview and Analytics"}
+        subtitle={"Overview & Manage your Event Finances"}
       />
       <div className="manage-orders-page-container">
         {checkPermission("financeTransactionStats").status && (

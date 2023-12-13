@@ -199,7 +199,7 @@ const ContactUs = () => {
             >
               <label htmlFor="phoneNumber">Phone Number</label>
               <PhoneInput
-                defaultCountry="ua"
+                defaultCountry="usa"
                 value={formValues.phoneNumber}
                 className={`phone-input-whole ${
                   formErrors.phoneNumber ? "phone-input-whole-error" : ""

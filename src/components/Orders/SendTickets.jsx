@@ -17,7 +17,6 @@ const SendTickets = ({
   const [formErrors, setFormErrors] = useState({});
 
   // console.log(selectedRecord, "selectedRecord");
-  console.log(formErrors);
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;

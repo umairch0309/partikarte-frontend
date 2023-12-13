@@ -13,3 +13,18 @@ export function useAllGuestsForEvent(eventId, onSuccess, onError) {
   );
   return { response, isLoading };
 }
+
+export function useAllGuestsSummaryForEvent(eventId, onSuccess, onError) {
+  const { response, isLoading } = useFetch(
+    ["get-all-guests-summary", eventId],
+    `guests/summary/${eventId}`,
+    {
+      cacheTime: 1,
+      onSuccess,
+      onError,
+      enabled: true,
+    }
+  );
+
+  return { response, isLoading };
+}

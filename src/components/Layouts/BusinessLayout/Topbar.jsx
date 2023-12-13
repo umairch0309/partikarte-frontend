@@ -8,7 +8,7 @@ import { useAuthContext } from "../../../context/auth-context";
 import { useProfileDetails } from "../../../api/profile";
 import { setEncryptedData } from "../../../utilities/EncryptedStorage";
 
-const Topbar = ({ title, subtitle }) => {
+const Topbar = ({ title, subtitle, hideSearchInput }) => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -84,10 +84,12 @@ const Topbar = ({ title, subtitle }) => {
           </h5>
         </div>
         <div className="topbar-right">
-          <div className="search-input-container">
-            <input type="text" placeholder="Search anything here..." />
-            <ReactSVG src="/icons/tools/search.svg" />
-          </div>
+          {!hideSearchInput && (
+            <div className="search-input-container">
+              <input type="text" placeholder="Search anything here..." />
+              <ReactSVG src="/icons/tools/search.svg" />
+            </div>
+          )}
 
           <ReactSVG
             onClick={() => navigate("/")}

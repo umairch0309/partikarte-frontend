@@ -98,7 +98,7 @@ const AddNews = ({
     const formData = new FormData();
     formData.append("name", formValues.name);
     formData.append("eventId", formValues.event);
-    formData.append("date", formValues.startingDate);
+    formData.append("date", new Date().toISOString());
     formData.append("description", formValues.description);
     if (selectedNews?.images && selectedNewsStatus) {
       selectedNews?.images?.forEach((image) => {
@@ -163,7 +163,7 @@ const AddNews = ({
       width={!isMobile && 700}
     >
       <form className="add-new-news-form-container" onSubmit={handleSubmit}>
-        <div className="add-new-news-header">
+        {/* <div className="add-new-news-header">
           <div className="new-news-header-left">
             <label
               htmlFor="upload-news-banner"
@@ -185,7 +185,7 @@ const AddNews = ({
             {formValues?.newsImages?.length > 0 &&
               formValues.newsImages.map((el) => <img src={el} />)}
           </div>
-        </div>
+        </div> */}
         {formErrors.newsImages && (
           <p className="image-error-message">{formErrors.newsImages}</p>
         )}
@@ -225,27 +225,6 @@ const AddNews = ({
           )}
         </div>
 
-        <div
-          className={`single-form-item ${
-            formErrors.startingDate ? "error" : ""
-          }`}
-        >
-          <label htmlFor="startingDate">Starting (Date-Time)</label>
-          <input
-            name="startingDate"
-            type="datetime-local"
-            id="startingDate"
-            placeholder="Select date and time..."
-            onChange={handleInputChange}
-            value={formValues.startingDate}
-            onBlur={handleOnBlur}
-          />
-
-          {formErrors.startingDate && (
-            <p className="select-error-message">{formErrors.startingDate}</p>
-          )}
-        </div>
-
         <div className={`single-form-item ${formErrors.event ? "error" : ""}`}>
           <label htmlFor="event">Event</label>
           <select
@@ -256,6 +235,8 @@ const AddNews = ({
             onBlur={handleOnBlur}
           >
             <option value="">Choose event</option>
+            <option value="no-specific-event">No specific event.</option>
+
             {eventsData?.length > 0 &&
               eventsData?.map((el) => (
                 <option value={el?._id}>{el?.eventName}</option>

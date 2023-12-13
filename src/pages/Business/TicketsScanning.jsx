@@ -5,67 +5,32 @@ import EventsList from "../../components/Common/EventsList";
 import SecondaryButton from "../../components/UI/SecondaryButton";
 import { ReactSVG } from "react-svg";
 import StatCard from "../../components/Common/StatCard";
-import Chart from "../../components/Common/Chart";
 import { useState, useEffect } from "react";
 import AddNewEventModal from "../../components/ManageEvents/AddNewEventModal";
 import TicketsTableInScanning from "../../components/Tables/TicketsTableInScanning";
 import GuestsTableInScanning from "../../components/Tables/GuestsTableInScanning";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
-import { useOrdersByTimeInterval } from "../../api/orders";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
-import ScanningChart from "../../components/Common/ScanningChart";
+import { useAllGuestsSummaryForEvent } from "../../api/guests";
 
 const TicketsScanning = () => {
   const navigate = useNavigate();
-  const [tickets, setTickets] = useState([]);
   const [guests, setGuests] = useState([]);
   const [showAddNewEventModal, setShowAddNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedTable, setSelectedTable] = useState(0);
   const isMobile = useIsMobileWidth();
 
-  const [ordersDataForChart, setOrdersDataForChart] = useState([]);
-  const [selectedInterval, setSelectedInterval] = useState("daily");
-
-  const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
-    [selectedInterval, selectedEvent?._id],
-    `${selectedInterval}${
-      selectedEvent?._id ? `?eventId=${selectedEvent?._id}` : ""
-    }`,
+  const { isLoading } = useAllGuestsSummaryForEvent(
+    selectedEvent?._id,
     (res) => {
-      console.log(res);
-      setOrdersDataForChart(res?.orders);
+      console.log(res, "summary");
+      setGuests(res?.guestTypeSummary);
     }
   );
 
-  useEffect(() => {
-    const array = [];
-    for (let i = 0; i < 30; i++) {
-      const row = {
-        key: i,
-        ticketType: "Luxury Tickets",
-        soldQuantity: "2322",
-        admitedQuantity: "1290",
-      };
-      array.push(row);
-    }
-    setTickets(array);
-  }, []);
-
-  useEffect(() => {
-    const array = [];
-    for (let i = 0; i < 30; i++) {
-      const row = {
-        key: i,
-        guestType: "Luxury Tickets",
-        guestNumber: "23480",
-        admittedGuest: "23480",
-      };
-      array.push(row);
-    }
-    setGuests(array);
-  }, []);
+  console.log(selectedEvent, "selected event");
 
   const copyToClipboard = (link) => {
     navigator.clipboard
@@ -117,7 +82,7 @@ const TicketsScanning = () => {
         </div>
         <div className="stats-cards-container">
           <StatCard
-            title={"Total Tickets"}
+            title={"Total Booked Tickets"}
             number={selectedEvent?.ticketsSold}
             icon={<ReactSVG src="/icons/tools/ticket-filled-colored.svg" />}
             variant={"yellow-stat-card"}
@@ -194,7 +159,7 @@ const TicketsScanning = () => {
                   />
                 </div>
               </div>
-              <TicketsTableInScanning ticketsData={tickets} />
+              <TicketsTableInScanning ticketsData={selectedEvent?.tickets} />
             </div>
           )}
           {isMobile && selectedTable === 0 && (
@@ -210,7 +175,7 @@ const TicketsScanning = () => {
                   />
                 </div>
               </div>
-              <TicketsTableInScanning ticketsData={tickets} />
+              <TicketsTableInScanning ticketsData={selectedEvent?.tickets} />
             </div>
           )}
           {!isMobile && (

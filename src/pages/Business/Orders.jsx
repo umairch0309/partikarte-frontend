@@ -61,7 +61,15 @@ const Orders = () => {
       JSON.stringify(guest)?.toLowerCase()?.includes(searchText?.toLowerCase())
     );
 
-    if (interval === "monthly") {
+    if (interval === "today") {
+      const currentDate = new Date();
+      filtered = filtered.filter((guest) => {
+        const guestDate = new Date(guest.createdAt);
+        return (
+          guestDate.toLocaleDateString() === currentDate.toLocaleDateString()
+        );
+      });
+    } else if (interval === "monthly") {
       const currentDate = new Date();
       filtered = filtered.filter((guest) => {
         const guestDate = new Date(guest.createdAt);
@@ -137,6 +145,7 @@ const Orders = () => {
                 value={selectedInterval}
                 onChange={(e) => setSelectedInterval(e.target.value)}
               >
+                <option value={"today"}>Today</option>
                 <option value={"monthly"}>Monthly</option>
                 <option value={"weekly"}>Weekly</option>
                 <option value={"yearly"}>Yearly</option>
