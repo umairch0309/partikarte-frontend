@@ -2,10 +2,11 @@
 // export const WEB_URL = "http://localhost:5600/";
 
 // LIVE URL
-export const BASE_URL = "http://15.188.15.210/api/";
-export const WEB_URL = "http://15.188.15.210/";
+// export const BASE_URL = "http://18.227.107.229/api/";
+// export const WEB_URL = "http://18.227.107.229/";
 
 // SSL
-// export const BASE_URL = "https://partikarte.si/api/";
+export const BASE_URL = "https://partikarte.si/api/";
+export const WEB_URL = "https://partikarte.si/";
 
 export const CryptKey = "glennphilips";
