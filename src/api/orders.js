@@ -13,6 +13,18 @@ export function useLatestOrders(onSuccess, onError) {
   return { response, isLoading };
 }
 
+export function useOrderDetailsById(id, onSuccess, onError) {
+  const { response, isLoading } = useFetch(
+    ["get-order-details-by-id", id],
+    `orders/order-detail/${id}`,
+    {
+      onSuccess,
+      onError,
+    }
+  );
+  return { response, isLoading };
+}
+
 export function useOrdersByTimeInterval(
   selectedEvent,
   interval,

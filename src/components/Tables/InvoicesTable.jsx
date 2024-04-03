@@ -6,6 +6,7 @@ import SendTickets from "../Orders/SendTickets";
 import OrderInvoice from "../Orders/OrderInvoice";
 import formatDate from "../../utilities/formatDate";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
+import OrderModal from "../Orders/OrderModal";
 
 const InvoicesTable = ({ customersData, isLoading }) => {
   const { checkPermission } = usePermissionCheck();
@@ -155,11 +156,20 @@ const InvoicesTable = ({ customersData, isLoading }) => {
         setShowSendTicketModal={setShowSendTicketModal}
         selectedRecord={selectedRecord}
       />
-      <OrderInvoice
-        showOrderInvoice={showOrderInvoice}
-        setShowOrderInvoice={setShowOrderInvoice}
-        selectedRecord={selectedRecord}
-      />
+      {selectedRecord && (
+        <OrderInvoice
+          showOrderInvoice={showOrderInvoice}
+          setShowOrderInvoice={setShowOrderInvoice}
+          selectedRecord={selectedRecord}
+        />
+      )}
+      {selectedRecord && (
+        <OrderModal
+          showOrderModal={showOrderModal}
+          setShowOrderModal={setShowOrderModal}
+          selectedRecord={selectedRecord}
+        />
+      )}
     </>
   );
 };

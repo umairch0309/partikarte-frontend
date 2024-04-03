@@ -5,13 +5,14 @@ import RefundOrderAlert from "../Orders/RefundOrderAlert";
 import SendTickets from "../Orders/SendTickets";
 import OrderInvoice from "../Orders/OrderInvoice";
 import formatDate from "../../utilities/formatDate";
+import OrderModal from "../Orders/OrderModal";
 
 const CustomersTable = ({ customersData, isLoading }) => {
   const [data, setData] = useState([]);
   const [showRefundAlert, setShowRefundAlert] = useState(false);
   const [showSendTicketModal, setShowSendTicketModal] = useState(false);
   const [showOrderInvoice, setShowOrderInvoice] = useState(false);
-
+  const [showOrderModal, setShowOrderModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
 
   useEffect(() => {
@@ -34,7 +35,10 @@ const CustomersTable = ({ customersData, isLoading }) => {
     },
     {
       label: (
-        <div className="button-in-dropdown">
+        <div
+          onClick={() => setShowOrderModal(true)}
+          className="button-in-dropdown"
+        >
           <ReactSVG className="button-svg" src="/icons/tools/view-order.svg" />
           <span>View Order</span>
         </div>
@@ -65,7 +69,7 @@ const CustomersTable = ({ customersData, isLoading }) => {
             className="button-svg"
             src="/icons/tools/cancel-ticket.svg"
           />
-          <span>Resend/Cancel Tickets</span>
+          <span>Resend Tickets</span>
         </div>
       ),
       key: "3",
@@ -95,7 +99,8 @@ const CustomersTable = ({ customersData, isLoading }) => {
       dataIndex: "orderAmount",
       key: "orderAmount",
       align: "center",
-      render: (text) => "$" + text,
+      render: (text, record) =>
+        currencySymbolGenerator(record?.currency) + text,
     },
     {
       title: "Date/Time",
@@ -116,6 +121,30 @@ const CustomersTable = ({ customersData, isLoading }) => {
       key: "newsLetterSubscription",
       align: "center",
       render: (text, record) => (record.recommendations ? "Yes" : "No"),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (text, record) => {
+        return (
+          <p className={text == "refunded" ? "yellow" : "black"}>
+            {text || "Booked"}
+          </p>
+        );
+      },
+    },
+    {
+      title: "Payment Status",
+      dataIndex: "paymentStatus",
+      key: "paymentStatus",
+      align: "center",
+      render: (text, record) => {
+        return (
+          <p className={text ? "green" : "red"}>{text ? "Paid" : "Unpaid"}</p>
+        );
+      },
     },
     {
       title: "Actions",
@@ -167,11 +196,20 @@ const CustomersTable = ({ customersData, isLoading }) => {
         setShowSendTicketModal={setShowSendTicketModal}
         selectedRecord={selectedRecord}
       />
-      <OrderInvoice
-        showOrderInvoice={showOrderInvoice}
-        setShowOrderInvoice={setShowOrderInvoice}
-        selectedRecord={selectedRecord}
-      />
+      {selectedRecord && (
+        <OrderInvoice
+          showOrderInvoice={showOrderInvoice}
+          setShowOrderInvoice={setShowOrderInvoice}
+          selectedRecord={selectedRecord}
+        />
+      )}
+      {selectedRecord && (
+        <OrderModal
+          showOrderModal={showOrderModal}
+          setShowOrderModal={setShowOrderModal}
+          selectedRecord={selectedRecord}
+        />
+      )}
     </>
   );
 };

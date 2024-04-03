@@ -2,12 +2,30 @@ import React, { useState } from "react";
 import CustomModal from "../UI/CustomModal";
 import "./RefundOrderAlert.scss";
 import PrimaryButton from "../UI/PrimaryButton";
+import { useQueryClient } from "@tanstack/react-query";
+import { usePutApi } from "../../hooks/api-hooks/usePutApi";
 
 const RefundOrderAlert = ({
   showRefundAlert,
   setShowRefundAlert,
   selectedRecord,
 }) => {
+  const { isLoading, handleMutation } = usePutApi();
+
+  const queryClient = useQueryClient();
+
+  const refundOrder = () => {
+    handleMutation(
+      {
+        path: `orders/refund-order/${selectedRecord?._id}`,
+      },
+      (res) => {
+        queryClient.invalidateQueries([selectedRecord?.businessId]);
+        setShowRefundAlert(false);
+      }
+    );
+  };
+
   return (
     <CustomModal
       onCancel={() => setShowRefundAlert(false)}
@@ -28,10 +46,7 @@ const RefundOrderAlert = ({
           <PrimaryButton onClick={() => setShowRefundAlert(false)}>
             Cancel
           </PrimaryButton>
-          <PrimaryButton
-            className={"red-button"}
-            onClick={() => setShowRefundAlert(false)}
-          >
+          <PrimaryButton className={"red-button"} onClick={refundOrder}>
             Confirm Refund
           </PrimaryButton>
         </div>

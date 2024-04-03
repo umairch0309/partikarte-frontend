@@ -4,6 +4,8 @@ import "./SendTickets.scss";
 import PrimaryButton from "../UI/PrimaryButton";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import validateForgotPasswordForm from "../../validation/ForgotPassword";
+import { usePutApi } from "../../hooks/api-hooks/usePutApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initalState = {
   email: "",
@@ -17,6 +19,24 @@ const SendTickets = ({
   const [formErrors, setFormErrors] = useState({});
 
   // console.log(selectedRecord, "selectedRecord");
+
+  const { isLoading, handleMutation } = usePutApi();
+
+  const queryClient = useQueryClient();
+
+  const resentTickets = () => {
+    handleMutation(
+      {
+        path: `orders/${selectedRecord?._id}/resend-tickets`,
+        data: {
+          email: formData?.email,
+        },
+      },
+      (res) => {
+        queryClient.invalidateQueries([selectedRecord?.businessId]);
+      }
+    );
+  };
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -35,8 +55,8 @@ const SendTickets = ({
       return;
     }
 
-    // use api here
-    //   after submitting form
+    resentTickets();
+
     setShowSendTicketModal(false);
     setFormErrors({});
     setFormData(initalState);

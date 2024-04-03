@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+import { CountriesList } from "../constants/countrieslist";
+
 export function useCountriesList(onSuccess, onError) {
   const fetchData = async () => {
     try {
-      const { data } = await axios.get(
-        "http://api.geonames.org/countryInfoJSON?username=jamshaidjavaid"
-      );
-      return data.geonames;
+      return CountriesList.geonames;
     } catch (error) {
       throw new Error("Failed to fetch countries");
     }
@@ -19,6 +18,7 @@ export function useCountriesList(onSuccess, onError) {
     {
       onSuccess,
       onError,
+      cacheTime: Infinity,
     }
   );
 
