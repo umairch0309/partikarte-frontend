@@ -124,6 +124,70 @@ input[type="number"] {
   padding: 10px;
 }
 
+.ant-picker-input {
+  input {
+    border: none !important;
+    border-color: transparent !important;
+    outline-color: transparent !important;
+  }
+
+  &:hover {
+    input {
+      border: none !important;
+
+      border-color: transparent !important;
+      outline-color: transparent !important;
+    }
+  }
+}
+
+.ant-picker.ant-picker-focused {
+  box-shadow: 0 0 0 0.5px #3d8aff;
+  border-inline-end-width: 0px;
+
+  .ant-picker-input {
+    input {
+      border: none !important;
+      border-color: transparent !important;
+      outline-color: transparent !important;
+    }
+
+    &:hover {
+      input {
+        border: none !important;
+        border-color: transparent !important;
+        outline-color: transparent !important;
+      }
+    }
+  }
+}
+
+.error {
+  .ant-picker-focused {
+    box-shadow: 0 0 0 0.5px $errorColor;
+  }
+
+  .ant-picker {
+    border-color: $errorColor;
+
+    .ant-picker-input {
+      input {
+        border: none !important;
+        border-color: transparent !important;
+        outline-color: transparent !important;
+      }
+
+      &:hover {
+        input {
+          border: none !important;
+          border-color: transparent !important;
+          outline-color: transparent !important;
+        }
+      }
+    }
+  }
+}
+
 .ant-table-wrapper .ant-table {
   font-family: $primaryFont !important;
   background-color: transparent;

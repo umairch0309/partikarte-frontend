@@ -49,7 +49,7 @@ const OrganizerSettings = () => {
           {checkPermission("companyDetails").status && (
             <NavLink to={"./company-details"}>
               <ReactSVG src="/icons/menu/user-square.svg" />
-              <span>Company Details</span>
+              <span>Organizer Details</span>
             </NavLink>
           )}
           {checkPermission("ticketCustomization").status && (

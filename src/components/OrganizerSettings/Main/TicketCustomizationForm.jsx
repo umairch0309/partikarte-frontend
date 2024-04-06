@@ -335,9 +335,10 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
               type="text"
               id="companyName"
               placeholder="Organizer name"
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               value={formValues.companyName}
               onBlur={handleOnBlur}
+              disabled
             />
             {formErrors.companyName && (
               <p className="error-message">{formErrors.companyName}</p>
@@ -354,9 +355,10 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
               type="number"
               id="companyVAT"
               placeholder="VAT number"
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               value={formValues.companyVAT}
               onBlur={handleOnBlur}
+              disabled
             />
             {formErrors.companyVAT && (
               <p className="error-message">{formErrors.companyVAT}</p>
@@ -374,9 +376,10 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
             type="text"
             id="companyAddress"
             placeholder="Address"
-            onChange={handleInputChange}
+            // onChange={handleInputChange}
             value={formValues.companyAddress}
             onBlur={handleOnBlur}
+            disabled
           />
           {formErrors.companyAddress && (
             <p className="error-message">{formErrors.companyAddress}</p>
@@ -390,11 +393,12 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
           >
             <label htmlFor="guestType">Country</label>
             <select
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               name="companyCountry"
               id="companyCountry"
               value={formValues.companyCountry}
               onBlur={handleOnBlur}
+              disabled
             >
               <option value="">Choose country</option>
               {!countriesLoading &&
@@ -421,8 +425,9 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
               name="companyCity"
               value={formValues.companyCity}
               placeholder="City"
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               onBlur={handleOnBlur}
+              disabled
             />
             {formErrors.companyCity && (
               <p className="error-message">{formErrors.companyCity}</p>
@@ -439,9 +444,10 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
               type="number"
               id="companyPostalCode"
               placeholder="Postal code"
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               value={formValues.companyPostalCode}
               onBlur={handleOnBlur}
+              disabled
             />
             {formErrors.companyPostalCode && (
               <p className="error-message">{formErrors.companyPostalCode}</p>
@@ -493,7 +499,7 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
             formErrors.eventAddress ? "error" : ""
           }`}
         >
-          <label htmlFor="eventAddress">Address</label>
+          <label htmlFor="eventAddress">Venue Address</label>
           <input
             name="eventAddress"
             type="text"
@@ -513,7 +519,7 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
               formErrors.eventCountry ? "error" : ""
             }`}
           >
-            <label htmlFor="guestType">Country</label>
+            <label htmlFor="guestType">Venue Country</label>
             <select
               onChange={handleInputChange}
               name="eventCountry"
@@ -537,7 +543,7 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
               formErrors.eventCity ? "error" : ""
             }`}
           >
-            <label htmlFor="eventCity">City</label>
+            <label htmlFor="eventCity">Venue City</label>
             <input
               id="eventCity"
               type="text"
@@ -556,7 +562,7 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
               formErrors.eventPostalCode ? "error" : ""
             }`}
           >
-            <label htmlFor="eventPostalCode">Postal code</label>
+            <label htmlFor="eventPostalCode">Venue Postal code</label>
             <input
               name="eventPostalCode"
               type="number"

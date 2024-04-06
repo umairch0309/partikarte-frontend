@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CustomModal from "../UI/CustomModal";
 import "./ModalForm.scss";
+import { DatePicker } from "antd";
 import useIsMobileWidth from "../../hooks/useIsMobileWidth";
 import PrimaryButton from "../UI/PrimaryButton";
 import { ReactSVG } from "react-svg";
@@ -10,6 +11,7 @@ import { useCountriesList } from "../../api/services";
 import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
+import dayjs from "dayjs";
 
 const initialState = {
   title: "",
@@ -180,7 +182,7 @@ const AddNewEventModal = ({
               }`}
             >
               <label htmlFor="startingDate">Starting (Date-Time)</label>
-              <input
+              {/* <input
                 name="startingDate"
                 type="datetime-local"
                 id="startingDate"
@@ -188,6 +190,23 @@ const AddNewEventModal = ({
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.startingDate}
+              /> */}
+
+              <DatePicker
+                name="startingDate"
+                id="startingDate"
+                placeholder="Select date and time..."
+                onChange={(date, dateString) =>
+                  formik.setFieldValue("startingDate", dateString)
+                }
+                onBlur={formik.handleBlur}
+                value={
+                  formik.values.startingDate
+                    ? dayjs(formik.values.startingDate, "YYYY-MM-DD HH:mm")
+                    : ""
+                }
+                showTime={{ format: "HH:mm" }}
+                format="YYYY-MM-DD HH:mm"
               />
 
               {formik.touched.startingDate && formik.errors.startingDate && (
@@ -202,7 +221,7 @@ const AddNewEventModal = ({
               }`}
             >
               <label htmlFor="endingDate">Ending (Date-Time)</label>
-              <input
+              {/* <input
                 name="endingDate"
                 type="datetime-local"
                 id="endingDate"
@@ -210,6 +229,23 @@ const AddNewEventModal = ({
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.endingDate}
+              /> */}
+
+              <DatePicker
+                name="endingDate"
+                id="endingDate"
+                placeholder="Select date and time..."
+                onChange={(date, dateString) =>
+                  formik.setFieldValue("endingDate", dateString)
+                }
+                onBlur={formik.handleBlur}
+                value={
+                  formik.values.endingDate
+                    ? dayjs(formik.values.endingDate, "YYYY-MM-DD HH:mm")
+                    : ""
+                }
+                showTime={{ format: "HH:mm" }}
+                format="YYYY-MM-DD HH:mm"
               />
               {formik.touched.endingDate && formik.errors.endingDate && (
                 <p className="error-message">{formik.errors.endingDate}</p>

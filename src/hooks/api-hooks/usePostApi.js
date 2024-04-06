@@ -15,7 +15,7 @@ export function usePostApi() {
   const { token } = useAuthContext();
 
   function postApiCall(data) {
-    return axios.post(`${BASE_URL}${data.path}`, data.data && data.data, {
+    return axios.post(`${BASE_URL}${data.path}`, data.data ? data.data : {}, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -33,13 +33,12 @@ export function usePostApi() {
   function handleMutation(data, afterSucess = () => {}, afterError = () => {}) {
     mutate(data, {
       onSuccess: async (res) => {
-        console.log(res, "success");
         ShowMessageSuccess(res?.data?.message, path);
         afterSucess(res?.data);
       },
       onError: async (res) => {
         ShowMessageError(res?.response?.data?.message, path);
-        afterError(res?.data);
+        afterError(res?.response?.data);
       },
     });
   }

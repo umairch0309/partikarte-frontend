@@ -37,7 +37,7 @@ const AutocompleteInput = ({
       };
 
       onPlaceSelect({
-        formatted_address: `${selectedPlace.name}, ${selectedPlace.formatted_address}`,
+        formatted_address: `${selectedPlace.formatted_address}`,
         country,
         city,
         postal_code: postalCode,

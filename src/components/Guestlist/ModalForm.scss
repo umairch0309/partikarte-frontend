@@ -77,8 +77,8 @@
     input,
     select,
     textarea {
-      border-color: $errorColor !important;
-      outline-color: $errorColor !important;
+      border-color: $errorColor;
+      outline-color: $errorColor;
     }
     .error-message,
     .select-error-message {

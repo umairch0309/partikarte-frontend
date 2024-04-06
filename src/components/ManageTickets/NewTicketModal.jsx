@@ -10,13 +10,17 @@ import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import { useQueryClient } from "@tanstack/react-query";
 import DateTimeLocalConverter from "../../utilities/DateTimeLocalConverter";
 import { usePutApi } from "../../hooks/api-hooks/usePutApi";
+import dayjs from "dayjs";
+import { DatePicker } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { Divider, Input, Select, Space, Button } from "antd";
 
 const initialState = {
   ticketName: "",
   ticketType: "",
-  ticketPrice: 0,
-  vatPercentage: 0,
-  numberOfTickets: 0,
+  ticketPrice: "",
+  vatPercentage: "",
+  numberOfTickets: "",
   descriptionOnWeb: "",
   descriptionOnTicket: "",
   startingDate: "",
@@ -137,11 +141,11 @@ const NewTicketModal = ({
       ticketName: formValues.ticketName,
       validFrom: formValues.startingDate,
       validTo: formValues.endingDate,
-      maxCapacity: formValues.numberOfTickets,
+      maxCapacity: formValues.numberOfTickets || 0,
       capacityLimitation: formValues.limitedTickets,
       paidTicket: formValues.paidTicket,
-      price: formValues.ticketPrice,
-      vatPercentage: formValues.vatPercentage,
+      price: formValues.ticketPrice || 0,
+      vatPercentage: formValues.vatPercentage || 0,
       ticketType: formValues.ticketType,
       descriptionWeb: formValues.descriptionOnWeb,
       descriptionTicket: formValues.descriptionOnTicket,
@@ -186,6 +190,23 @@ const NewTicketModal = ({
 
   // console.log(formValues);
 
+  const [items, setItems] = useState([
+    { label: "VIP", value: "vip" },
+    { label: "VVIP", value: "vvip" },
+    { label: "Economy", value: "economy" },
+  ]);
+  const [name, setName] = useState("");
+
+  const onNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const addItem = (e) => {
+    e.preventDefault();
+    setItems([...items, { label: name, value: name?.toLowerCase() }]);
+    setName("");
+  };
+
   return (
     <CustomModal
       onCancel={() => {
@@ -229,7 +250,7 @@ const NewTicketModal = ({
             }`}
           >
             <label htmlFor="startingDate">Valid from</label>
-            <input
+            {/* <input
               name="startingDate"
               type="datetime-local"
               id="startingDate"
@@ -237,6 +258,21 @@ const NewTicketModal = ({
               onChange={handleInputChange}
               value={formValues.startingDate}
               onBlur={handleOnBlur}
+            /> */}
+
+            <DatePicker
+              showTime={{ format: "HH:mm" }}
+              format="YYYY-MM-DD HH:mm"
+              placeholder="Select date and time..."
+              onChange={(date, dateString) =>
+                handleInputChange({
+                  target: { name: "startingDate", value: dateString },
+                })
+              }
+              onBlur={handleOnBlur}
+              value={
+                formValues.startingDate ? dayjs(formValues.startingDate) : ""
+              }
             />
 
             {formErrors.startingDate && (
@@ -249,7 +285,7 @@ const NewTicketModal = ({
             }`}
           >
             <label htmlFor="endingDate">Valid to</label>
-            <input
+            {/* <input
               name="endingDate"
               type="datetime-local"
               id="endingDate"
@@ -257,6 +293,19 @@ const NewTicketModal = ({
               onChange={handleInputChange}
               value={formValues.endingDate}
               onBlur={handleOnBlur}
+            /> */}
+
+            <DatePicker
+              showTime={{ format: "HH:mm" }}
+              format="YYYY-MM-DD HH:mm"
+              placeholder="Select date and time..."
+              onChange={(date, dateString) =>
+                handleInputChange({
+                  target: { name: "endingDate", value: dateString },
+                })
+              }
+              onBlur={handleOnBlur}
+              value={formValues.endingDate ? dayjs(formValues.endingDate) : ""}
             />
 
             {formErrors.endingDate && (
@@ -280,7 +329,7 @@ const NewTicketModal = ({
                 onChange={(e) =>
                   formValues.paidTicket ? handleInputChange(e) : () => {}
                 }
-                value={formValues.ticketPrice || 0}
+                value={formValues.ticketPrice}
                 onBlur={handleOnBlur}
                 disabled={!formValues.paidTicket}
                 min={0}
@@ -330,7 +379,7 @@ const NewTicketModal = ({
                 onChange={(e) =>
                   formValues.paidTicket ? handleInputChange(e) : () => {}
                 }
-                value={formValues.vatPercentage || 0}
+                value={formValues.vatPercentage}
                 onBlur={handleOnBlur}
                 disabled={!formValues.paidTicket}
               />
@@ -386,7 +435,7 @@ const NewTicketModal = ({
               }
               value={
                 formValues.limitedTickets
-                  ? formValues.numberOfTickets || 0
+                  ? formValues.numberOfTickets
                   : "Unlimited"
               }
               onBlur={handleOnBlur}
@@ -401,7 +450,7 @@ const NewTicketModal = ({
           className={`single-form-item ${formErrors.ticketType ? "error" : ""}`}
         >
           <label htmlFor="ticketType">Ticket Type*</label>
-          <select
+          {/* <select
             onChange={handleInputChange}
             name="ticketType"
             id="ticketType"
@@ -412,7 +461,38 @@ const NewTicketModal = ({
             <option value="vip">VIP</option>
             <option value="vvip">VVIP</option>
             <option value="economy">Economy</option>
-          </select>
+          </select> */}
+
+          <Select
+            placeholder="Select ticket type"
+            dropdownRender={(menu) => (
+              <>
+                {menu}
+                <Divider
+                  style={{
+                    margin: "8px 0",
+                  }}
+                />
+                <Space
+                  style={{
+                    padding: "0 8px 4px",
+                  }}
+                >
+                  <Input
+                    placeholder="Please enter guest type"
+                    value={name}
+                    onChange={onNameChange}
+                    onKeyDown={(e) => e.stopPropagation()}
+                  />
+                  <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
+                    Add
+                  </Button>
+                </Space>
+              </>
+            )}
+            options={items}
+          />
+
           {formErrors.ticketType && (
             <p className="select-error-message">{formErrors.ticketType}</p>
           )}

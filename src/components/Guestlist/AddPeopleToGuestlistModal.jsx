@@ -235,7 +235,7 @@ const AddPeopleToGuestlistModal = ({
                         setNewOption("");
                       }}
                     >
-                      Add
+                      Add guest list type
                     </Button>
                   </Space>
                 </>

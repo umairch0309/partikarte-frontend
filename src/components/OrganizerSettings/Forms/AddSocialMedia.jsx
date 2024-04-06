@@ -94,6 +94,7 @@ const AddSocialMedia = ({
             <option value="facebook">Facebook</option>
             <option value="instagram">Instagram</option>
             <option value="linkedin">LinkedIn</option>
+            <option value="other">Other</option>
           </select>
           {formErrors.platform && (
             <p className="select-error-message">{formErrors.platform}</p>
