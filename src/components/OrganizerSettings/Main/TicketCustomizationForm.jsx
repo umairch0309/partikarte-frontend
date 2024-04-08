@@ -317,8 +317,9 @@ const TicketCustomizationForm = ({ selectedTicket }) => {
               name="showCompanyInfo"
               type="checkbox"
               id="showCompanyInfo"
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               checked={formValues.showCompanyInfo}
+              disabled
             />
             <label htmlFor="showCompanyInfo">Show company info</label>
           </div>

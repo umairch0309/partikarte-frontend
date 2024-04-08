@@ -465,6 +465,12 @@ const NewTicketModal = ({
 
           <Select
             placeholder="Select ticket type"
+            onChange={(v) =>
+              handleInputChange({ target: { name: "ticketType", value: v } })
+            }
+            name="ticketType"
+            id="ticketType"
+            value={formValues.ticketType}
             dropdownRender={(menu) => (
               <>
                 {menu}
