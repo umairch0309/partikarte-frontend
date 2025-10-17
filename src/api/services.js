@@ -5,7 +5,7 @@ export function useCountriesList(onSuccess, onError) {
   const fetchData = async () => {
     try {
       const { data } = await axios.get(
-        "http://api.geonames.org/countryInfoJSON?username=jamshaidjavaid"
+        "https://secure.geonames.org/countryInfoJSON?username=jamshaidjavaid"
       );
       return data.geonames;
     } catch (error) {
@@ -29,7 +29,7 @@ export function useCitiesForCountry(countryCode, onSuccess, onError) {
   const fetchData = async () => {
     try {
       const { data } = await axios.get(
-        `http://api.geonames.org/searchJSON?country=${countryCode}&featureClass=P&maxRows=1000&username=jamshaidjavaid`
+        `https://secure.geonames.org/searchJSON?country=${countryCode}&featureClass=P&maxRows=1000&username=jamshaidjavaid`
       );
       return data.geonames;
     } catch (error) {
