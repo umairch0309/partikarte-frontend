@@ -5,7 +5,7 @@ export function useCouponByEventId(selectedEvent, onSuccess, onError) {
     ["get-coupon", selectedEvent],
     `coupon/${selectedEvent}`,
     {
-      cacheTime: 1,
+      gcTime: 1,
       onSuccess,
       onError,
       enabled: true,

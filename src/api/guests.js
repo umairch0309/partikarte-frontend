@@ -5,7 +5,7 @@ export function useAllGuestsForEvent(eventId, onSuccess, onError) {
     ["get-all-guests", eventId],
     `guests/${eventId}`,
     {
-      cacheTime: 1,
+      gcTime: 1,
       onSuccess,
       onError,
       enabled: true,
@@ -19,7 +19,7 @@ export function useAllGuestsSummaryForEvent(eventId, onSuccess, onError) {
     ["get-all-guests-summary", eventId],
     `guests/summary/${eventId}`,
     {
-      cacheTime: 1,
+      gcTime: 1,
       onSuccess,
       onError,
       enabled: true,

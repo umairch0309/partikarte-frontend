@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -13,14 +14,24 @@ export function useCountriesList(onSuccess, onError) {
     }
   };
 
-  const { data, isLoading, isError } = useQuery(
-    ["get-all-countries"],
-    fetchData,
-    {
-      onSuccess,
-      onError,
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get-all-countries"],
+    queryFn: fetchData,
+  });
+
+  useEffect(() => {
+    if (data !== undefined) {
+      onSuccess?.(data);
     }
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (isError) {
+      onError?.(error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, error]);
 
   return { countries: data, isLoading, isError };
 }
@@ -37,15 +48,25 @@ export function useCitiesForCountry(countryCode, onSuccess, onError) {
     }
   };
 
-  const { data, isLoading, isError } = useQuery(
-    ["get-cities-for-country", countryCode],
-    fetchData,
-    {
-      onSuccess,
-      onError,
-      cacheTime: Infinity,
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get-cities-for-country", countryCode],
+    queryFn: fetchData,
+    gcTime: Infinity,
+  });
+
+  useEffect(() => {
+    if (data !== undefined) {
+      onSuccess?.(data);
     }
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (isError) {
+      onError?.(error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, error]);
 
   return { cities: data, isLoading, isError };
 }

@@ -22,13 +22,13 @@ export function usePostApi() {
     });
   }
 
-  const { mutate, isLoading } = useMutation(postApiCall);
+  const { mutate, isPending } = useMutation({ mutationFn: postApiCall });
 
   useEffect(() => {
-    if (isLoading && path) {
+    if (isPending && path) {
       ShowMessageLoading(path);
     }
-  }, [isLoading]);
+  }, [isPending]);
 
   function handleMutation(data, afterSucess = () => {}, afterError = () => {}) {
     mutate(data, {
@@ -43,5 +43,5 @@ export function usePostApi() {
       },
     });
   }
-  return { isLoading, handleMutation };
+  return { isLoading: isPending, handleMutation };
 }

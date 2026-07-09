@@ -1,5 +1,10 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+  MutationCache,
+} from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
 
 import "./styles/main.scss";
@@ -15,30 +20,27 @@ function App() {
   const { setIsLoggedIn, isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
 
+  const handleAuthError = (res) => {
+    console.log("hello 401");
+    if (res?.response?.status === 401 && isLoggedIn) {
+      setIsLoggedIn(false);
+      localStorage.removeItem("token");
+      navigate("/business/login");
+    }
+  };
+
   const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+      onError: handleAuthError,
+    }),
+    mutationCache: new MutationCache({
+      onError: handleAuthError,
+    }),
     defaultOptions: {
       queries: {
-        onError: (res) => {
-          console.log("hello 401");
-          if (res?.response?.status === 401 && isLoggedIn) {
-            setIsLoggedIn(false);
-            localStorage.removeItem("token");
-            navigate("/business/login");
-          }
-        },
         staleTime: 120000,
-        cacheTime: 120000,
+        gcTime: 120000,
         refetchOnWindowFocus: false,
-      },
-      mutations: {
-        onError: (res) => {
-          if (res?.response?.status === 401 && isLoggedIn) {
-            console.log("hello 401");
-            setIsLoggedIn(false);
-            localStorage.removeItem("token");
-            navigate("/business/login");
-          }
-        },
       },
     },
   });

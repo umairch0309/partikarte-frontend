@@ -5,7 +5,7 @@ export function useLatestOrders(onSuccess, onError) {
     ["get-latest-orders"],
     "orders/latest-orders",
     {
-      cacheTime: 60000 * 2,
+      gcTime: 60000 * 2,
       onSuccess,
       onError,
     }
@@ -23,7 +23,7 @@ export function useOrdersByTimeInterval(
     ["ge-orders-by-time", selectedEvent],
     `orders/by-time/${interval}`,
     {
-      cacheTime: 1,
+      gcTime: 1,
       onSuccess,
       onError,
       enabled: true,
@@ -37,7 +37,7 @@ export function useOrdersByEventId(selectedEvent, onSuccess, onError) {
     ["get-orders-by-eventId", selectedEvent],
     `orders/${selectedEvent}`,
     {
-      cacheTime: 1,
+      gcTime: 1,
       onSuccess,
       onError,
       enabled: true,
@@ -51,7 +51,7 @@ export function useBusinessRevenueByMonth(month, onSuccess, onError) {
     ["get-business-revenue-by-month", month],
     `orders/get-business-revenue-by-month/${month}`,
     {
-      cacheTime: 1,
+      gcTime: 1,
       onSuccess,
       onError,
       enabled: true,

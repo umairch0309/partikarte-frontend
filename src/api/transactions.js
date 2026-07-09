@@ -5,7 +5,7 @@ export function useBusinessTransactions(onSuccess, onError) {
     ["get-all-business-transactions"],
     "transactions/all",
     {
-      cacheTime: 60000 * 2,
+      gcTime: 60000 * 2,
       onSuccess,
       onError,
     }

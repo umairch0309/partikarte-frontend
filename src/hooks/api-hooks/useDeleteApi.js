@@ -21,13 +21,13 @@ export function useDeleteApi() {
       },
     });
   }
-  const { mutate, isLoading } = useMutation(deleteApi);
+  const { mutate, isPending } = useMutation({ mutationFn: deleteApi });
 
   useEffect(() => {
-    if (isLoading && path) {
+    if (isPending && path) {
       ShowMessageLoading(path);
     }
-  }, [isLoading]);
+  }, [isPending]);
 
   function handleMutation(data, afterSucess = () => {}, afterError = () => {}) {
     mutate(data, {
@@ -41,5 +41,5 @@ export function useDeleteApi() {
       },
     });
   }
-  return { isLoading, handleMutation };
+  return { isLoading: isPending, handleMutation };
 }

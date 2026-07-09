@@ -15,7 +15,11 @@ export function useFetch(queryKey, path, config = {}) {
     return data;
   };
 
-  const { data, isLoading } = useQuery(queryKey, fetchData, config);
+  const { data, isLoading } = useQuery({
+    queryKey,
+    queryFn: fetchData,
+    ...config,
+  });
   const response = data?.data;
 
   return { response, isLoading };

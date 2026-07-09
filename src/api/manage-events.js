@@ -2,7 +2,7 @@ import { useFetch } from "../hooks/api-hooks/useFetch";
 
 export function useAllEvents(onSuccess, onError) {
   const { response, isLoading } = useFetch(["get-all-events"], "events", {
-    cacheTime: 60000 * 2,
+    gcTime: 60000 * 2,
     onSuccess,
     onError,
   });
@@ -14,7 +14,7 @@ export function useActiveEvents(onSuccess, onError) {
     ["get-active-events"],
     "events/active",
     {
-      cacheTime: 60000 * 2,
+      gcTime: 60000 * 2,
       onSuccess,
       onError,
     }
@@ -27,7 +27,7 @@ export function useAllEventsForCustomer(onSuccess, onError) {
     ["all-events-for-customer"],
     "all-events-for-customer",
     {
-      cacheTime: 60000 * 2,
+      gcTime: 60000 * 2,
       onSuccess,
       onError,
     }
@@ -40,7 +40,7 @@ export function useSingleEventForCustomer(id, onSuccess, onError) {
     ["single-event-for-customer", id],
     `single-event-for-customer/${id}`,
     {
-      cacheTime: 1,
+      gcTime: 1,
       onSuccess,
       onError,
       enabled: true,

@@ -22,13 +22,13 @@ export function usePatchApi() {
     });
   }
 
-  const { mutate, isLoading } = useMutation(patchApiCall);
+  const { mutate, isPending } = useMutation({ mutationFn: patchApiCall });
 
   useEffect(() => {
-    if (isLoading && path) {
+    if (isPending && path) {
       ShowMessageLoading(path);
     }
-  }, [isLoading]);
+  }, [isPending]);
 
   function handleMutation(data, afterSucess = () => {}, afterError = () => {}) {
     mutate(data, {
@@ -43,5 +43,5 @@ export function usePatchApi() {
     });
   }
 
-  return { isLoading, handleMutation };
+  return { isLoading: isPending, handleMutation };
 }

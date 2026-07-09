@@ -5,7 +5,7 @@ export function useBusinessManagers(onSuccess, onError) {
     ["get-all-business-managers"],
     "business/business-managers",
     {
-      cacheTime: 60000 * 2,
+      gcTime: 60000 * 2,
       onSuccess,
       onError,
     }
@@ -18,7 +18,7 @@ export function useAllBusinessesForCustomer(onSuccess, onError) {
     ["get-all-business-for-customer"],
     "business/businesses-for-customer",
     {
-      cacheTime: 60000 * 2,
+      gcTime: 60000 * 2,
       onSuccess,
       onError,
     }
@@ -31,7 +31,7 @@ export function useSingleBusinessForCustomer(id, onSuccess, onError) {
     ["get-single-business-for-customer"],
     `business/business-for-customer/${id}`,
     {
-      cacheTime: 10,
+      gcTime: 10,
       onSuccess,
       onError,
     }

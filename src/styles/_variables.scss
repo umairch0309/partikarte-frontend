@@ -1,3 +1,5 @@
+@use "sass:color";
+
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;600;700&display=swap");
 
@@ -19,7 +21,12 @@ $pendingColor: #ffd66b;
 $orangeColor: #ff8f28;
 
 @function opacityColor($color, $alpha) {
-  @return rgba(red($color), green($color), blue($color), $alpha);
+  @return rgba(
+    color.channel($color, "red", $space: rgb),
+    color.channel($color, "green", $space: rgb),
+    color.channel($color, "blue", $space: rgb),
+    $alpha
+  );
 }
 
 // borders and border-radius

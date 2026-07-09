@@ -6,7 +6,7 @@ export function useAllTickets(eventId, onSuccess, onError) {
     ["get-all-tickets", eventId],
     `event/${eventId}/tickets`,
     {
-      cacheTime: 1,
+      gcTime: 1,
       onSuccess,
       onError,
       enabled: !!eventId,
