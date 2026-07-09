@@ -35,10 +35,22 @@ const BusinessMain = () => {
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        {forgotEmail && <Route path="/verify-otp" element={<VerifyOTP />} />}
-        {forgotEmail && (
-          <Route path="/reset-password" element={<ResetPassword />} />
-        )}
+        <Route
+          path="/verify-otp"
+          element={
+            forgotEmail ? <VerifyOTP /> : <Navigate to="/business/forgot-password" replace />
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            forgotEmail ? (
+              <ResetPassword />
+            ) : (
+              <Navigate to="/business/forgot-password" replace />
+            )
+          }
+        />
 
         {/* Show 404 for any other routes */}
         <Route path="*" element={<Navigate to="/business/login" />} />
