@@ -12,11 +12,16 @@ export const setEncryptedData = (itemName, data) => {
 
 // Function to retrieve and decrypt data from local storage
 export const getDecryptedData = (itemName) => {
-  const storedData = localStorage.getItem(itemName);
-  if (storedData) {
+  try {
+    const storedData = localStorage.getItem(itemName);
+    if (!storedData) return null;
+
     const bytes = CryptoJS.AES.decrypt(storedData, CryptKey);
-    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    return decryptedData;
+    const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+    if (!decryptedData) return null;
+
+    return JSON.parse(decryptedData);
+  } catch {
+    return null;
   }
-  return null;
 };

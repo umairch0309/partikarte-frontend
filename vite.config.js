@@ -7,7 +7,12 @@ import { VitePWA } from "vite-plugin-pwa";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const manifestForPlugin = {
-  registerType: "prompt",
+  registerType: "autoUpdate",
+  workbox: {
+    cleanupOutdatedCaches: true,
+    skipWaiting: true,
+    clientsClaim: true,
+  },
   includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
   manifest: {
     name: "Partikarte",
