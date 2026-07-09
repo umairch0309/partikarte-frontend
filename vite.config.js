@@ -1,6 +1,10 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const manifestForPlugin = {
   registerType: "prompt",
@@ -44,6 +48,14 @@ const manifestForPlugin = {
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/",
+  resolve: {
+    alias: [
+      {
+        find: /^react-slick$/,
+        replacement: path.resolve(__dirname, "src/lib/slider.jsx"),
+      },
+    ],
+  },
   plugins: [react(), VitePWA(manifestForPlugin)],
   build: {
     rollupOptions: {
