@@ -32,17 +32,17 @@ const BusinessMain = () => {
   if (!isLoggedIn) {
     return (
       <Routes>
-        <Route path="/login" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/business/login" element={<SignIn />} />
+        <Route path="/business/signup" element={<SignUp />} />
+        <Route path="/business/forgot-password" element={<ForgotPassword />} />
         <Route
-          path="/verify-otp"
+          path="/business/verify-otp"
           element={
             forgotEmail ? <VerifyOTP /> : <Navigate to="/business/forgot-password" replace />
           }
         />
         <Route
-          path="/reset-password"
+          path="/business/reset-password"
           element={
             forgotEmail ? (
               <ResetPassword />
@@ -54,7 +54,6 @@ const BusinessMain = () => {
 
         {/* Show 404 for any other routes */}
         <Route path="*" element={<Navigate to="/business/login" />} />
-        <Route path="*" element={<Page404 />} />
       </Routes>
     );
   }

@@ -3,15 +3,28 @@ import { getDecryptedData } from "../utilities/EncryptedStorage";
 
 const AuthContext = createContext();
 
+const FORGOT_EMAIL_KEY = "forgotEmail";
+
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(getDecryptedData("token"));
   const [isLoggedIn, setIsLoggedIn] = useState(token !== null);
   const [role, setRole] = useState(getDecryptedData("role"));
   const [user, setUser] = useState(null);
-  const [forgotEmail, setForgotEmail] = useState(null);
+  const [forgotEmail, setForgotEmailState] = useState(
+    () => sessionStorage.getItem(FORGOT_EMAIL_KEY) || null
+  );
   const [permissions, setPermissions] = useState(
     getDecryptedData("available") || []
   );
+
+  const setForgotEmail = (email) => {
+    if (email) {
+      sessionStorage.setItem(FORGOT_EMAIL_KEY, email);
+    } else {
+      sessionStorage.removeItem(FORGOT_EMAIL_KEY);
+    }
+    setForgotEmailState(email);
+  };
 
   useEffect(() => {
     setToken(getDecryptedData("token"));

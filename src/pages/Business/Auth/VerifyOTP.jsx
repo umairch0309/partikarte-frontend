@@ -22,9 +22,9 @@ const VerifyOTP = () => {
 
   useEffect(() => {
     if (forgotEmail) {
-      setFormData({ ...formData, email: forgotEmail });
+      setFormData((prev) => ({ ...prev, email: forgotEmail }));
     }
-  });
+  }, [forgotEmail]);
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;

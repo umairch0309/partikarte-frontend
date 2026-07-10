@@ -25,9 +25,9 @@ const ResetPassword = () => {
 
   useEffect(() => {
     if (forgotEmail) {
-      setFormData({ ...formData, email: forgotEmail });
+      setFormData((prev) => ({ ...prev, email: forgotEmail }));
     }
-  });
+  }, [forgotEmail]);
 
   const { handleMutation, isLoading } = usePostApi();
 

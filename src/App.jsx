@@ -51,8 +51,8 @@ function App() {
         <div className="app-container">
           <ScrollToTopOnRouteChange />
           <Routes>
-            <Route path="/*" element={<UserMain />} />
             <Route path="/business/*" element={<BusinessMain />} />
+            <Route path="/*" element={<UserMain />} />
             <Route path="*" element={<Page404 />} />
           </Routes>
           <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
