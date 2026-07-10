@@ -32,17 +32,17 @@ const BusinessMain = () => {
   if (!isLoggedIn) {
     return (
       <Routes>
-        <Route path="/business/login" element={<SignIn />} />
-        <Route path="/business/signup" element={<SignUp />} />
-        <Route path="/business/forgot-password" element={<ForgotPassword />} />
+        <Route path="login" element={<SignIn />} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
         <Route
-          path="/business/verify-otp"
+          path="verify-otp"
           element={
             forgotEmail ? <VerifyOTP /> : <Navigate to="/business/forgot-password" replace />
           }
         />
         <Route
-          path="/business/reset-password"
+          path="reset-password"
           element={
             forgotEmail ? (
               <ResetPassword />
