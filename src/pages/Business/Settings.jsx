@@ -70,13 +70,13 @@ const Settings = () => {
               <Route index element={<CompanyInformation />} />
             )}{" "}
             {checkPermission("settingsFinanceInfo").status && (
-              <Route path="/finance" element={<FinanceInformation />} />
+              <Route path="finance" element={<FinanceInformation />} />
             )}
             {checkPermission("settingsMarketingInfo").status && (
-              <Route path="/marketing" element={<MarketingInformation />} />
+              <Route path="marketing" element={<MarketingInformation />} />
             )}
             {checkPermission("settingsAccountInfo").status && (
-              <Route path="/account" element={<AccountInformation />} />
+              <Route path="account" element={<AccountInformation />} />
             )}
           </Routes>
         </div>

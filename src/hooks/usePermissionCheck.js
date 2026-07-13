@@ -45,11 +45,14 @@ const usePermissionCheck = () => {
   };
 
   const getFirstGrantedPermission = () => {
-    for (const permission of permissions) {
-      if (permission.isGranted) {
-        return { status: true, permission };
+    if (permissions && permissions.length > 0) {
+      for (const permission of permissions) {
+        if (permission.isGranted) {
+          return { status: true, permission };
+        }
       }
     }
+
     return {
       status: true,
       permission: {

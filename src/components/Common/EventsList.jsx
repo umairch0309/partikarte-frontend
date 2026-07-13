@@ -49,13 +49,14 @@ const EventsList = ({
   const [allEvents, setAllEvents] = useState([]);
   const [eventsData, setEventsData] = useState([]);
   const { isLoading } = useAllEvents((res) => {
-    setEventsData(res?.events);
-    setAllEvents(res?.events);
+    const events = res?.events || [];
+    setEventsData(events);
+    setAllEvents(events);
   });
 
   const handleSearchEvent = (e) => {
     setEventsData(
-      allEvents.filter((event) =>
+      (allEvents || []).filter((event) =>
         event?.eventName?.toLowerCase()?.includes(e.target.value?.toLowerCase())
       )
     );

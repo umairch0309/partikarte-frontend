@@ -7,6 +7,7 @@ import validateVerifyOTPForm from "../../../validation/VerifyOTP";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import { useAuthContext } from "../../../context/auth-context";
 import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
+import { ShowDevOtpHint } from "../../../hooks/ShowMessage";
 
 const initalState = {
   otp: "",
@@ -19,6 +20,8 @@ const VerifyOTP = () => {
   const { forgotEmail } = useAuthContext();
 
   const { handleMutation, isLoading } = usePostApi();
+  const { handleMutation: handleResendMutation, isLoading: isResending } =
+    usePostApi();
 
   useEffect(() => {
     if (forgotEmail) {
@@ -70,6 +73,21 @@ const VerifyOTP = () => {
     );
   };
 
+  const handleResendOtp = () => {
+    handleResendMutation(
+      {
+        path: "auth/resend-otp",
+        data: { email: formData.email },
+      },
+      (res) => {
+        if (res?.debugOtp) {
+          ShowDevOtpHint(res.debugOtp);
+        }
+      },
+      (res) => {}
+    );
+  };
+
   return (
     <div className="verify-otp-page">
       <AuthPageLeft />
@@ -100,6 +118,18 @@ const VerifyOTP = () => {
             Submit OTP
           </PrimaryButton>
         </form>
+        <div className="top-line">
+          <p>Didn't receive the code?</p>
+          <button
+            type="button"
+            className="forgot-password"
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+            disabled={isResending}
+            onClick={handleResendOtp}
+          >
+            Resend OTP
+          </button>
+        </div>
         <p className="note-line">
           Protected by reCAPTCHA and subject to the{" "}
           <a

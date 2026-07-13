@@ -23,9 +23,7 @@ const Roles = () => {
   const { handleMutation, isLoading: isRoleDeleting } = useDeleteApi();
 
   const { isLoading: isRolesLoading } = useAllRoles((res) => {
-    if (res?.roles) {
-      setFilteredData(res?.roles);
-    }
+    setFilteredData(res?.roles || []);
   });
 
   const onDeleteRole = () => {

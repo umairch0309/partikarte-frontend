@@ -1,6 +1,7 @@
 import { Dropdown, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
+import { useQueryClient } from "@tanstack/react-query";
 import formatDate from "../../utilities/formatDate";
 import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
@@ -12,9 +13,11 @@ const GuestTable = ({
   setShowAddPeopleModal,
   setEditSelected,
   selectedGuest,
+  selectedEvent,
 }) => {
   const { checkPermission } = usePermissionCheck();
   const [data, setData] = useState([]);
+  const queryClient = useQueryClient();
 
   const { isDeleting, handleMutation } = useDeleteApi();
 
@@ -23,7 +26,7 @@ const GuestTable = ({
       {
         path: `guests/${selectedGuest?._id}`,
       },
-      (res) => {
+      () => {
         queryClient.invalidateQueries(["get-all-guests", selectedEvent?._id]);
       }
     );

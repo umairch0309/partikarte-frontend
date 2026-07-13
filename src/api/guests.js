@@ -8,7 +8,7 @@ export function useAllGuestsForEvent(eventId, onSuccess, onError) {
       gcTime: 1,
       onSuccess,
       onError,
-      enabled: true,
+      enabled: !!eventId,
     }
   );
   return { response, isLoading };
@@ -22,7 +22,7 @@ export function useAllGuestsSummaryForEvent(eventId, onSuccess, onError) {
       gcTime: 1,
       onSuccess,
       onError,
-      enabled: true,
+      enabled: !!eventId,
     }
   );
 

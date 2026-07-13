@@ -6,8 +6,8 @@ import PrimaryButton from "../UI/PrimaryButton";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
 import { Switch, message } from "antd";
 import validateNewRole from "../../validation/NewRole";
-import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePostApi } from "../../hooks/api-hooks/usePostApi";
 import { usePutApi } from "../../hooks/api-hooks/usePutApi";
 import { ReactSVG } from "react-svg";
 import { Permssions } from "../../utilities/Permissions";
@@ -27,6 +27,7 @@ const NewRoleModal = ({
   roleViewStatus,
 }) => {
   const isMobile = useIsMobileWidth();
+  const queryClient = useQueryClient();
   const [formValues, setFormValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
 
@@ -151,6 +152,7 @@ const NewRoleModal = ({
           data: formData,
         },
         (res) => {
+          queryClient.invalidateQueries(["get-all-roles"]);
           setShowNewRoleModal(false);
           setRoleEditStatus(false);
           setFormValues(initialState);
@@ -160,10 +162,11 @@ const NewRoleModal = ({
     } else {
       handleMutation(
         {
-          path: `/roles/create-role`,
+          path: "roles/create-role",
           data: formData,
         },
         (res) => {
+          queryClient.invalidateQueries(["get-all-roles"]);
           setShowNewRoleModal(false);
           setFormValues(initialState);
         },

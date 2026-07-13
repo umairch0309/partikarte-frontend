@@ -87,7 +87,7 @@ const FeaturedEvents = ({ titleStart, titleEnd, status }) => {
 
   const [allEvents, setAllEvents] = useState([]);
   const { isLoading: allEventsLoading } = useAllEventsForCustomer((res) => {
-    setAllEvents(res?.events);
+    setAllEvents(res?.events || []);
   });
 
   return !allEventsLoading ? (

@@ -9,6 +9,7 @@ import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
 import { useCountriesList } from "../../../api/services";
 import { useAuthContext } from "../../../context/auth-context";
+import { ShowDevOtpHint } from "../../../hooks/ShowMessage";
 
 const initalState = {
   email: "",
@@ -68,13 +69,14 @@ const SignUp = () => {
         data: formData,
       },
       (res) => {
+        if (res?.debugOtp) {
+          ShowDevOtpHint(res.debugOtp);
+        }
         setForgotEmail(formData?.email);
         navigate("/business/verify-otp");
         setFormData(initalState);
       },
-      (res) => {
-        console.log(res);
-      }
+      (res) => {}
     );
     //   after submitting form
   };

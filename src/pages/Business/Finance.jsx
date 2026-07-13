@@ -16,21 +16,20 @@ import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
 const Finance = () => {
   const { checkPermission } = usePermissionCheck();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [filteredData, setFilteredData] = useState([]);
 
   const { isLoading } = useProfileDetails((res) => {
-    if (res?.data) {
-      setData(res?.data);
+    const profile = res?.user ? res : res?.data;
+    if (profile) {
+      setData(profile);
     }
   });
 
   const { isLoading: isTransactionsLoading } = useBusinessTransactions(
     (res) => {
-      if (res?.transactions) {
-        setTransactions(res?.transactions);
-        setFilteredData(res?.transactions);
-      }
+      const transactions = res?.transactions || [];
+      setFilteredData(transactions);
     }
   );
 
@@ -47,7 +46,7 @@ const Finance = () => {
               title={"Sales"}
               number={
                 currencySymbolGenerator("EUR") +
-                (parseInt(data?.business?.earnings?.currentBalance).toFixed(
+                (parseInt(data?.business?.earnings?.currentBalance || 0).toFixed(
                   2
                 ) || 0)
               }
@@ -59,7 +58,7 @@ const Finance = () => {
               title={"Fees"}
               number={
                 currencySymbolGenerator("EUR") +
-                (parseInt(data?.business?.earnings?.totalEarnings).toFixed(2) ||
+                (parseInt(data?.business?.earnings?.totalEarnings || 0).toFixed(2) ||
                   0)
               }
               icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}
@@ -71,8 +70,8 @@ const Finance = () => {
               number={
                 currencySymbolGenerator("EUR") +
                 (parseInt(
-                  data?.business?.earnings?.totalEarnings -
-                    data?.business?.earnings?.currentBalance
+                  (data?.business?.earnings?.totalEarnings || 0) -
+                    (data?.business?.earnings?.currentBalance || 0)
                 ).toFixed(2) || 0)
               }
               icon={<ReactSVG src="/icons/tools/dollar-filled-colored.svg" />}

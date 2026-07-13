@@ -53,7 +53,7 @@ const BusinessProfile = () => {
   const { businessId } = useParams();
   const [data, setData] = useState(null);
   const { isLoading } = useSingleBusinessForCustomer(businessId, (res) => {
-    setData(res?.data);
+    setData(res?.data ?? res);
   });
 
   const copyToClipboard = (link) => {
@@ -75,7 +75,7 @@ const BusinessProfile = () => {
           <h3>Latest Events</h3>
         </div>
         <div className="events-wrapper">
-          {data?.events.length > 0 ? (
+          {data?.events?.length > 0 ? (
             data?.events.slice(0, 2).map((event, index) => {
               return (
                 <EventCard
@@ -119,7 +119,7 @@ const BusinessProfile = () => {
               <ReactSVG src="/icons/tools/news-tag.svg" /> <h3>News</h3>
             </div>
             <div className="news-wrapper">
-              {data?.news.length > 0 ? (
+              {data?.news?.length > 0 ? (
                 data?.news.slice(0, 2).map((news, index) => {
                   return (
                     <NewsCard

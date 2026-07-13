@@ -28,9 +28,9 @@ const Guestlist = () => {
   const [showMultiplePeopleModal, setShowMultiplePeopleModal] = useState(false);
 
   const { isLoading } = useAllGuestsForEvent(selectedEvent?._id, (res) => {
-    console.log(res);
-    setData(res?.guests);
-    setFilteredData(res?.guests);
+    const guests = res?.guests || [];
+    setData(guests);
+    setFilteredData(guests);
   });
 
   const handleSearchText = (text) => {
@@ -49,7 +49,7 @@ const Guestlist = () => {
   };
 
   const applyFilters = (searchText, guestType, notified) => {
-    let filtered = data;
+    let filtered = data || [];
 
     filtered = filtered.filter((guest) =>
       JSON.stringify(guest)?.toLowerCase()?.includes(searchText?.toLowerCase())
@@ -141,6 +141,7 @@ const Guestlist = () => {
             guestsData={filteredData}
             setEditSelected={setEditSelected}
             selectedGuest={selectedGuest}
+            selectedEvent={selectedEvent}
           />
         </div>
       </div>

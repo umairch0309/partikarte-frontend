@@ -17,10 +17,11 @@ const Topbar = ({ title, subtitle, hideSearchInput }) => {
 
   const { isLoading } = useProfileDetails(
     (res) => {
-      if (res?.data) {
-        setUser(res?.data);
-        setPermissions(res?.data?.user?.permissions);
-        setEncryptedData("available", res?.data?.user?.permissions);
+      const profile = res?.user ? res : res?.data;
+      if (profile) {
+        setUser(profile);
+        setPermissions(profile?.user?.permissions || []);
+        setEncryptedData("available", profile?.user?.permissions || []);
       }
     },
     (res) => {

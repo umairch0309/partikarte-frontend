@@ -10,7 +10,8 @@ import StatusModal from "../../components/UI/StatusModal";
 import PrimaryButton from "../../components/UI/PrimaryButton";
 import HeaderPlaceHolder from "../../components/Layouts/UserLayout/HeaderPlaceHolder";
 import useHandleOnBlur from "../../hooks/useHandleOnBlur";
-import { usePostApi } from "../../hooks/api-hooks/usePostApi";
+import { useSendContactEmail } from "../../hooks/api-hooks/useSendContactEmail";
+import { filesToAttachments } from "../../utilities/fileToBase64";
 
 const Qualities = [
   {
@@ -50,7 +51,7 @@ const ContactUs = () => {
   const [showSuccessStatus, setShowSuccessStatus] = useState(false);
   const [fileList, setFileList] = useState([]);
 
-  const { handleMutation, isLoading: isEventCreating } = usePostApi();
+  const { handleMutation, isLoading: isEventCreating } = useSendContactEmail();
 
   const props = {
     onRemove: (file) => {
@@ -84,31 +85,21 @@ const ContactUs = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("firstName", formValues.firstName);
-    formData.append("lastName", formValues.lastName);
-    formData.append("email", formValues.email);
-    formData.append("object", formValues.object);
-    formData.append("description", formValues.description);
-    formData.append("phoneNumber", formValues.phoneNumber);
-    fileList.forEach((file, index) => {
-      formData.append(`attachments${index + 1}`, file);
-    });
-
     setFormErrors({});
 
-    console.log(formValues);
+    const attachments = await filesToAttachments(fileList);
+
     handleMutation(
       {
-        path: "contact-us",
-        data: formData,
+        ...formValues,
+        attachments,
       },
-      (res) => {
+      () => {
         setShowSuccessStatus(true);
         setFormValues(initalState);
         setFileList([]);
       },
-      (res) => {}
+      () => {}
     );
   };
   return (
@@ -264,7 +255,9 @@ const ContactUs = () => {
                 Click or drag the file to upload
               </Button>
             </Upload>
-            <PrimaryButton type={"submit"}>Submit</PrimaryButton>
+            <PrimaryButton type={"submit"} disabled={isEventCreating}>
+              Submit
+            </PrimaryButton>
           </form>
         </div>
       </div>

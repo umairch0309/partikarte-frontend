@@ -8,7 +8,7 @@ export function useCouponByEventId(selectedEvent, onSuccess, onError) {
       gcTime: 1,
       onSuccess,
       onError,
-      enabled: true,
+      enabled: !!selectedEvent,
     }
   );
   return { response, isLoading };

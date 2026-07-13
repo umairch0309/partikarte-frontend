@@ -22,9 +22,9 @@ const Customers = () => {
   const { isLoading: isOrdersLoading } = useOrdersByEventId(
     selectedEvent?._id,
     (res) => {
-      console.log(res);
-      setData(res?.orders);
-      setFilteredData(res?.orders);
+      const orders = res?.orders || [];
+      setData(orders);
+      setFilteredData(orders);
     }
   );
 
@@ -39,7 +39,7 @@ const Customers = () => {
   };
 
   const applyFilters = (searchText, interval) => {
-    let filtered = data;
+    let filtered = data || [];
 
     filtered = filtered.filter((guest) =>
       JSON.stringify(guest)?.toLowerCase()?.includes(searchText?.toLowerCase())

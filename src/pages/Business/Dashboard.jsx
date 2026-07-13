@@ -49,8 +49,7 @@ const Dashboard = () => {
   );
 
   const { isLoading: isAllEventsLoading } = useAllEvents((res) => {
-    setAllEventsData(res?.events);
-    // setSelectedEvent(res?.events[0]?._id);
+    setAllEventsData(res?.events || []);
   });
 
   const { isLoading: isOrderChartDataLoading } = useOrdersByTimeInterval(
@@ -60,7 +59,7 @@ const Dashboard = () => {
     }`,
     (res) => {
       console.log(res);
-      setOrdersDataForChart(res?.orders);
+      setOrdersDataForChart(res?.orders || []);
     }
   );
 
@@ -68,11 +67,11 @@ const Dashboard = () => {
     useBusinessRevenueByMonth(selectedMonth);
 
   const { isLoading } = useLatestOrders((res) => {
-    setOrdersData(res?.orders);
+    setOrdersData(res?.orders || []);
   });
 
   const { isLoading: isEventsLoading } = useActiveEvents((res) => {
-    setEventsData(res?.events);
+    setEventsData(res?.events || []);
   });
 
   useEffect(() => {

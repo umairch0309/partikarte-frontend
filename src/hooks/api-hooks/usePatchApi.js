@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { BASE_URL } from "../../constants";
 import { useAuthContext } from "../../context/auth-context";
+import { resolveApiUrl } from "../../utilities/resolveApiUrl";
 import {
   ShowMessageError,
   ShowMessageSuccess,
@@ -15,7 +15,7 @@ export function usePatchApi() {
   const { token } = useAuthContext();
 
   function patchApiCall(data) {
-    return axios.patch(`${BASE_URL}${data.path}`, data.data && data.data, {
+    return axios.patch(resolveApiUrl(data.path), data.data && data.data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

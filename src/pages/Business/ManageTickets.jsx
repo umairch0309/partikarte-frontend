@@ -22,8 +22,9 @@ const ManageTickets = () => {
 
   useEffect(() => {
     if (selectedEvent) {
-      setData(selectedEvent?.tickets);
-      setFilteredData(selectedEvent?.tickets);
+      const tickets = selectedEvent?.tickets || [];
+      setData(tickets);
+      setFilteredData(tickets);
     }
   }, [selectedEvent]);
 
@@ -32,7 +33,7 @@ const ManageTickets = () => {
   }, [searchedText]);
 
   const filterData = (text) => {
-    const d = data.filter((t) =>
+    const d = (data || []).filter((t) =>
       JSON.stringify(t).toLowerCase().includes(text?.toLowerCase())
     );
     setFilteredData(d);

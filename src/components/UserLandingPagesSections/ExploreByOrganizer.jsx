@@ -78,7 +78,7 @@ const ExploreByOrganizer = () => {
   const [data, setData] = useState([]);
 
   useAllBusinessesForCustomer((res) => {
-    setData(res?.businesses);
+    setData(res?.businesses || []);
   });
 
   return (
@@ -110,29 +110,33 @@ const ExploreByOrganizer = () => {
         </div>
       </div>
       <div className="explore-by-organizer-events-main">
-        <Slider {...settings} ref={sliderRef}>
-          {data.map((event, index) => {
-            return (
-              <div key={index} className="single-slider-item">
-                <div className="gallery-item-container">
-                  <img
-                    src={event?.organizerImageBanner || "/images/event-1.jpg"}
-                    alt={event?.company?.companyName}
-                  />
-                  <Link to={`/business-profile/${event?._id}`}>
-                    <div className="organizer-tag">
-                      <img
-                        src={event?.organizerImage || "/images/event-1.jpg"}
-                        alt={event?.company?.companyName}
-                      />
-                      <h5>{event?.company?.companyName}</h5>
-                    </div>
-                  </Link>
+        {data.length > 0 ? (
+          <Slider {...settings} ref={sliderRef}>
+            {data.map((event, index) => {
+              return (
+                <div key={index} className="single-slider-item">
+                  <div className="gallery-item-container">
+                    <img
+                      src={event?.organizerImageBanner || "/images/event-1.jpg"}
+                      alt={event?.company?.companyName}
+                    />
+                    <Link to={`/business-profile/${event?._id}`}>
+                      <div className="organizer-tag">
+                        <img
+                          src={event?.organizerImage || "/images/event-1.jpg"}
+                          alt={event?.company?.companyName}
+                        />
+                        <h5>{event?.company?.companyName}</h5>
+                      </div>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </Slider>
+              );
+            })}
+          </Slider>
+        ) : (
+          <p className="yellow no-events-found">No organizers found.</p>
+        )}
       </div>
     </div>
   );

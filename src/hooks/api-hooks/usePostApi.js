@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useAuthContext } from "../../context/auth-context";
-import { BASE_URL } from "../../constants";
+import { resolveApiUrl, USE_LOCAL_API } from "../../utilities/resolveApiUrl";
 import {
   ShowMessageError,
   ShowMessageSuccess,
@@ -9,15 +9,18 @@ import {
 } from "../ShowMessage";
 import { useEffect } from "react";
 
-const path = new Date().getTime().toString();
+const loadingKey = new Date().getTime().toString();
 
 export function usePostApi() {
   const { token } = useAuthContext();
 
   function postApiCall(data) {
-    return axios.post(`${BASE_URL}${data.path}`, data.data && data.data, {
+    const url = resolveApiUrl(data.path);
+
+    return axios.post(url, data.data && data.data, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(USE_LOCAL_API ? { "Content-Type": "application/json" } : {}),
       },
     });
   }
@@ -25,21 +28,20 @@ export function usePostApi() {
   const { mutate, isPending } = useMutation({ mutationFn: postApiCall });
 
   useEffect(() => {
-    if (isPending && path) {
-      ShowMessageLoading(path);
+    if (isPending && loadingKey) {
+      ShowMessageLoading(loadingKey);
     }
   }, [isPending]);
 
   function handleMutation(data, afterSucess = () => {}, afterError = () => {}) {
     mutate(data, {
       onSuccess: async (res) => {
-        console.log(res, "success");
-        ShowMessageSuccess(res?.data?.message, path);
+        ShowMessageSuccess(res?.data?.message, loadingKey);
         afterSucess(res?.data);
       },
       onError: async (res) => {
-        ShowMessageError(res?.response?.data?.message, path);
-        afterError(res?.data);
+        ShowMessageError(res?.response?.data?.message, loadingKey);
+        afterError(res?.response?.data);
       },
     });
   }

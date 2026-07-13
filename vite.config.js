@@ -1,8 +1,9 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import { createDevApiPlugin } from "./api/_lib/router.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -50,31 +51,36 @@ const manifestForPlugin = {
     orientation: "portrait",
   },
 };
+
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: "/",
-  resolve: {
-    alias: [
-      {
-        find: /^react-slick$/,
-        replacement: path.resolve(__dirname, "src/lib/slider.jsx"),
-      },
-    ],
-  },
-  plugins: [react(), VitePWA(manifestForPlugin)],
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            return id
-              .toString()
-              .split("node_modules/")[1]
-              .split("/")[0]
-              .toString();
-          }
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+
+  return {
+    base: "/",
+    resolve: {
+      alias: [
+        {
+          find: /^react-slick$/,
+          replacement: path.resolve(__dirname, "src/lib/slider.jsx"),
+        },
+      ],
+    },
+    plugins: [react(), createDevApiPlugin(env), VitePWA(manifestForPlugin)],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              return id
+                .toString()
+                .split("node_modules/")[1]
+                .split("/")[0]
+                .toString();
+            }
+          },
         },
       },
     },
-  },
+  };
 });

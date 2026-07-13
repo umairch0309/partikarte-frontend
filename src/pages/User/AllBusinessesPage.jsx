@@ -8,7 +8,7 @@ const AllBusinessesPage = () => {
   const [data, setData] = useState([]);
 
   useAllBusinessesForCustomer((res) => {
-    setData(res?.businesses);
+    setData(res?.businesses || []);
   });
 
   const navigate = useNavigate();

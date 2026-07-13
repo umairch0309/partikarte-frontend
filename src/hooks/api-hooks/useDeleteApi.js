@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { BASE_URL } from "../../constants";
 import {
   ShowMessageSuccess,
   ShowMessageError,
   ShowMessageLoading,
 } from "../ShowMessage";
 import { useAuthContext } from "../../context/auth-context";
+import { resolveApiUrl } from "../../utilities/resolveApiUrl";
 import { useEffect } from "react";
 
 const path = new Date().getTime().toString();
@@ -15,7 +15,7 @@ export function useDeleteApi() {
   const { token } = useAuthContext();
 
   function deleteApi(data) {
-    return axios.delete(`${BASE_URL}/${data.path}`, {
+    return axios.delete(resolveApiUrl(data.path), {
       headers: {
         Authorization: `Bearer ${token}`,
       },

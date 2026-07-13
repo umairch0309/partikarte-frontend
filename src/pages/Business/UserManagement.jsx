@@ -14,7 +14,7 @@ const UserManagement = () => {
   const [showAddNewMember, setShowAddNewMember] = useState(false);
 
   const { isLoading } = useBusinessManagers((res) => {
-    setData(res?.data);
+    setData(res?.data || []);
   });
 
   console.log(data);

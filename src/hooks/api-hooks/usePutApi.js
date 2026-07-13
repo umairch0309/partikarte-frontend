@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
-import { BASE_URL } from "../../constants";
 import { useAuthContext } from "../../context/auth-context";
+import { resolveApiUrl } from "../../utilities/resolveApiUrl";
 import {
   ShowMessageError,
   ShowMessageLoading,
@@ -15,7 +15,7 @@ export function usePutApi() {
   const { token } = useAuthContext();
 
   function putApiCall(data) {
-    return axios.put(`${BASE_URL}${data.path}`, data.data && data.data, {
+    return axios.put(resolveApiUrl(data.path), data.data && data.data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

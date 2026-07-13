@@ -66,14 +66,14 @@ const OrganizerSettings = () => {
               <Route index element={<Galleries />} />
             )}
             {checkPermission("news").status && (
-              <Route path="/news" element={<News />} />
+              <Route path="news" element={<News />} />
             )}
             {checkPermission("companyDetails").status && (
-              <Route path="/company-details" element={<Company />} />
+              <Route path="company-details" element={<Company />} />
             )}
             {checkPermission("ticketCustomization").status && (
               <Route
-                path="/tickets-customization"
+                path="tickets-customization"
                 element={
                   <CustomizeTickets setSelectedTicket={setSelectedTicket} />
                 }
@@ -81,7 +81,7 @@ const OrganizerSettings = () => {
             )}
             {checkPermission("ticketCustomization").status && (
               <Route
-                path="/tickets-customization/form"
+                path="tickets-customization/form"
                 element={
                   <TicketCustomizationForm selectedTicket={selectedTicket} />
                 }
@@ -90,7 +90,7 @@ const OrganizerSettings = () => {
 
             {/* SUB ROUTES  */}
             {checkPermission("galleryManagement").status && (
-              <Route path="/galleries/:galleryId" element={<ViewGallery />} />
+              <Route path="galleries/:galleryId" element={<ViewGallery />} />
             )}
           </Routes>
         </div>

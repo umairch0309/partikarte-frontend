@@ -12,7 +12,7 @@ const AllEvents = ({ link, searchText, interval }) => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const navigate = useNavigate();
   const { isLoading } = useAllEventsForCustomer((res) => {
-    setAllEvents(res?.events);
+    setAllEvents(res?.events || []);
   });
 
   useEffect(() => {
