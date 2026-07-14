@@ -1,12 +1,14 @@
-import { Dropdown, Table } from "antd";
+import { Dropdown, Table, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import formatDate from "../../utilities/formatDate";
 import { useDeleteApi } from "../../hooks/api-hooks/useDeleteApi";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TicketsTable = ({
   ticketsData,
+  isLoading = false,
   setTicketEditStatus,
   setSelectedTicket,
   setShowNewTicketModal,
@@ -14,6 +16,7 @@ const TicketsTable = ({
   selectedEvent,
 }) => {
   const { checkPermission } = usePermissionCheck();
+  const queryClient = useQueryClient();
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -34,7 +37,10 @@ const TicketsTable = ({
         path: `event/${selectedEvent?._id}/tickets/${selectedTicket?._id}`,
       },
       (res) => {
-        queryClient.invalidateQueries(["get-all-events"]);
+        queryClient.invalidateQueries({ queryKey: ["get-all-events"] });
+        queryClient.invalidateQueries({
+          queryKey: ["get-all-tickets", selectedEvent?._id],
+        });
       }
     );
   };
@@ -150,6 +156,8 @@ const TicketsTable = ({
 
   return (
     <Table
+      rowKey={(record) => record._id || record.ticketName}
+      loading={isLoading}
       scroll={{ scrollToFirstRowOnChange: true, x: window.innerWidth <= 768 }}
       columns={columns}
       dataSource={data}

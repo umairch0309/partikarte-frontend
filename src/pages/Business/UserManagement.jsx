@@ -14,7 +14,9 @@ const UserManagement = () => {
   const [showAddNewMember, setShowAddNewMember] = useState(false);
 
   const { isLoading } = useBusinessManagers((res) => {
-    setData(res?.data || []);
+    // useFetch already unwraps `{ data: [...] }` → success callback receives the array
+    const members = Array.isArray(res) ? res : res?.data || [];
+    setData(members);
   });
 
   console.log(data);

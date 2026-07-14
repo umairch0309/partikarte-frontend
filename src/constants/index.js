@@ -1,12 +1,13 @@
-// export const BASE_URL = "http://localhost:5600/api/";
-// export const WEB_URL = "http://localhost:5600/";
+export const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.DEV
+    ? "http://localhost:5600/api/"
+    : "https://partikarte-backend.vercel.app/api/");
 
-// LIVE URL
-// export const BASE_URL = "http://localhost:5600/api/";
-export const BASE_URL = "https://partikarte-backend.vercel.app/api/";
-export const WEB_URL = "https://partikarte-frontend.vercel.app/";
-
-// SSL
-// export const BASE_URL = "https://partikarte.si/api/";
+export const WEB_URL =
+  import.meta.env.VITE_WEB_URL ||
+  (import.meta.env.DEV
+    ? "http://localhost:5173/"
+    : "https://partikarte-frontend.vercel.app/");
 
 export const CryptKey = "glennphilips";

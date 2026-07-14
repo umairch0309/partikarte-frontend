@@ -69,22 +69,27 @@ const MemebersTable = ({ membersData, isLoading }) => {
       dataIndex: "dob",
       key: "dob",
       align: "center",
-      render: (text) => new Date(text)?.toLocaleDateString(),
+      render: (text) =>
+        text ? new Date(text)?.toLocaleDateString() : "-",
     },
     {
       title: "Member Type",
       dataIndex: "role",
       key: "role",
       align: "center",
-      render: (text) => text?.toUpperCase(),
+      render: (text) => text?.toUpperCase() || "-",
     },
     {
       title: "Address",
       dataIndex: "address",
       key: "address",
       width: "100",
-      render: (text) =>
-        text?.addressDescription + " " + text?.city + " " + text?.country,
+      render: (text) => {
+        if (!text) return "-";
+        return [text?.addressDescription, text?.city, text?.country]
+          .filter(Boolean)
+          .join(" ");
+      },
     },
     {
       title: "Actions",
@@ -121,6 +126,7 @@ const MemebersTable = ({ membersData, isLoading }) => {
   return (
     <>
       <Table
+        rowKey={(record) => record._id || record.email}
         scroll={{ scrollToFirstRowOnChange: true, x: window.innerWidth <= 768 }}
         columns={columns}
         dataSource={data}

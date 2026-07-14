@@ -63,8 +63,18 @@ const EventsList = ({
   };
 
   useEffect(() => {
-    if (!selectedEvent && eventsData?.length > 0) {
+    if (!eventsData?.length) return;
+
+    if (!selectedEvent) {
       setSelectedEvent(eventsData[0]);
+      return;
+    }
+
+    const refreshed = eventsData.find(
+      (event) => event?._id === selectedEvent?._id
+    );
+    if (refreshed) {
+      setSelectedEvent(refreshed);
     }
   }, [eventsData]);
 

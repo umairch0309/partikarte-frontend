@@ -95,14 +95,22 @@ const AddPeopleToGuestlistModal = ({
       return;
     }
 
+    if (!selectedEvent?._id) {
+      setFormErrors({
+        ...errors,
+        eventId: "Please select an event before adding a guest.",
+      });
+      return;
+    }
+
     const formData = new FormData();
     formData.append("name", formValues.name);
     formData.append("surname", formValues.surname);
     formData.append("guestType", formValues.guestType);
-    formData.append("email", formValues.email);
-    formData.append("phoneNumber", formValues.phoneNumber);
-    formData.append("isNotified", formValues.notifyPeople);
-    formData.append("eventId", selectedEvent?._id);
+    formData.append("email", formValues.email || "");
+    formData.append("phoneNumber", formValues.phoneNumber || "");
+    formData.append("isNotified", String(Boolean(formValues.notifyPeople)));
+    formData.append("eventId", selectedEvent._id);
 
     setFormErrors({});
     if (selectedGuest?._id && editSelected) {
@@ -151,6 +159,11 @@ const AddPeopleToGuestlistModal = ({
       width={!isMobile && 700}
     >
       <form className="add-guest-form-container" onSubmit={handleSubmit}>
+        {formErrors.eventId && (
+          <p className="error-message" style={{ marginBottom: "12px" }}>
+            {formErrors.eventId}
+          </p>
+        )}
         <div className="side-by-side-guest-input">
           <div className={`single-form-item ${formErrors.name ? "error" : ""}`}>
             <label htmlFor="name">Name*</label>

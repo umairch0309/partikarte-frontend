@@ -157,8 +157,9 @@ const NewTicketModal = ({
           data: formData,
         },
         (res) => {
+          queryClient.invalidateQueries({ queryKey: ["get-all-events"] });
           queryClient.invalidateQueries({
-            queryKey: ["get-all-events", selectedEvent?._id],
+            queryKey: ["get-all-tickets", selectedEvent?._id],
           });
           setShowNewTicketModal(false);
           setTicketEditStatus(false);
@@ -173,8 +174,9 @@ const NewTicketModal = ({
           data: formData,
         },
         (res) => {
+          queryClient.invalidateQueries({ queryKey: ["get-all-events"] });
           queryClient.invalidateQueries({
-            queryKey: ["get-all-events", selectedEvent?._id],
+            queryKey: ["get-all-tickets", selectedEvent?._id],
           });
           setShowNewTicketModal(false);
           setFormValues(initialState);

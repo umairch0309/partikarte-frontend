@@ -112,9 +112,13 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
         data: formData,
       },
       (res) => {
-        queryClient.invalidateQueries("get-all-members");
+        queryClient.invalidateQueries({
+          queryKey: ["get-all-business-managers"],
+        });
         setShowAddNewMember(false);
         setFormValues(initialState);
+        setFrontSideImage(null);
+        setBackSideImage(null);
       },
       (res) => {}
     );

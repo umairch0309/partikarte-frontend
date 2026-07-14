@@ -9,6 +9,7 @@ import TicketsTable from "../../components/Tables/TicketsTable";
 import NewTicketModal from "../../components/ManageTickets/NewTicketModal";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
 import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
+import { useAllTickets } from "../../api/manage-tickets";
 
 const ManageTickets = () => {
   const { checkPermission } = usePermissionCheck();
@@ -18,23 +19,35 @@ const ManageTickets = () => {
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState([]);
   const [ticketEditStatus, setTicketEditStatus] = useState(false);
-  const [searchedText, setSearchedText] = useState(false);
+  const [searchedText, setSearchedText] = useState("");
 
-  useEffect(() => {
-    if (selectedEvent) {
-      const tickets = selectedEvent?.tickets || [];
+  const { isLoading: isTicketsLoading } = useAllTickets(
+    selectedEvent?._id,
+    (res) => {
+      const tickets = Array.isArray(res?.tickets)
+        ? res.tickets
+        : Array.isArray(res)
+          ? res
+          : [];
       setData(tickets);
       setFilteredData(tickets);
     }
-  }, [selectedEvent]);
+  );
+
+  useEffect(() => {
+    if (!selectedEvent?._id) {
+      setData([]);
+      setFilteredData([]);
+    }
+  }, [selectedEvent?._id]);
 
   useEffect(() => {
     filterData(searchedText);
-  }, [searchedText]);
+  }, [searchedText, data]);
 
   const filterData = (text) => {
     const d = (data || []).filter((t) =>
-      JSON.stringify(t).toLowerCase().includes(text?.toLowerCase())
+      JSON.stringify(t).toLowerCase().includes((text || "").toLowerCase())
     );
     setFilteredData(d);
   };
@@ -107,6 +120,7 @@ const ManageTickets = () => {
           <TicketsTable
             setShowNewTicketModal={setShowNewTicketModal}
             ticketsData={filteredData}
+            isLoading={isTicketsLoading}
             setTicketEditStatus={setTicketEditStatus}
             setSelectedTicket={setSelectedTicket}
             selectedTicket={selectedTicket}

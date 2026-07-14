@@ -1,8 +1,8 @@
 import { BASE_URL } from "../constants";
 
-// Use the local /api backend in development, or when explicitly enabled for Vercel.
-export const USE_LOCAL_API =
-  import.meta.env.VITE_USE_LOCAL_API === "true" || import.meta.env.DEV;
+// Only use the Vite mock /api when explicitly enabled.
+// Default local development talks to the Express backend (BASE_URL).
+export const USE_LOCAL_API = import.meta.env.VITE_USE_LOCAL_API === "true";
 
 export function resolveApiUrl(path = "") {
   const normalizedPath = String(path).replace(/^\//, "");
