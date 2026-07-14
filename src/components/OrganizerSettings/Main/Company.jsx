@@ -149,7 +149,7 @@ const Company = () => {
           {isProfileUpdating || profileLoading ? (
             <Skeleton.Node
               active={true}
-              style={{ width: "100%", height: "350px" }}
+              style={{ width: "100%", height: "180px" }}
             ></Skeleton.Node>
           ) : formValues.coverPhoto ? (
             <img src={formValues.coverPhoto} alt="" />
@@ -170,7 +170,7 @@ const Company = () => {
           <div className="profile-image-container">
             <div className="image-inner-container">
               {isProfileUpdating || profileLoading ? (
-                <Skeleton.Avatar active={true} size={130} shape={"circle"} />
+                <Skeleton.Avatar active={true} size={96} shape={"circle"} />
               ) : formValues.profileImage ? (
                 <img src={formValues.profileImage} />
               ) : (
