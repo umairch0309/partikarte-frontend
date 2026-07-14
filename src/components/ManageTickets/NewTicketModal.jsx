@@ -14,9 +14,9 @@ import { usePutApi } from "../../hooks/api-hooks/usePutApi";
 const initialState = {
   ticketName: "",
   ticketType: "",
-  ticketPrice: 0,
-  vatPercentage: 0,
-  numberOfTickets: 0,
+  ticketPrice: "",
+  vatPercentage: "",
+  numberOfTickets: "",
   descriptionOnWeb: "",
   descriptionOnTicket: "",
   startingDate: "",
@@ -25,6 +25,12 @@ const initialState = {
   limitedTickets: true,
   questions: [],
 };
+
+function toNumberOrZero(value) {
+  if (value === "" || value == null) return 0;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
 
 const NewTicketModal = ({
   selectedEvent,
@@ -66,18 +72,24 @@ const NewTicketModal = ({
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
-    console.log(name, typeof value, value);
-    setFormValues({ ...formValues, [name]: value });
+
     if (name === "paidTicket" && value === false) {
       setFormValues({
         ...formValues,
-        vatPercentage: 0,
-        ticketPrice: 0,
+        vatPercentage: "",
+        ticketPrice: "",
         [name]: value,
       });
-    } else if (name === "limitedTickets" && value === false) {
-      setFormValues({ ...formValues, numberOfTickets: 0, [name]: value });
+      return;
     }
+
+    if (name === "limitedTickets" && value === false) {
+      setFormValues({ ...formValues, numberOfTickets: "", [name]: value });
+      return;
+    }
+
+    // Number inputs may be "" while editing (don't force back to 0).
+    setFormValues({ ...formValues, [name]: value });
   };
 
   const handleOnBlur = async (e) => {
@@ -125,7 +137,7 @@ const NewTicketModal = ({
     if (
       selectedTicket?._id &&
       ticketEditStatus &&
-      selectedTicket?.ticketOrders > formValues.numberOfTickets
+      selectedTicket?.ticketOrders > toNumberOrZero(formValues.numberOfTickets)
     ) {
       message.warning(
         `Ticket has already been order ${selectedTicket?.ticketOrders} many times.`
@@ -137,11 +149,11 @@ const NewTicketModal = ({
       ticketName: formValues.ticketName,
       validFrom: formValues.startingDate,
       validTo: formValues.endingDate,
-      maxCapacity: formValues.numberOfTickets,
+      maxCapacity: toNumberOrZero(formValues.numberOfTickets),
       capacityLimitation: formValues.limitedTickets,
       paidTicket: formValues.paidTicket,
-      price: formValues.ticketPrice,
-      vatPercentage: formValues.vatPercentage,
+      price: toNumberOrZero(formValues.ticketPrice),
+      vatPercentage: toNumberOrZero(formValues.vatPercentage),
       ticketType: formValues.ticketType,
       descriptionWeb: formValues.descriptionOnWeb,
       descriptionTicket: formValues.descriptionOnTicket,
@@ -206,7 +218,6 @@ const NewTicketModal = ({
       width={!isMobile && 700}
     >
       <form className="add-new-ticket-form-container" onSubmit={handleSubmit}>
-        <div className="side-by-side-ticket-input"></div>
         <div
           className={`single-form-item ${formErrors.ticketName ? "error" : ""}`}
         >
@@ -280,9 +291,9 @@ const NewTicketModal = ({
                 id="ticketPrice"
                 placeholder="Enter ticket price"
                 onChange={(e) =>
-                  formValues.paidTicket ? handleInputChange(e) : () => {}
+                  formValues.paidTicket ? handleInputChange(e) : undefined
                 }
-                value={formValues.ticketPrice || 0}
+                value={formValues.ticketPrice}
                 onBlur={handleOnBlur}
                 disabled={!formValues.paidTicket}
                 min={0}
@@ -330,9 +341,9 @@ const NewTicketModal = ({
                 min={0}
                 step={0.01}
                 onChange={(e) =>
-                  formValues.paidTicket ? handleInputChange(e) : () => {}
+                  formValues.paidTicket ? handleInputChange(e) : undefined
                 }
-                value={formValues.vatPercentage || 0}
+                value={formValues.vatPercentage}
                 onBlur={handleOnBlur}
                 disabled={!formValues.paidTicket}
               />
@@ -382,13 +393,13 @@ const NewTicketModal = ({
               type={formValues.limitedTickets ? "number" : "text"}
               id="numberOfTickets"
               placeholder="Enter No. of Tickets"
-              min={"0"}
+              min={0}
               onChange={(e) =>
-                formValues.limitedTickets ? handleInputChange(e) : () => {}
+                formValues.limitedTickets ? handleInputChange(e) : undefined
               }
               value={
                 formValues.limitedTickets
-                  ? formValues.numberOfTickets || 0
+                  ? formValues.numberOfTickets
                   : "Unlimited"
               }
               onBlur={handleOnBlur}

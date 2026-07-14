@@ -46,6 +46,31 @@
       height: 100px;
       padding-top: 10px;
     }
+
+    .guest-type-select {
+      .ant-select-selector {
+        min-height: 50px !important;
+        padding-inline: 11px !important;
+        align-items: center;
+        border-color: #e6e9ed !important;
+      }
+
+      &.guest-type-select--error .ant-select-selector {
+        border-color: $errorColor !important;
+      }
+
+      &:hover .ant-select-selector,
+      &.ant-select-focused .ant-select-selector {
+        border-color: $primaryColor !important;
+        box-shadow: none !important;
+        outline: none !important;
+      }
+
+      &.guest-type-select--error:hover .ant-select-selector,
+      &.guest-type-select--error.ant-select-focused .ant-select-selector {
+        border-color: $errorColor !important;
+      }
+    }
   }
   .phone-input-whole {
     margin-top: 5px;

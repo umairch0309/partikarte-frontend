@@ -60,6 +60,27 @@ body {
       }
     }
   }
+
+  // Ant Select keeps its own single border on .ant-select-selector;
+  // don't also paint a border/outline on the inner combobox input.
+  .ant-select {
+    input,
+    .ant-select-selection-search-input {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      height: auto;
+      padding-inline: 0;
+      background: transparent;
+
+      &:hover,
+      &:focus {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+    }
+  }
 }
 
 #root {
@@ -188,6 +209,21 @@ input[type="number"] {
     fill: $tertiaryColor;
     stroke: red;
     stroke-width: 5px;
+  }
+}
+
+// One highlight only: border lives on the selector, never also on the root.
+.ant-select {
+  &.ant-select-focused:not(.ant-select-disabled):not(.ant-select-customize-input)
+    .ant-select-selector,
+  &:hover:not(.ant-select-disabled):not(.ant-select-customize-input)
+    .ant-select-selector {
+    border-color: $primaryColor !important;
+    box-shadow: none !important;
+  }
+
+  .ant-select-selector {
+    border-radius: $primaryBorderRadius !important;
   }
 }
 

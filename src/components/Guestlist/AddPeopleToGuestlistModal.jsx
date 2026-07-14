@@ -209,14 +209,14 @@ const AddPeopleToGuestlistModal = ({
               }
               name="guestType"
               id="guestType"
-              value={formValues.guestType}
+              className={`guest-type-select${
+                formErrors.guestType ? " guest-type-select--error" : ""
+              }`}
+              value={formValues.guestType || undefined}
+              placeholder="Choose guest type"
               style={{
                 width: "100%",
                 marginTop: "5px",
-                ...(formErrors.guestType && {
-                  border: "1px solid red",
-                  borderRadius: "10px",
-                }),
               }}
               options={options}
               dropdownRender={(menu) => (
