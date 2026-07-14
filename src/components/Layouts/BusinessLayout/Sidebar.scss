@@ -19,6 +19,13 @@
     width: 0px;
     height: 0px;
   }
+
+  .sidebar-logo-link {
+    display: block;
+    cursor: pointer;
+    line-height: 0;
+  }
+
   .sidebar-all-routes-container {
     @include flex(column, "", center, 10px);
     width: 100%;

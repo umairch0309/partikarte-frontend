@@ -75,8 +75,8 @@ const BusinessProfile = () => {
           <h3>Latest Events</h3>
         </div>
         <div className="events-wrapper">
-          {data?.events?.length > 0 ? (
-            data?.events.slice(0, 2).map((event, index) => {
+          {Array.isArray(data?.events) && data.events.length > 0 ? (
+            data.events.slice(0, 2).map((event, index) => {
               return (
                 <EventCard
                   key={index}
@@ -119,8 +119,8 @@ const BusinessProfile = () => {
               <ReactSVG src="/icons/tools/news-tag.svg" /> <h3>News</h3>
             </div>
             <div className="news-wrapper">
-              {data?.news?.length > 0 ? (
-                data?.news.slice(0, 2).map((news, index) => {
+              {Array.isArray(data?.news) && data.news.length > 0 ? (
+                data.news.slice(0, 2).map((news, index) => {
                   return (
                     <NewsCard
                       key={index}

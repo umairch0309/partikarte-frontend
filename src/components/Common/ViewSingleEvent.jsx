@@ -14,9 +14,7 @@ const ViewSingleEvent = () => {
   const { eventId } = useParams();
 
   const { isLoading } = useSingleEventForCustomer(eventId, (res) => {
-    setData(res?.event);
-    console.log(res?.event);
-    console.log(new Date(res?.event?.eventStart));
+    setData(res?.event || null);
   });
 
   const handleGetDirections = () => {

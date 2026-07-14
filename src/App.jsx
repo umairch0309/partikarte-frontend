@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import {
   QueryClient,
@@ -5,7 +6,8 @@ import {
   QueryCache,
   MutationCache,
 } from "@tanstack/react-query";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, Empty } from "antd";
+import EmptyState from "./components/Common/EmptyState";
 
 import "./styles/main.scss";
 import Page404 from "./pages/common/Page404";
@@ -40,8 +42,9 @@ import Roles from "./pages/Business/Roles";
 function App() {
   const { setIsLoggedIn, isLoggedIn, forgotEmail } = useAuthContext();
   const navigate = useNavigate();
+  const authErrorRef = useRef(() => {});
 
-  const handleAuthError = (res) => {
+  authErrorRef.current = (res) => {
     if (res?.response?.status === 401 && isLoggedIn) {
       setIsLoggedIn(false);
       localStorage.removeItem("token");
@@ -49,24 +52,36 @@ function App() {
     }
   };
 
-  const queryClient = new QueryClient({
-    queryCache: new QueryCache({
-      onError: handleAuthError,
-    }),
-    mutationCache: new MutationCache({
-      onError: handleAuthError,
-    }),
-    defaultOptions: {
-      queries: {
-        staleTime: 120000,
-        gcTime: 120000,
-        refetchOnWindowFocus: false,
-      },
-    },
-  });
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        queryCache: new QueryCache({
+          onError: (error) => authErrorRef.current(error),
+        }),
+        mutationCache: new MutationCache({
+          onError: (error) => authErrorRef.current(error),
+        }),
+        defaultOptions: {
+          queries: {
+            staleTime: 120000,
+            gcTime: 120000,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
   return (
-    <ConfigProvider theme={configuration.configuration}>
+    <ConfigProvider
+      theme={configuration.configuration}
+      renderEmpty={() => (
+        <EmptyState
+          height={160}
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="No data to display"
+        />
+      )}
+    >
       <QueryClientProvider client={queryClient}>
         <div className="app-container">
           <ScrollToTopOnRouteChange />

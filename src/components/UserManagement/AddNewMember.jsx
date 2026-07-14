@@ -37,7 +37,7 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
-      setCountries(res);
+      setCountries(Array.isArray(res) ? res : []);
     },
     (res) => {
       console.log(res, "countries list error");
@@ -45,9 +45,7 @@ const AddNewMember = ({ setShowAddNewMember, showAddNewMember }) => {
   );
 
   const { isLoading: isRolesLoading } = useAllRoles((res) => {
-    if (res?.roles) {
-      setRoles(res?.roles);
-    }
+    setRoles(Array.isArray(res?.roles) ? res.roles : []);
   });
 
   const { handleMutation, isLoading: isEventCreating } = usePostApi();

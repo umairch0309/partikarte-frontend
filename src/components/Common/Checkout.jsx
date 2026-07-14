@@ -54,8 +54,7 @@ const Checkout = ({ setCoupon, eventData }) => {
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
-      setCountries(res);
-      console.log(res, " countries list");
+      setCountries(Array.isArray(res) ? res : []);
     },
     (res) => {
       console.log(res, "countries list error");
@@ -196,7 +195,7 @@ const Checkout = ({ setCoupon, eventData }) => {
             formData.append("addressDescription", paymentData?.address);
             formData.append(
               "countryCode",
-              countries.find(
+              (Array.isArray(countries) ? countries : []).find(
                 (country) => country.countryName === paymentData?.country
               )?.countryCode
             );

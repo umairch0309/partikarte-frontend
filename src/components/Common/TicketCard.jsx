@@ -177,7 +177,7 @@ const TicketCard = ({ ticket, eventId, eventCurrency }) => {
           ticketName: ticket?.ticketName,
           show: true,
           allQuestions: [
-            ...state.tickets[ticketIndexInContext].allQuestions,
+            ...(state.tickets[ticketIndexInContext]?.allQuestions || []),
             { questions },
           ],
         },

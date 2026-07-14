@@ -107,6 +107,7 @@ export function handleDataRequest(path, session) {
   if (normalizedPath.startsWith("guests/summary/")) {
     return {
       data: {
+        guestTypeSummary: [],
         summary: {
           total: 0,
           vip: 0,
@@ -166,7 +167,7 @@ export function handleDataRequest(path, session) {
   }
 
   if (normalizedPath === "business/gallery") {
-    return emptyListResponse("galleries");
+    return emptyListResponse("gallery");
   }
 
   if (normalizedPath.startsWith("business/gallery/")) {

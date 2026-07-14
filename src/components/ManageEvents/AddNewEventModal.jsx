@@ -41,7 +41,7 @@ const AddNewEventModal = ({
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
-      setCountries(res);
+      setCountries(Array.isArray(res) ? res : []);
     },
     (res) => {
       console.log(res, "countries list error");
@@ -131,7 +131,7 @@ const AddNewEventModal = ({
       onOk={() => setShowAddNewEventModal(false)}
       title={"Add Events"}
       subtitle={"Please enter the information to add Events."}
-      width={!isMobile && 900}
+      width={isMobile ? undefined : 900}
     >
       <form
         className="add-new-event-form-container"

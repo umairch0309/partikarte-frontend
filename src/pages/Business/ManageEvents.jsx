@@ -50,7 +50,7 @@ const ManageEvents = () => {
     }`,
     (res) => {
       // console.log(res);
-      setOrdersDataForChart(res?.orders);
+      setOrdersDataForChart(res?.orders || []);
     }
   );
 
@@ -388,15 +388,19 @@ const ManageEvents = () => {
           </div>
         </div>
       </div>
-      <AddNewEventModal
-        showAddNewEventModal={showAddNewEventModal}
-        setShowAddNewEventModal={setShowAddNewEventModal}
-      />
-      <EditEvent
-        showEditEventModal={showEditEventModal}
-        setShoweditEventModal={setShoweditEventModal}
-        selectedEvent={selectedEvent}
-      />
+      {showAddNewEventModal && (
+        <AddNewEventModal
+          showAddNewEventModal={showAddNewEventModal}
+          setShowAddNewEventModal={setShowAddNewEventModal}
+        />
+      )}
+      {showEditEventModal && (
+        <EditEvent
+          showEditEventModal={showEditEventModal}
+          setShoweditEventModal={setShoweditEventModal}
+          selectedEvent={selectedEvent}
+        />
+      )}
     </>
   );
 };

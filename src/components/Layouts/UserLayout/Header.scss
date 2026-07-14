@@ -43,17 +43,54 @@
           font-weight: 400;
         }
       }
-      img {
-        height: 60px;
-        width: 60px;
+      img.header-profile-avatar {
+        height: 44px;
+        width: 44px;
         object-fit: cover;
         border-radius: 50%;
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
         cursor: pointer;
+        display: block;
+        flex-shrink: 0;
         @media (max-width: 767px) {
-          height: 40px;
-          width: 40px;
+          height: 36px;
+          width: 36px;
         }
       }
+
+      .header-profile-placeholder {
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.12);
+        cursor: pointer;
+        flex-shrink: 0;
+        @include flex(row, center, center);
+
+        @media (max-width: 767px) {
+          width: 36px;
+          height: 36px;
+        }
+
+        svg {
+          width: 24px;
+          height: 24px;
+          display: block;
+
+          path,
+          circle {
+            fill: white;
+          }
+
+          @media (max-width: 767px) {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+
       .login-link-button {
         .header-login-button {
           width: 150px;

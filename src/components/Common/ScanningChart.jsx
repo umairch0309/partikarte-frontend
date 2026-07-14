@@ -8,6 +8,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import EmptyState from "./EmptyState";
 
 const ScanningChart = ({ height, data: chartData }) => {
   const formatUsers = (orderAmount) => {
@@ -42,6 +43,12 @@ const ScanningChart = ({ height, data: chartData }) => {
     const monthAbbreviation = updatedAt.substring(0, 3); // Get the first 3 letters of the month
     return `${day?.split(",")?.[0]}\n${monthAbbreviation}`;
   };
+
+  if (!data.length) {
+    return (
+      <EmptyState height={height} description="No scanning data to display" />
+    );
+  }
 
   return (
     <ResponsiveContainer width="100%" height={height}>

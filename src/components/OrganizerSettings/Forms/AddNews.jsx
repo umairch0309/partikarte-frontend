@@ -44,7 +44,7 @@ const AddNews = ({
   }, [selectedNews, selectedNewsStatus]);
 
   const { isLoading: isEventsLoading } = useAllEvents((res) => {
-    setEventsData(res?.events);
+    setEventsData(Array.isArray(res?.events) ? res.events : []);
   });
 
   const { handleMutation, isLoading: isNewsCreating } = usePostApi();

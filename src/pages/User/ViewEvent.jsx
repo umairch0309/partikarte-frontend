@@ -21,8 +21,15 @@ const ViewEvent = () => {
   const { eventId } = useParams();
 
   const { isLoading } = useSingleEventForCustomer(eventId, (res) => {
-    setData(res?.event);
-    console.log(res?.event);
+    const event = res?.event;
+    setData(
+      event
+        ? {
+            ...event,
+            tickets: Array.isArray(event.tickets) ? event.tickets : [],
+          }
+        : null
+    );
   });
 
   const handleGetDirections = () => {

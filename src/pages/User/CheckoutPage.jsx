@@ -16,8 +16,15 @@ const CheckoutPage = () => {
   const [data, setData] = useState(null);
   const [coupon, setCoupon] = useState(null);
   const { isLoading } = useSingleEventForCustomer(state.eventId, (res) => {
-    setData(res?.event);
-    console.log(res?.event);
+    const event = res?.event;
+    setData(
+      event
+        ? {
+            ...event,
+            tickets: Array.isArray(event.tickets) ? event.tickets : [],
+          }
+        : null
+    );
   });
 
   useEffect(() => {

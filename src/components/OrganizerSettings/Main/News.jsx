@@ -17,7 +17,7 @@ const News = () => {
   const queryClient = useQueryClient();
 
   const { isLoading } = useGetAllNews((res) => {
-    setNews(res?.news);
+    setNews(Array.isArray(res?.news) ? res.news : []);
   });
 
   const [showAddNewsModal, setShowAddNewsModal] = useState(false);
@@ -79,13 +79,20 @@ const News = () => {
       <div className="news-main-bottom">
         {isLoading ? (
           <Skeleton active={true} paragraph={{ rows: 5 }} size={"small"} />
-        ) : (
+        ) : news.length > 0 ? (
           news.map((newsItem) => (
             <div className="single-news-container" key={newsItem?._id}>
               <div className="container-left">
-                <img src={newsItem?.images[0]} alt={newsItem?.name} />
+                <img
+                  src={newsItem?.images?.[0] || "/images/event-1.jpg"}
+                  alt={newsItem?.name}
+                />
                 <div className="news-info-container">
-                  <p>{new Date(newsItem?.date).toLocaleString()}</p>
+                  <p>
+                    {newsItem?.date
+                      ? new Date(newsItem.date).toLocaleString()
+                      : ""}
+                  </p>
                   <h4>{newsItem?.name}</h4>
                   <h6>{newsItem?.description}</h6>
                 </div>
@@ -112,15 +119,19 @@ const News = () => {
               </div>
             </div>
           ))
+        ) : (
+          <p>No news yet.</p>
         )}
       </div>
-      <AddNews
-        setShowAddNewsModal={setShowAddNewsModal}
-        showAddNewsModal={showAddNewsModal}
-        selectedNews={selectedNews}
-        setSelectedNewsStatus={setSelectedNewsStatus}
-        selectedNewsStatus={selectedNewsStatus}
-      />
+      {showAddNewsModal && (
+        <AddNews
+          setShowAddNewsModal={setShowAddNewsModal}
+          showAddNewsModal={showAddNewsModal}
+          selectedNews={selectedNews}
+          setSelectedNewsStatus={setSelectedNewsStatus}
+          selectedNewsStatus={selectedNewsStatus}
+        />
+      )}
     </div>
   );
 };

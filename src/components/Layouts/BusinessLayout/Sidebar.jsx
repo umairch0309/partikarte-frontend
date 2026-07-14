@@ -2,7 +2,7 @@ import React from "react";
 import "./Sidebar.scss";
 import { ReactSVG } from "react-svg";
 import { businessRoutes } from "../../../Routes";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../../../context/auth-context";
 import usePermissionCheck from "../../../hooks/usePermissionCheck";
 
@@ -19,7 +19,9 @@ const Sidebar = () => {
 
   return (
     <aside className="side-bar-main-container">
-      <ReactSVG src="/blue-logo.svg" />
+      <Link to="/" className="sidebar-logo-link" aria-label="Go to landing page">
+        <ReactSVG src="/blue-logo.svg" />
+      </Link>
       <div className="sidebar-all-routes-container">
         {businessRoutes.map((route) => {
           return checkPermission(route.route.split("/").pop()).status ? (

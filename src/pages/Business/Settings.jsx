@@ -29,7 +29,7 @@ const Settings = () => {
           <div className="business-settings-menu">
             {checkPermission("settingsCompanyInfo").status && (
               <Link
-                to={"./"}
+                to="/business/settings"
                 className={
                   location.pathname === "/business/settings" ||
                   location.pathname === "/business/settings/"
@@ -42,19 +42,19 @@ const Settings = () => {
               </Link>
             )}
             {checkPermission("settingsFinanceInfo").status && (
-              <NavLink to={"./finance"}>
+              <NavLink to="/business/settings/finance" end>
                 <ReactSVG src="/icons/menu/finance-dollar.svg" />
                 <span>Finance</span>
               </NavLink>
             )}
             {checkPermission("settingsMarketingInfo").status && (
-              <NavLink to={"./marketing"}>
+              <NavLink to="/business/settings/marketing" end>
                 <ReactSVG src="/icons/menu/marketing.svg" />
                 <span>Marketing & API</span>
               </NavLink>
             )}
             {checkPermission("settingsAccountInfo").status && (
-              <NavLink to={"./account"}>
+              <NavLink to="/business/settings/account" end>
                 <ReactSVG src="/icons/menu/user-square.svg" />
                 <span>Account</span>
               </NavLink>

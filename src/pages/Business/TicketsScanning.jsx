@@ -25,8 +25,28 @@ const TicketsScanning = () => {
   const { isLoading } = useAllGuestsSummaryForEvent(
     selectedEvent?._id,
     (res) => {
-      console.log(res, "summary");
-      setGuests(res?.guestTypeSummary);
+      const summaryList = res?.guestTypeSummary;
+      if (Array.isArray(summaryList)) {
+        setGuests(summaryList);
+        return;
+      }
+
+      const summary = res?.summary;
+      if (summary && typeof summary === "object") {
+        setGuests(
+          Object.entries(summary)
+            .filter(([key]) => key !== "total")
+            .map(([guestType, totalGuests]) => ({
+              key: guestType,
+              guestType,
+              totalGuests: totalGuests || 0,
+              totalPresentGuests: 0,
+            }))
+        );
+        return;
+      }
+
+      setGuests([]);
     }
   );
 
@@ -212,10 +232,12 @@ const TicketsScanning = () => {
           )}
         </div>
       </div>
-      <AddNewEventModal
-        showAddNewEventModal={showAddNewEventModal}
-        setShowAddNewEventModal={setShowAddNewEventModal}
-      />
+      {showAddNewEventModal && (
+        <AddNewEventModal
+          showAddNewEventModal={showAddNewEventModal}
+          setShowAddNewEventModal={setShowAddNewEventModal}
+        />
+      )}
     </>
   );
 };

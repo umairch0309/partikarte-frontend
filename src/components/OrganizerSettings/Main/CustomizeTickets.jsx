@@ -28,7 +28,9 @@ const CustomizeTickets = ({ setSelectedTicket }) => {
                 <PrimaryButton
                   onClick={() => {
                     setSelectedTicket({ ticket, eventId: selectedEvent?._id });
-                    navigate("./form");
+                    navigate(
+                      "/business/organizer-settings/tickets-customization/form"
+                    );
                   }}
                   className={"cutomize-ticket-button"}
                 >

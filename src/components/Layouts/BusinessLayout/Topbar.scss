@@ -30,6 +30,7 @@
     border: 1px solid opacityColor($textColor, 0.2);
     width: 70%;
     display: none;
+    background-color: white;
     @media (max-width: 767px) {
       width: 100%;
       display: flex;
@@ -38,11 +39,26 @@
       font-size: 14px;
       border: none;
       outline: none;
+      width: 100%;
+      background: transparent;
     }
 
     &:focus-within {
       outline: 2px solid $primaryColor;
       border-color: transparent;
+    }
+  }
+
+  .topbar-search {
+    position: relative;
+
+    &.topbar-search-mobile {
+      display: none;
+
+      @media (max-width: 767px) {
+        display: flex;
+        width: 100%;
+      }
     }
   }
   .topbar-left {
@@ -68,29 +84,108 @@
     }
 
     .image-and-notification-container {
-      @include flex(row, flex-end, center, 20px);
+      @include flex(row, flex-end, center, 16px);
     }
     svg {
       display: block;
     }
-    .notifications-icon {
+    .notifications-icon-wrapper {
+      position: relative;
       cursor: pointer;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid opacityColor($textColor, 0.15);
+      flex-shrink: 0;
+      @include flex(row, center, center);
+
+      @media (max-width: 767px) {
+        width: 36px;
+        height: 36px;
+      }
+
+      .notifications-icon {
+        cursor: pointer;
+
+        svg {
+          width: 20px;
+          height: 20px;
+          display: block;
+
+          @media (max-width: 767px) {
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
     }
-    .search-input-container {
+
+    .notifications-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background-color: $errorColor;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      @include flex(row, center, center);
+    }
+    .search-input-container,
+    .topbar-search-desktop {
       display: flex;
+      position: relative;
+      min-width: 280px;
+      width: auto;
+      flex: 1;
+      max-width: 360px;
+      background-color: white;
+
       @media (max-width: 767px) {
         display: none;
       }
     }
     img {
-      height: 60px;
-      width: 60px;
+      height: 44px;
+      width: 44px;
       object-fit: cover;
       border-radius: 50%;
+      border: 1px solid opacityColor($textColor, 0.15);
       cursor: pointer;
       @media (max-width: 767px) {
-        height: 40px;
-        width: 40px;
+        height: 36px;
+        width: 36px;
+      }
+    }
+
+    .topbar-profile-placeholder {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: 1px solid opacityColor($textColor, 0.15);
+      border-radius: 50%;
+      background-color: white;
+      cursor: pointer;
+      flex-shrink: 0;
+      @include flex(row, center, center);
+
+      @media (max-width: 767px) {
+        width: 36px;
+        height: 36px;
+      }
+
+      svg {
+        width: 24px;
+        height: 24px;
+        display: block;
+
+        @media (max-width: 767px) {
+          width: 20px;
+          height: 20px;
+        }
       }
     }
     .menu-icon-mobile {
@@ -109,6 +204,153 @@
           }
         }
       }
+    }
+  }
+}
+
+.topbar-search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid opacityColor($textColor, 0.1);
+  border-radius: $primaryBorderRadius;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 120;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.topbar-search-option {
+  width: 100%;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  @include flex(row, flex-start, center, 10px);
+  text-align: left;
+
+  span {
+    font-size: 14px;
+    color: $secondaryColor;
+  }
+
+  svg {
+    min-width: 18px;
+    display: block;
+  }
+
+  &:hover {
+    background-color: opacityColor($primaryColor, 0.08);
+  }
+}
+
+.topbar-search-empty {
+  margin: 0;
+  padding: 12px;
+  font-size: 13px;
+  color: opacityColor($textColor, 0.55);
+  text-align: center;
+}
+
+.notifications-popover {
+  .ant-popover-inner {
+    padding: 0;
+    border-radius: $primaryBorderRadius;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.notifications-panel {
+  width: 360px;
+  max-width: calc(100vw - 32px);
+
+  .notifications-panel-header {
+    @include flex(row, space-between, center);
+    padding: 16px 18px;
+    border-bottom: 1px solid opacityColor($textColor, 0.08);
+
+    h4 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: $secondaryColor;
+    }
+
+    span {
+      font-size: 12px;
+      font-weight: 500;
+      color: $primaryColor;
+    }
+  }
+
+  .notifications-list {
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  .notification-item {
+    @include flex(row, space-between, flex-start, 12px);
+    padding: 14px 18px;
+    border-bottom: 1px solid opacityColor($textColor, 0.06);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: opacityColor($primaryColor, 0.04);
+    }
+
+    &.unread {
+      background-color: opacityColor($primaryColor, 0.03);
+    }
+  }
+
+  .notification-item-content {
+    h5 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: $secondaryColor;
+    }
+
+    p {
+      margin: 0 0 6px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: opacityColor($textColor, 0.7);
+    }
+
+    span {
+      font-size: 12px;
+      color: opacityColor($textColor, 0.45);
+    }
+  }
+
+  .notification-dot {
+    width: 8px;
+    height: 8px;
+    margin-top: 6px;
+    border-radius: 50%;
+    background-color: $primaryColor;
+    flex-shrink: 0;
+  }
+
+  .notifications-view-all {
+    width: 100%;
+    border: none;
+    background: white;
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: $primaryColor;
+    cursor: pointer;
+    text-align: center;
+
+    &:hover {
+      background-color: opacityColor($primaryColor, 0.04);
     }
   }
 }
@@ -169,5 +411,35 @@
       font-weight: 400;
       color: $errorColor;
     }
+  }
+}
+
+.topbar-profile-email-item {
+  cursor: default !important;
+  opacity: 1 !important;
+  background: transparent !important;
+
+  &.ant-dropdown-menu-item-disabled {
+    cursor: default !important;
+    color: inherit !important;
+  }
+}
+
+.topbar-profile-email {
+  @include flex(column, "", flex-start, 2px);
+  max-width: 240px;
+  padding-block: 2px;
+
+  .topbar-profile-email-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: opacityColor($textColor, 0.45);
+  }
+
+  .topbar-profile-email-value {
+    font-size: 13px;
+    font-weight: 500;
+    color: $secondaryColor;
+    word-break: break-all;
   }
 }

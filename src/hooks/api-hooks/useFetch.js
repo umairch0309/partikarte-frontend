@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useAuthContext } from "../../context/auth-context";
@@ -7,6 +7,11 @@ import { resolveApiUrl } from "../../utilities/resolveApiUrl";
 export function useFetch(queryKey, path, config = {}) {
   const { token } = useAuthContext();
   const { onSuccess, onError, ...queryConfig } = config;
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+
+  onSuccessRef.current = onSuccess;
+  onErrorRef.current = onError;
 
   const fetchData = async () => {
     const { data } = await axios.get(resolveApiUrl(path), {
@@ -24,16 +29,16 @@ export function useFetch(queryKey, path, config = {}) {
   const response = data?.data ?? data;
 
   useEffect(() => {
-    if (data && onSuccess) {
-      onSuccess(response);
+    if (data && onSuccessRef.current) {
+      onSuccessRef.current(response);
     }
-  }, [data, onSuccess, response]);
+  }, [data, response]);
 
   useEffect(() => {
-    if (isError && onError) {
-      onError(error);
+    if (isError && onErrorRef.current) {
+      onErrorRef.current(error);
     }
-  }, [isError, error, onError]);
+  }, [isError, error]);
 
   return { response, isLoading };
 }

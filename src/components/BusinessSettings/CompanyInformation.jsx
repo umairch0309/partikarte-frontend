@@ -26,7 +26,7 @@ const CompanyInformation = () => {
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
-      setCountries(res);
+      setCountries(Array.isArray(res) ? res : []);
     },
     (res) => {
       console.log(res, "countries list error");
@@ -34,17 +34,23 @@ const CompanyInformation = () => {
   );
 
   const { response, isLoading: profileLoading } = useProfileDetails((res) => {
-    setData(res?.data);
+    const profile = res?.user ? res : res?.data;
+    if (!profile) return;
+
+    const company = profile?.business?.company;
+    setData(profile);
     setFormValues({
-      companyName: res?.data?.business?.company?.companyName,
-      companyRegistryNumber:
-        res?.data?.business?.company?.companyRegistryNumber,
-      companyVAT: res?.data?.business?.company?.companyVAT,
+      companyName: company?.companyName || "",
+      companyRegistryNumber: company?.companyRegistryNumber || "",
+      companyVAT: company?.companyVAT || "",
       addressDescription:
-        res?.data?.business?.company?.companyAddress?.addressDescription,
-      city: res?.data?.business?.company?.companyAddress?.city,
-      country: res?.data?.business?.company?.companyAddress?.country,
-      postalCode: res?.data?.business?.company?.companyAddress?.postalCode,
+        company?.companyAddress?.addressDescription ||
+        company?.addressDescription ||
+        "",
+      city: company?.companyAddress?.city || company?.city || "",
+      country: company?.companyAddress?.country || company?.country || "",
+      postalCode:
+        company?.companyAddress?.postalCode || company?.postalCode || "",
     });
   });
 

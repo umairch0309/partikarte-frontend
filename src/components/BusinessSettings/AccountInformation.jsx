@@ -31,11 +31,14 @@ const AccountInformation = () => {
   };
 
   const { response, isLoading: profileLoading } = useProfileDetails((res) => {
-    setData(res?.data);
+    const profile = res?.user ? res : res?.data;
+    if (!profile) return;
+
+    setData(profile);
     setFormValues((prevState) => ({
       ...prevState,
-      username: res?.data?.user?.username,
-      email: res?.data?.user?.email,
+      username: profile?.user?.username || "",
+      email: profile?.user?.email || "",
     }));
   });
 

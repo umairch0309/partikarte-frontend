@@ -10,11 +10,6 @@ export const businessRoutes = [
     route: "/business/guestlists",
   },
   {
-    title: "Settings",
-    icon: "/icons/menu/settings-icon.svg",
-    route: "/business/settings",
-  },
-  {
     title: "Finance",
     icon: "/icons/menu/finance-icon.svg",
     route: "/business/finance",
@@ -63,5 +58,10 @@ export const businessRoutes = [
     title: "Roles & Permissions",
     icon: "/icons/menu/roles.svg",
     route: "/business/roles",
+  },
+  {
+    title: "Settings",
+    icon: "/icons/menu/settings-icon.svg",
+    route: "/business/settings",
   },
 ];

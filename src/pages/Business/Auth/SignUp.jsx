@@ -34,7 +34,7 @@ const SignUp = () => {
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
-      setCountries(res);
+      setCountries(Array.isArray(res) ? res : []);
     },
     (res) => {
       console.log(res, "countries list error");

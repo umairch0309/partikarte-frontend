@@ -19,11 +19,15 @@ const FinanceInformation = () => {
   const [data, setData] = useState(null);
 
   const { response, isLoading: profileLoading } = useProfileDetails((res) => {
-    setData(res?.data);
+    const profile = res?.user ? res : res?.data;
+    if (!profile) return;
+
+    setData(profile);
     setFormValues({
-      IBAN: res?.data?.business?.financialInformation?.IBAN,
-      accountName: res?.data?.business?.financialInformation?.accountName,
-      invoiceEmail: res?.data?.business?.financialInformation?.invoiceEmail,
+      IBAN: profile?.business?.financialInformation?.IBAN || "",
+      accountName: profile?.business?.financialInformation?.accountName || "",
+      invoiceEmail:
+        profile?.business?.financialInformation?.invoiceEmail || "",
     });
   });
 

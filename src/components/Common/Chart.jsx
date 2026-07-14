@@ -8,6 +8,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import EmptyState from "./EmptyState";
 
 const Chart = ({ height, data: chartData, selectedInterval }) => {
   const data =
@@ -54,6 +55,15 @@ const Chart = ({ height, data: chartData, selectedInterval }) => {
     }
     return `${monthAbbreviation}\n${day}`;
   };
+
+  if (!data.length) {
+    return (
+      <EmptyState
+        height={height}
+        description="No ticket sales data for this period"
+      />
+    );
+  }
 
   return (
     <ResponsiveContainer width="100%" height={height}>

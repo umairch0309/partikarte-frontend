@@ -17,14 +17,15 @@ const CustomModal = ({
       onCancel={onCancel}
       open={open}
       onOk={onOk}
-      footer={[]}
+      footer={null}
       centered
-      width={width}
+      width={width || undefined}
+      destroyOnHidden
       closeIcon={
         <ReactSVG className={"svg"} src="/icons/tools/cross-red.svg" />
       }
       maskClosable={false}
-      style={{ marginBlock: "40px" }}
+      styles={{ wrapper: { marginBlock: "40px" } }}
       title={
         <>
           <h2 className="custom-modal-title">{title}</h2>

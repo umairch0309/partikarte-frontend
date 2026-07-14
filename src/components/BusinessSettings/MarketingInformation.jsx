@@ -20,12 +20,15 @@ const MarketingInformation = () => {
   const [data, setData] = useState(null);
 
   const { response, isLoading: profileLoading } = useProfileDetails((res) => {
-    setData(res?.data);
+    const profile = res?.user ? res : res?.data;
+    if (!profile) return;
+
+    setData(profile);
     setFormValues({
-      metaPixelId: res?.data?.business?.marketingInformation?.metaPixelId,
+      metaPixelId: profile?.business?.marketingInformation?.metaPixelId || "",
       googleAnalyticsId:
-        res?.data?.business?.marketingInformation?.googleAnalyticsId,
-      apiAccessKey: res?.data?.business?.marketingInformation?.apiAccessKey,
+        profile?.business?.marketingInformation?.googleAnalyticsId || "",
+      apiAccessKey: profile?.business?.marketingInformation?.apiAccessKey || "",
     });
   });
 

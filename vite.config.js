@@ -66,6 +66,13 @@ export default defineConfig(({ mode }) => {
         },
       ],
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          silenceDeprecations: ["import", "global-builtin", "slash-div"],
+        },
+      },
+    },
     plugins: [react(), createDevApiPlugin(env), VitePWA(manifestForPlugin)],
     build: {
       rollupOptions: {
@@ -84,3 +91,4 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+

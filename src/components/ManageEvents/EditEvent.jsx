@@ -43,7 +43,7 @@ const EditEvent = ({
 
   const { isLoading: countriesLoading } = useCountriesList(
     (res) => {
-      setCountries(res);
+      setCountries(Array.isArray(res) ? res : []);
     },
     (res) => {
       console.log(res, "countries list error");
@@ -160,7 +160,7 @@ const EditEvent = ({
       onOk={() => setShoweditEventModal(false)}
       title={"Edit Event"}
       subtitle={"Please enter the information to edit event."}
-      width={!isMobile && 900}
+      width={isMobile ? undefined : 900}
     >
       <form
         className="add-new-event-form-container"

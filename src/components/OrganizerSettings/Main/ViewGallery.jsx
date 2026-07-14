@@ -14,7 +14,15 @@ const ViewGallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const { isLoading } = useGetSingleGallery(galleryId, (res) => {
-    setData(res?.gallery);
+    const gallery = res?.gallery;
+    setData(
+      gallery
+        ? {
+            ...gallery,
+            images: Array.isArray(gallery.images) ? gallery.images : [],
+          }
+        : { images: [] }
+    );
   });
 
   const { handleMutation, isLoading: isDeleting } = useDeleteApi();

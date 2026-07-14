@@ -18,7 +18,8 @@ const Galleries = () => {
   const [showAddGalleryModal, setShowAddGalleryModal] = useState(false);
 
   const { isLoading } = useGetAllGalleries((res) => {
-    setGalleries(res?.gallery);
+    const list = res?.gallery ?? res?.galleries;
+    setGalleries(Array.isArray(list) ? list : []);
   });
 
   const { handleMutation, isLoading: isDeleting } = useDeleteApi();
@@ -78,26 +79,34 @@ const Galleries = () => {
       <div className="galleries-main-bottom">
         {isLoading ? (
           <Skeleton active={true} paragraph={{ rows: 5 }} size={"small"} />
-        ) : (
+        ) : galleries.length > 0 ? (
           galleries.map((gallery) => {
+            const images = Array.isArray(gallery?.images) ? gallery.images : [];
+            const previewImage =
+              images[gallery?.galleryPreview] || images[0] || "/images/event-1.jpg";
+
             return (
-              <div key={gallery.id} className="single-gallery-item">
-                <img
-                  src={
-                    gallery.images[gallery?.galleryPreview]
-                      ? gallery.images[gallery?.galleryPreview]
-                      : "/images/event-1.jpg"
-                  }
-                />
+              <div key={gallery._id || gallery.id} className="single-gallery-item">
+                <img src={previewImage} alt={gallery?.name || "Gallery"} />
                 <div className="single-gallery-item-bottom">
                   <div className="side-by-side-info">
-                    <h4 onClick={() => navigate(`galleries/${gallery._id}`)}>
+                    <h4
+                      onClick={() =>
+                        navigate(
+                          `/business/organizer-settings/galleries/${gallery._id}`
+                        )
+                      }
+                    >
                       {gallery.name}
                     </h4>
-                    <h6>{gallery.images.length} images</h6>
+                    <h6>{images.length} images</h6>
                   </div>
                   <div className="side-by-side-info">
-                    <p>{new Date(gallery.startingDate).toLocaleString()}</p>
+                    <p>
+                      {gallery?.startingDate
+                        ? new Date(gallery.startingDate).toLocaleString()
+                        : ""}
+                    </p>
                     <Dropdown
                       menu={{
                         items,
@@ -117,15 +126,19 @@ const Galleries = () => {
               </div>
             );
           })
+        ) : (
+          <p>No galleries yet.</p>
         )}
       </div>
-      <AddGalleryModal
-        showAddGalleryModal={showAddGalleryModal}
-        setShowAddGalleryModal={setShowAddGalleryModal}
-        selectedGallery={selectedGallery}
-        selectedGalleryStatus={selectedGalleryStatus}
-        setSelectedGalleryStatus={setSelectedGalleryStatus}
-      />
+      {showAddGalleryModal && (
+        <AddGalleryModal
+          showAddGalleryModal={showAddGalleryModal}
+          setShowAddGalleryModal={setShowAddGalleryModal}
+          selectedGallery={selectedGallery}
+          selectedGalleryStatus={selectedGalleryStatus}
+          setSelectedGalleryStatus={setSelectedGalleryStatus}
+        />
+      )}
     </div>
   );
 };

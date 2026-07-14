@@ -65,22 +65,22 @@ const NewRoleModal = ({
       }
 
       if (name.split("-")[1] !== "showSub") {
-        if (subIndex === undefined) {
+        if (subIndex === undefined || Number.isNaN(subIndex)) {
           // Main permission checkbox
           const updatedPermissions = [...formValues.permissions];
+          const currentPermission = updatedPermissions[index] || {};
+          const currentSub = Array.isArray(currentPermission.sub)
+            ? currentPermission.sub
+            : [];
+
           updatedPermissions[index] = {
-            ...updatedPermissions[index],
+            ...currentPermission,
             isGranted: checked,
             showSub: true,
-            sub: checked
-              ? updatedPermissions[index].sub.map((subPerm) => ({
-                  ...subPerm,
-                  isGranted: true,
-                }))
-              : updatedPermissions[index].sub.map((subPerm) => ({
-                  ...subPerm,
-                  isGranted: false,
-                })),
+            sub: currentSub.map((subPerm) => ({
+              ...subPerm,
+              isGranted: checked,
+            })),
           };
           setFormValues((prevState) => ({
             ...prevState,
@@ -89,13 +89,25 @@ const NewRoleModal = ({
         } else {
           // Sub-permission checkbox
           const updatedPermissions = [...formValues.permissions];
-          updatedPermissions[index].sub[subIndex] = {
-            ...updatedPermissions[index].sub[subIndex],
+          const currentPermission = updatedPermissions[index] || {};
+          const currentSub = Array.isArray(currentPermission.sub)
+            ? [...currentPermission.sub]
+            : [];
+
+          if (!currentSub[subIndex]) {
+            return;
+          }
+
+          currentSub[subIndex] = {
+            ...currentSub[subIndex],
             isGranted: checked,
           };
-          if (checked === true) {
-            updatedPermissions[index].isGranted = true;
-          }
+
+          updatedPermissions[index] = {
+            ...currentPermission,
+            sub: currentSub,
+            isGranted: checked ? true : currentPermission.isGranted,
+          };
 
           setFormValues((prevState) => ({
             ...prevState,

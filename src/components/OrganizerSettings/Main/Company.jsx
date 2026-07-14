@@ -36,14 +36,17 @@ const Company = () => {
     });
 
   const { response, isLoading: profileLoading } = useProfileDetails((res) => {
-    setData(res?.data);
+    const profile = res?.user ? res : res?.data;
+    if (!profile) return;
+
+    setData(profile);
     setFormValues({
-      companyName: res?.data?.business?.company?.companyName,
-      email: res?.data?.business?.contactInformation?.email,
-      phoneNumber: res?.data?.business?.contactInformation?.phoneNumber,
-      description: res?.data?.business?.description,
-      profileImage: res?.data?.business?.organizerImage,
-      coverPhoto: res?.data?.business?.organizerImageBanner,
+      companyName: profile?.business?.company?.companyName || "",
+      email: profile?.business?.contactInformation?.email || "",
+      phoneNumber: profile?.business?.contactInformation?.phoneNumber || "",
+      description: profile?.business?.description || "",
+      profileImage: profile?.business?.organizerImage || null,
+      coverPhoto: profile?.business?.organizerImageBanner || null,
     });
   });
 

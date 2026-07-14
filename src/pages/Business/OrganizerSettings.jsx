@@ -25,7 +25,7 @@ const OrganizerSettings = () => {
         <div className="organizer-settings-menu">
           {checkPermission("galleryManagement").status && (
             <Link
-              to={"./"}
+              to="/business/organizer-settings"
               className={
                 location.pathname === "/business/organizer-settings" ||
                 location.pathname === "/business/organizer-settings/" ||
@@ -41,19 +41,19 @@ const OrganizerSettings = () => {
             </Link>
           )}
           {checkPermission("news").status && (
-            <NavLink to={"./news"}>
+            <NavLink to="/business/organizer-settings/news" end>
               <ReactSVG src="/icons/menu/news.svg" />
               <span>News</span>
             </NavLink>
           )}
           {checkPermission("companyDetails").status && (
-            <NavLink to={"./company-details"}>
+            <NavLink to="/business/organizer-settings/company-details" end>
               <ReactSVG src="/icons/menu/user-square.svg" />
               <span>Company Details</span>
             </NavLink>
           )}
           {checkPermission("ticketCustomization").status && (
-            <NavLink to={"./tickets-customization"}>
+            <NavLink to="/business/organizer-settings/tickets-customization">
               <ReactSVG src="/icons/menu/ticket-outlined.svg" />
               <span>Customize Tickets</span>
             </NavLink>
