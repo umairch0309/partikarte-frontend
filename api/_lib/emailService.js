@@ -90,7 +90,7 @@ export async function sendContactEmail(payload, env = process.env) {
     attachments = [],
   } = payload;
 
-  const to = env.CONTACT_TO_EMAIL || "delivered@resend.dev";
+  const to = env.CONTACT_TO_EMAIL || "info@partikarte.si";
   const resendAttachments = attachments
     .filter((attachment) => attachment?.filename && attachment?.content)
     .map((attachment) => ({

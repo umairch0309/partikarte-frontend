@@ -11,5 +11,5 @@ export function getResendClient(env = process.env) {
 }
 
 export function getFromEmail(env = process.env) {
-  return env.RESEND_FROM_EMAIL || "Partikarte <onboarding@resend.dev>";
+  return env.RESEND_FROM_EMAIL || "Partikarte <info@partikarte.si>";
 }
