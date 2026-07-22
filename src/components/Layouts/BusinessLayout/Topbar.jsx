@@ -7,55 +7,72 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../context/auth-context";
 import { useProfileDetails } from "../../../api/profile";
 import { setEncryptedData } from "../../../utilities/EncryptedStorage";
+import {
+  formatNotificationTime,
+  useBusinessNotifications,
+  useNotificationActions,
+} from "../../../api/notifications";
 
-const staticNotifications = [
-  {
-    id: 1,
-    title: "New order received",
-    description: "Order #1024 was placed for Summer Festival.",
-    time: "5 min ago",
-    unread: true,
-  },
-  {
-    id: 2,
-    title: "Ticket purchased",
-    description: "A customer bought 2 tickets for your event.",
-    time: "2 hours ago",
-    unread: true,
-  },
-  {
-    id: 3,
-    title: "Payout processed",
-    description: "Monthly payout for March has been completed.",
-    time: "Yesterday",
-    unread: false,
-  },
-];
-
-const NotificationsPanel = () => (
+const NotificationsPanel = ({
+  notifications = [],
+  unreadCount = 0,
+  isLoading,
+  onMarkAsRead,
+  onMarkAllAsRead,
+  onViewAll,
+}) => (
   <div className="notifications-panel">
     <div className="notifications-panel-header">
       <h4>Notifications</h4>
-      <span>2 new</span>
+      <span>
+        {unreadCount > 0
+          ? `${unreadCount} new`
+          : notifications.length
+            ? "All caught up"
+            : "No alerts"}
+      </span>
     </div>
     <div className="notifications-list">
-      {staticNotifications.map((notification) => (
-        <div
-          key={notification.id}
-          className={`notification-item ${
-            notification.unread ? "unread" : ""
-          }`}
-        >
-          <div className="notification-item-content">
-            <h5>{notification.title}</h5>
-            <p>{notification.description}</p>
-            <span>{notification.time}</span>
-          </div>
-          {notification.unread && <span className="notification-dot" />}
+      {isLoading ? (
+        <div className="notification-item">
+          <Skeleton active paragraph={{ rows: 2 }} title={false} />
         </div>
-      ))}
+      ) : notifications.length === 0 ? (
+        <div className="notification-item">
+          <div className="notification-item-content">
+            <h5>No notifications yet</h5>
+            <p>New orders and ticket purchases will appear here.</p>
+          </div>
+        </div>
+      ) : (
+        notifications.map((notification) => (
+          <button
+            type="button"
+            key={notification._id}
+            className={`notification-item ${
+              !notification.isRead ? "unread" : ""
+            }`}
+            onClick={() => onMarkAsRead?.(notification)}
+          >
+            <div className="notification-item-content">
+              <h5>{notification.title}</h5>
+              <p>{notification.description}</p>
+              <span>
+                {formatNotificationTime(
+                  notification.createdAt || notification.updatedAt
+                )}
+              </span>
+            </div>
+            {!notification.isRead && <span className="notification-dot" />}
+          </button>
+        ))
+      )}
     </div>
-    <button type="button" className="notifications-view-all">
+    <button
+      type="button"
+      className="notifications-view-all"
+      onClick={onViewAll || onMarkAllAsRead}
+    >
       View all notifications
     </button>
   </div>
@@ -149,6 +166,34 @@ const Topbar = ({ title, subtitle }) => {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, user, setUser, setPermissions } =
     useAuthContext();
+
+  const { data: notificationsData, isLoading: isNotificationsLoading } =
+    useBusinessNotifications({ enabled: isLoggedIn });
+  const { markAsRead, markAllAsRead } = useNotificationActions();
+
+  const notifications = notificationsData?.notifications || [];
+  const unreadCount = notificationsData?.unreadCount || 0;
+
+  const handleNotificationClick = async (notification) => {
+    try {
+      if (!notification?.isRead) {
+        await markAsRead(notification._id);
+      }
+      navigate(notification?.link || "/business/orders");
+    } catch (error) {
+      console.error("Failed to mark notification as read", error);
+      navigate(notification?.link || "/business/orders");
+    }
+  };
+
+  const handleViewAllNotifications = async () => {
+    try {
+      await markAllAsRead();
+    } catch (error) {
+      console.error("Failed to mark all notifications as read", error);
+    }
+    navigate("/business/orders");
+  };
 
   const { isLoading } = useProfileDetails(
     (res) => {
@@ -284,7 +329,16 @@ const Topbar = ({ title, subtitle }) => {
           />
           <div className="image-and-notification-container">
             <Popover
-              content={<NotificationsPanel />}
+              content={
+                <NotificationsPanel
+                  notifications={notifications}
+                  unreadCount={unreadCount}
+                  isLoading={isNotificationsLoading}
+                  onMarkAsRead={handleNotificationClick}
+                  onMarkAllAsRead={handleViewAllNotifications}
+                  onViewAll={handleViewAllNotifications}
+                />
+              }
               trigger="click"
               placement="bottomRight"
               arrow={false}
@@ -295,7 +349,11 @@ const Topbar = ({ title, subtitle }) => {
                   className="notifications-icon"
                   src="/icons/tools/notification.svg"
                 />
-                <span className="notifications-badge">2</span>
+                {unreadCount > 0 && (
+                  <span className="notifications-badge">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
               </div>
             </Popover>
             <Dropdown

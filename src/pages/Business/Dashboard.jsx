@@ -11,9 +11,10 @@ import {
 import { useActiveEvents, useAllEvents } from "../../api/manage-events";
 import formatDate from "../../utilities/formatDate";
 import { Skeleton } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
 import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
+import { ShowMessageSuccess } from "../../hooks/ShowMessage";
 
 const monthNames = [
   "January",
@@ -32,6 +33,7 @@ const monthNames = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { checkPermission } = usePermissionCheck();
 
   const [ordersData, setOrdersData] = useState([]);
@@ -47,6 +49,27 @@ const Dashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(
     monthNames[new Date().getMonth()]
   );
+
+  useEffect(() => {
+    if (searchParams.get("payment") !== "success") return;
+
+    const sessionId = searchParams.get("session_id") || "success";
+    const toastKey = `payment-success:${sessionId}`;
+
+    // React Strict Mode remounts effects once — only show the toast a single time.
+    if (!sessionStorage.getItem(toastKey)) {
+      sessionStorage.setItem(toastKey, "1");
+      ShowMessageSuccess(
+        "Payment successful. Ticket order completed.",
+        toastKey
+      );
+    }
+
+    const next = new URLSearchParams(searchParams);
+    next.delete("payment");
+    next.delete("session_id");
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   const { isLoading: isAllEventsLoading } = useAllEvents((res) => {
     setAllEventsData(res?.events || []);
@@ -65,6 +88,16 @@ const Dashboard = () => {
 
   const { isLoading: isRevenueDataLoading, response: revenueData } =
     useBusinessRevenueByMonth(selectedMonth);
+
+  const revenueSummary = Array.isArray(revenueData)
+    ? revenueData[0]
+    : revenueData;
+
+  const formatEurAmount = (value, withDecimals = false) => {
+    const amount = Number(value ?? 0);
+    const formatted = withDecimals ? amount.toFixed(2) : amount;
+    return `${currencySymbolGenerator("EUR")}${formatted}`;
+  };
 
   const { isLoading } = useLatestOrders((res) => {
     setOrdersData(res?.orders || []);
@@ -151,6 +184,7 @@ const Dashboard = () => {
                 selectedInterval={selectedInterval}
                 data={ordersDataForChart}
                 height={290}
+                currency="EUR"
               />
             </div>
           )}
@@ -203,21 +237,17 @@ const Dashboard = () => {
               <div className="all-balance-sheets-container">
                 <div className="single-balance-sheet">
                   <h4>Total Orders</h4>
-                  <h3>{revenueData?.[0]?.totalOrders || 0}</h3>
+                  <h3>{revenueSummary?.totalOrders || 0}</h3>
                 </div>
                 <div className="single-balance-sheet">
                   <h4>Revenue</h4>
-                  <h3>
-                    {" "}
-                    {currencySymbolGenerator("EUR")}{" "}
-                    {revenueData?.[0]?.totalRevenue || 0}
-                  </h3>
+                  <h3>{formatEurAmount(revenueSummary?.totalRevenue)}</h3>
                 </div>
                 <div className="single-balance-sheet">
                   <h4>Fee’s</h4>
                   <h3>
-                    {currencySymbolGenerator("EUR")}
-                    {parseInt(revenueData?.[0]?.totalRevenue) * 0.08 || 0} (8%)
+                    {formatEurAmount(revenueSummary?.totalPlatformFees, true)}{" "}
+                    (8%)
                   </h3>
                 </div>
               </div>

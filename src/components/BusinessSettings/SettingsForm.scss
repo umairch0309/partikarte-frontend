@@ -148,3 +148,21 @@
     background-color: #f8f8f8;
   }
 }
+
+.stripe-connect-panel {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid opacityColor($textColor, 0.12);
+}
+
+.stripe-connect-help {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: opacityColor($textColor, 0.75);
+}
+
+.stripe-status-row {
+  @include flex(column, "", "", 6px);
+  font-size: 14px;
+}

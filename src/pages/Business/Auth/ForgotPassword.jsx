@@ -7,7 +7,6 @@ import AuthPageLeft from "../../../components/AuthPagesComponents/AuthPageLeft";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import { useAuthContext } from "../../../context/auth-context";
 import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
-import { ShowDevOtpHint } from "../../../hooks/ShowMessage";
 
 const initalState = {
   email: "",
@@ -51,9 +50,6 @@ const ForgotPassword = () => {
         data: formData,
       },
       (res) => {
-        if (res?.debugOtp) {
-          ShowDevOtpHint(res.debugOtp);
-        }
         setForgotEmail(formData?.email);
         setFormErrors({});
         setFormData(initalState);

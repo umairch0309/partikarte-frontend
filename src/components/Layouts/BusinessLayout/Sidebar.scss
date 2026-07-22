@@ -26,6 +26,17 @@
     line-height: 0;
   }
 
+  .sidebar-stripe-lock-note {
+    margin: 0;
+    width: 100%;
+    font-size: 12px;
+    line-height: 1.4;
+    color: opacityColor($primaryColor, 0.95);
+    background: opacityColor($primaryColor, 0.08);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
   .sidebar-all-routes-container {
     @include flex(column, "", center, 10px);
     width: 100%;
@@ -46,6 +57,11 @@
       svg {
         min-width: 17px;
       }
+    }
+    .sidebar-item-locked {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
     }
     .active {
       background-color: $primaryColor;

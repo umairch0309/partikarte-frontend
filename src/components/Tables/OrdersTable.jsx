@@ -1,6 +1,10 @@
 import { Table } from "antd";
 import React, { useEffect, useState } from "react";
 import formatDate from "../../utilities/formatDate";
+import {
+  formatMoney,
+  orderCurrency,
+} from "../../utilities/currencySymbolGenerator";
 
 const OrdersTable = ({ ordersData, isLoading }) => {
   const [data, setData] = useState([]);
@@ -58,10 +62,7 @@ const OrdersTable = ({ ordersData, isLoading }) => {
       key: "orderAmount",
       align: "center",
       sorter: (a, b) => a.orderAmount - b.orderAmount,
-
-      render: (text, record) => {
-        return `$${text}`;
-      },
+      render: (text, record) => formatMoney(text, orderCurrency(record)),
     },
     {
       title: "Purchase date",

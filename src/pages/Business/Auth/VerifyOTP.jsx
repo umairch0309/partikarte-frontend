@@ -7,7 +7,6 @@ import validateVerifyOTPForm from "../../../validation/VerifyOTP";
 import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import { useAuthContext } from "../../../context/auth-context";
 import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
-import { ShowDevOtpHint } from "../../../hooks/ShowMessage";
 
 const initalState = {
   otp: "",
@@ -79,11 +78,7 @@ const VerifyOTP = () => {
         path: "auth/resend-otp",
         data: { email: formData.email },
       },
-      (res) => {
-        if (res?.debugOtp) {
-          ShowDevOtpHint(res.debugOtp);
-        }
-      },
+      (res) => {},
       (res) => {}
     );
   };

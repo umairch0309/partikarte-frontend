@@ -74,6 +74,10 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [react(), createDevApiPlugin(env), VitePWA(manifestForPlugin)],
+    server: {
+      port: 5173,
+      strictPort: true,
+    },
     build: {
       rollupOptions: {
         output: {

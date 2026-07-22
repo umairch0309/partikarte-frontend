@@ -37,12 +37,9 @@ const AddNewEventModal = ({
   const isMobile = useIsMobileWidth();
   const [imageToUpload, setImageToUpload] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [countries, setCountries] = useState([]);
 
-  const { isLoading: countriesLoading } = useCountriesList(
-    (res) => {
-      setCountries(Array.isArray(res) ? res : []);
-    },
+  const { countries = [], isLoading: countriesLoading } = useCountriesList(
+    undefined,
     (res) => {
       console.log(res, "countries list error");
     }
@@ -394,9 +391,13 @@ const AddNewEventModal = ({
                 >
                   <option value="">Choose country</option>
                   {!countriesLoading &&
-                    countries?.length > 0 &&
                     countries?.map((el) => (
-                      <option value={el?.countryName}>{el?.countryName}</option>
+                      <option
+                        key={el?.countryCode || el?.countryName}
+                        value={el?.countryName}
+                      >
+                        {el?.countryName}
+                      </option>
                     ))}
                 </select>
                 {formik.touched.country && formik.errors.country && (

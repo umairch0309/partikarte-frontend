@@ -1,0 +1,54 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.stripe-onboarding-banner {
+  @include flex(row, space-between, center, 20px);
+  flex-wrap: wrap;
+  margin: 20px 0 0;
+  padding: 16px 20px;
+  border-radius: $primaryBorderRadius;
+  background: linear-gradient(
+    135deg,
+    opacityColor($primaryColor, 0.12),
+    opacityColor($primaryColor, 0.04)
+  );
+  border: 1px solid opacityColor($primaryColor, 0.35);
+
+  &__text {
+    flex: 1 1 280px;
+    @include flex(column, "", "", 6px);
+
+    strong {
+      font-size: 16px;
+      color: $primaryColor;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.45;
+      color: opacityColor($textColor, 0.85);
+    }
+  }
+
+  &__actions {
+    @include flex(row, "", center, 12px);
+    flex-wrap: wrap;
+  }
+
+  &__link {
+    border: none;
+    background: transparent;
+    color: $primaryColor;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+
+  @media (max-width: 767px) {
+    margin-top: 12px;
+    padding: 14px;
+  }
+}

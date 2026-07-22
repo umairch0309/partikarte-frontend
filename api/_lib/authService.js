@@ -57,15 +57,8 @@ function isDevFallbackAllowed(env) {
 }
 
 /**
- * Issues a fresh OTP, persists it, and attempts delivery via Resend.
- *
- * Resend accounts without a verified domain can only deliver to the
- * account owner's own address (sandbox mode). When that restriction (or any
- * other delivery failure) is hit in a non-production environment, we still
- * log the code to the server console and return it as `debugOtp` so local
- * development and QA are never blocked on email delivery. In production
- * (Vercel with no DEV_LOG_OTP override) the error is rethrown so the
- * failure is visible and not silently swallowed.
+ * Issues a fresh OTP, persists it, and delivers it via Resend.
+ * OTP is never returned to the client — users must use the email inbox.
  */
 async function issueOtp(email, scope, purpose, env) {
   const normalizedEmail = normalizeEmail(email);
@@ -86,10 +79,10 @@ async function issueOtp(email, scope, purpose, env) {
 
     console.warn(
       `[Partikarte OTP] Email delivery failed (${error.message}). ` +
-        `Falling back to console for ${scope}/${purpose}/${normalizedEmail}: ${otp}`
+        `OTP logged for ${scope}/${purpose}/${normalizedEmail}: ${otp}`
     );
 
-    return { delivered: false, debugOtp: otp };
+    return { delivered: false };
   }
 }
 
@@ -108,11 +101,10 @@ export async function forgotPassword({ email }, scope = "business", env = proces
     throw new ApiError("No account found with this email address", 404);
   }
 
-  const { debugOtp } = await issueOtp(normalizedEmail, scope, "reset", env);
+  await issueOtp(normalizedEmail, scope, "reset", env);
 
   return {
     message: "OTP sent to your email address",
-    ...(debugOtp && { debugOtp }),
   };
 }
 
@@ -139,11 +131,10 @@ export async function resendVerificationOtp(
     throw new ApiError("This account is already verified", 400);
   }
 
-  const { debugOtp } = await issueOtp(normalizedEmail, scope, "verify", env);
+  await issueOtp(normalizedEmail, scope, "verify", env);
 
   return {
     message: "A new OTP has been sent to your email address",
-    ...(debugOtp && { debugOtp }),
   };
 }
 
@@ -275,11 +266,10 @@ export async function registerBusinessUser(payload, env = process.env) {
     return nextStore;
   });
 
-  const { debugOtp } = await issueOtp(email, "business", "verify", env);
+  await issueOtp(email, "business", "verify", env);
 
   return {
     message: "Account created. Please verify your email with the OTP sent.",
-    ...(debugOtp && { debugOtp }),
   };
 }
 
@@ -312,11 +302,10 @@ export async function registerAdminUser(payload, env = process.env) {
     return nextStore;
   });
 
-  const { debugOtp } = await issueOtp(email, "admin", "verify", env);
+  await issueOtp(email, "admin", "verify", env);
 
   return {
     message: "Admin account created. Please verify your email with the OTP sent.",
-    ...(debugOtp && { debugOtp }),
   };
 }
 
@@ -331,10 +320,9 @@ export async function loginUser({ email, password }, scope = "business", env = p
   }
 
   if (!account.verified) {
-    const { debugOtp } = await issueOtp(normalizedEmail, scope, "verify", env);
+    await issueOtp(normalizedEmail, scope, "verify", env);
     throw new ApiError("Please verify your email. A new OTP has been sent.", 403, {
       verifyEmailRequested: true,
-      ...(debugOtp && { debugOtp }),
     });
   }
 

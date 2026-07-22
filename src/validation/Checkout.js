@@ -38,13 +38,6 @@ const checkoutValidationSchema = Yup.object().shape({
         ? schema.required(" ")
         : schema.notRequired();
     }),
-  expiry: Yup.string()
-    .trim()
-    .when("$activePaymentType", ([activePaymentType], schema) => {
-      return activePaymentType === "card"
-        ? schema.required("")
-        : schema.notRequired();
-    }),
   recaptcha: Yup.string()
     .trim()
     .when("$activePaymentType", ([activePaymentType], schema) => {

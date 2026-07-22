@@ -59,3 +59,17 @@ export function useBusinessRevenueByMonth(month, onSuccess, onError) {
   );
   return { response, isLoading };
 }
+
+export function useBusinessFinanceSummary(onSuccess, onError) {
+  const { response, isLoading } = useFetch(
+    ["get-business-finance-summary"],
+    "orders/finance-summary",
+    {
+      gcTime: 60000,
+      onSuccess,
+      onError,
+      enabled: true,
+    }
+  );
+  return { response, isLoading };
+}

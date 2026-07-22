@@ -2,9 +2,28 @@
 @import "../../styles/variables";
 
 .order-invoice-main-container {
-  margin-top: 30px;
+  margin-top: 10px;
   padding-inline: 6%;
   @include flex(column, "", flex-start, 10px);
+
+  .invoice-brand {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    border-radius: 12px;
+    padding: 18px 16px;
+    margin-bottom: 12px;
+
+    img {
+      height: 36px;
+      width: auto;
+      max-width: 220px;
+      object-fit: contain;
+    }
+  }
+
   .invoice-item {
     width: 100%;
     @include flex(row, space-between, center, 10px);
@@ -21,5 +40,10 @@
       width: 100%;
       text-align: end;
     }
+  }
+
+  .invoice-download-button {
+    width: 100%;
+    margin-top: 18px;
   }
 }

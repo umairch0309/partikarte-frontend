@@ -4,8 +4,8 @@ import { ReactSVG } from "react-svg";
 import RefundOrderAlert from "../Orders/RefundOrderAlert";
 import SendTickets from "../Orders/SendTickets";
 import OrderInvoice from "../Orders/OrderInvoice";
-import formatDate from "../../utilities/formatDate";
 import usePermissionCheck from "../../hooks/usePermissionCheck";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
 const InvoicesTable = ({ customersData, isLoading }) => {
   const { checkPermission } = usePermissionCheck();
@@ -97,7 +97,13 @@ const InvoicesTable = ({ customersData, isLoading }) => {
       dataIndex: "orderAmount",
       key: "orderAmount",
       align: "center",
-      render: (text) => "$" + text,
+      render: (text, record) => {
+        const currency =
+          record?.currency ||
+          record?.eventId?.eventCurrency ||
+          "EUR";
+        return `${currencySymbolGenerator(currency)}${Number(text || 0).toFixed(2)}`;
+      },
     },
     {
       title: "No. of Tickets",

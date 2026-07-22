@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { CountriesList } from "../constants/countrieslist";
 
 export function useCountriesList(onSuccess, onError) {
   const fetchData = async () => {
     try {
-      const { data } = await axios.get(
-        "https://secure.geonames.org/countryInfoJSON?username=jamshaidjavaid"
-      );
-      return data.geonames;
+      // Use the local list — GeoNames remote API is often rate-limited / unreachable.
+      return CountriesList.geonames;
     } catch (error) {
       throw new Error("Failed to fetch countries");
     }
@@ -17,6 +16,8 @@ export function useCountriesList(onSuccess, onError) {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-all-countries"],
     queryFn: fetchData,
+    gcTime: Infinity,
+    staleTime: Infinity,
   });
 
   useEffect(() => {
@@ -52,6 +53,7 @@ export function useCitiesForCountry(countryCode, onSuccess, onError) {
     queryKey: ["get-cities-for-country", countryCode],
     queryFn: fetchData,
     gcTime: Infinity,
+    enabled: Boolean(countryCode),
   });
 
   useEffect(() => {

@@ -295,8 +295,13 @@
 
   .notification-item {
     @include flex(row, space-between, flex-start, 12px);
+    width: 100%;
     padding: 14px 18px;
+    border: 0;
     border-bottom: 1px solid opacityColor($textColor, 0.06);
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
     transition: background-color 0.2s ease;
 
     &:hover {

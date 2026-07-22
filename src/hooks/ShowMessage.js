@@ -49,14 +49,3 @@ export function ShowMessageDelete(text, url) {
     duration: 2,
   });
 }
-
-// Shown only when Resend can't deliver the OTP (e.g. sandbox mode without a
-// verified domain) so local development/QA is never blocked on email delivery.
-export function ShowDevOtpHint(otp) {
-  return message.info({
-    key: "dev-otp-hint",
-    type: "info",
-    content: `Email delivery is restricted in test mode. Your OTP is: ${otp}`,
-    duration: 15,
-  });
-}

@@ -9,8 +9,15 @@ import {
   Area,
 } from "recharts";
 import EmptyState from "./EmptyState";
+import currencySymbolGenerator from "../../utilities/currencySymbolGenerator";
 
-const Chart = ({ height, data: chartData, selectedInterval }) => {
+const Chart = ({
+  height,
+  data: chartData,
+  selectedInterval,
+  currency = "EUR",
+}) => {
+  const symbol = currencySymbolGenerator(currency);
   const data =
     chartData?.map((order) => ({
       ...order,
@@ -31,9 +38,9 @@ const Chart = ({ height, data: chartData, selectedInterval }) => {
 
   const formatUsers = (orderAmount) => {
     if (orderAmount >= 1000) {
-      return `$${(orderAmount / 1000).toFixed(1)}k`;
+      return `${symbol}${(orderAmount / 1000).toFixed(1)}k`;
     }
-    return `$${orderAmount}`;
+    return `${symbol}${orderAmount}`;
   };
 
   const axisStyle = {
@@ -49,7 +56,7 @@ const Chart = ({ height, data: chartData, selectedInterval }) => {
 
   const customTickFormatter = (tick) => {
     const [updatedAt, day] = tick.split(" ");
-    const monthAbbreviation = updatedAt.substring(0, 3); // Get the first 3 letters of the month
+    const monthAbbreviation = updatedAt.substring(0, 3);
     if (selectedInterval !== "yearly") {
       return `${day.split(",")[0]}\n${monthAbbreviation}`;
     }
@@ -83,7 +90,7 @@ const Chart = ({ height, data: chartData, selectedInterval }) => {
           tick={{ ...yAxisStyle }}
         />
         <Tooltip
-          content={<CustomTooltip />}
+          content={<CustomTooltip symbol={symbol} />}
           wrapperStyle={{
             borderRadius: "8px",
             backgroundColor: "rgba(255, 255, 255, 1)",
@@ -98,7 +105,6 @@ const Chart = ({ height, data: chartData, selectedInterval }) => {
           </linearGradient>
         </defs>
         <Area
-          //   type="monotone"
           dataKey="orderAmount"
           stroke="#338AF3"
           type="linear"
@@ -117,13 +123,13 @@ const Chart = ({ height, data: chartData, selectedInterval }) => {
   );
 };
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, symbol = "€" }) => {
   if (active && payload && payload.length) {
     return (
       <div className="custom-chart-tooltip">
         {payload.map((entry, index) => (
           <h4 key={`data-${index}`} style={{ color: entry.stroke }}>
-            {`$${entry.value}`}
+            {`${symbol}${entry.value}`}
           </h4>
         ))}
         <p className="label">{`${label}`}</p>

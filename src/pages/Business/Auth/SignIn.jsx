@@ -9,7 +9,6 @@ import useHandleOnBlur from "../../../hooks/useHandleOnBlur";
 import { usePostApi } from "../../../hooks/api-hooks/usePostApi";
 import { useAuthContext } from "../../../context/auth-context";
 import { setEncryptedData } from "../../../utilities/EncryptedStorage";
-import { ShowDevOtpHint } from "../../../hooks/ShowMessage";
 
 const initalState = {
   email: "",
@@ -64,9 +63,6 @@ const SignIn = () => {
       },
       (res) => {
         if (res?.verifyEmailRequested) {
-          if (res?.debugOtp) {
-            ShowDevOtpHint(res.debugOtp);
-          }
           setForgotEmail(formData?.email);
           navigate("/business/verify-otp");
           return;
